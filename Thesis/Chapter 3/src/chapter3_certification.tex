@@ -1,2 +1,716 @@
-\chapter{Finite-Sample Certification of Hedging Error}\label{ch3-certification}
-\gap{Chapter not yet drafted; scheduled in the loop order of LOOP.md.}
+\chapter{Finite-Sample Certification of Hedging Error}\label{ch:cert}\label{ch:certification}
+
+\begin{quote}\itshape
+This chapter defines the certification problem for a fixed valuation-and-hedging policy on a converted option book and proves the coverage theorem on which the statistical half of the thesis rests. The block hedging-error score is introduced, the fitting, calibration and deployment windows are separated by gaps, and the split-conformal threshold is shown to cover the next deployment block with probability at least $1-\alpha$ less three explicit deficits: a Kolmogorov drift term, a coupling term $(n+1)\beta(b)$, and, in the conditional form, a Markov term $\beta(b)/\delta'$. The proof is written in full from three standard tools, each restated: Berbee's coupling applied sequentially, the Beta law of conformal coverage, and a half-line comparison of two laws. The drift term is bounded by $\sqrt{2L\Wone}$ and the linear bound is shown to be false. The chapter establishes that the mixing coefficient is not estimable from data, so the certificate is conditional on an assumed mixing class; the density bound on the deployment law is an assumption on an unobserved law. It leaves open the dependent-data rate for the plug-in drift estimate and the choice of block length, both taken up in Chapter~\ref{ch4-sharpness-blocking}.
+\end{quote}
+
+\section{Introduction}\label{sec:cert-intro}
+
+\subsection{The problem}
+
+A South African bank holds a book of caps, floors and swaptions written on three-month JIBAR. On the first JIBAR business day after 31 December 2026 every such contract falls back to compounded ZARONIA plus a fixed spread $s$ (Chapter~\ref{ch1-introduction}). The bank must value and hedge the converted book from that day, and it has no ZARONIA options market to calibrate to. Chapter~\ref{ch5-identifiability} shows that the successor smile is identified only within an interval whose half-width is the basis volatility $\eta$; the bank therefore chooses a valuation-and-hedging policy from within that interval, by convention or by judgement, and runs it.
+
+The question of this chapter is not whether the chosen policy is right. It is how large the hedging error of the chosen policy can be, and with what probability, stated in a form that a risk committee or a regulator can hold the bank to. The answer offered is a \emph{certificate}: a threshold $\hat q$ computed from a record of past hedging errors, together with a proved statement that the hedging error of the policy over the next block of trading periods exceeds $\hat q$ with probability at most $\alpha$ plus explicitly named deficits.
+
+Three features of the problem shape the mathematics.
+
+First, the record of hedging errors is a time series. Consecutive rebalancing periods share market states, positions and volatility regimes. No exchangeability assumption holds, and the classical split-conformal guarantee \cite{vovk2005}, which needs exchangeability, does not apply as stated. The chapter recovers it up to a coupling cost by working with blocks separated by gaps and by paying a $\beta$-mixing coefficient for every block coupled.
+
+Second, the law of the hedging error at deployment need not equal the law on the calibration record. The transition itself is a structural change; the basis between JIBAR and compounded ZARONIA is a source of drift that the fallback spread freezes at a single number. The chapter carries a distribution-shift term throughout, and shows that the right metric for it is the Kolmogorov distance, not total variation and not Wasserstein.
+
+Third, the policy $\pi$ must be fixed before the calibration record is scored. This is the split in split conformal. If $\pi$ were refitted on the calibration blocks, the scores would depend on all of them jointly, the order statistic $\hat q$ would lose its interpretation as the quantile of an independent sample, and the hedging error certified would not be the hedging error that the deployed book experiences. Section~\ref{sec:cert-policy} explains why fixing the policy on a separate fitting sample creates no additional obstacle: conditioning on the fitting sample freezes $\pi$, and the coupling step of the proof makes every later block independent of the fitting sample, so the conditional argument is the exchangeable argument with $\pi$ treated as a constant.
+
+\subsection{What a certificate is and is not}\label{sec:cert-isnot}
+
+A certificate is a statement of the form: \emph{under Assumption~\ref{ass:mix} and a bound $\varepsilon$ on the Kolmogorov distance between the calibration law and the deployment law, the block hedging-error score of $\pi$ on the next gap-separated deployment block exceeds $\hat q$ with probability at most $\alpha+\varepsilon+(n+1)\beta(b)$}. Every term in the statement is either computed from data ($\hat q$, $n$, $k$) or an assumption named in the statement ($\varepsilon$, the mixing class that bounds $\beta(b)$). Nothing in the statement depends on the model behind $\pi$ being correct. Theorem~\ref{thm:cov} closes with exactly this sentence.
+
+A certificate is not a value-at-risk. Value-at-risk is a quantile of a loss law estimated under a model; its accuracy is asymptotic and is checked after the fact by breach counts (Section~\ref{sec:cert-backtests}). The certificate is a finite-sample prediction interval for the realised hedging error of a fixed policy; its level is stated before the deployment block is observed and is proved, not tested.
+
+A certificate is not a statement about the correctness of the model behind $\pi$. A wrong model with a small, stable hedging error is certified at a tight threshold; a right model implemented with a noisy hedge is certified at a wide one. The certificate measures what the book will experience.
+
+A certificate is not unconditional. Its two assumptions, the mixing class and the drift bound, are about laws that are not observed: Section~\ref{sec:cert-estimable} proves that $\beta(b)$ is not estimable from any finite record and states that the density bound on the deployment law is likewise an assumption. A certificate that hides these assumptions is a false certificate. This chapter states them in every theorem.
+
+\subsection{Map of the chapter}
+
+Section~\ref{sec:cert-scores} defines the score, the blocking, the mixing coefficient and the assumption. Section~\ref{sec:cert-theorem} states Theorem~\ref{thm:cov} in its marginal and conditional forms and proves it in three steps, restating every borrowed lemma. Section~\ref{sec:cert-drift} bounds the drift term by a Wasserstein distance and shows that the obvious linear bound is false. Section~\ref{sec:cert-estimable} establishes what is and is not estimable. Section~\ref{sec:cert-algorithm} gives the algorithm. Section~\ref{sec:cert-example} works a synthetic example by hand. Section~\ref{sec:cert-backtests} describes the bootstrap and breach-count alternatives and says why no theorem comparing them to the certificate is claimed. Section~\ref{sec:cert-discussion} discusses.
+
+\section{Scores and blocks}\label{sec:cert-scores}
+
+\subsection{The state process and the policy}\label{sec:cert-policy}
+
+Let $(X_t)_{t\ge1}$ be a process with values in a Polish space $\mathcal X$, defined on a probability space $(\Omega,\mathcal F,\Prob)$. The reader may take $X_t$ to be the vector of market observables at the close of rebalancing period $t$: the discount curve, the ZARONIA fixings, the JIBAR fixings while they exist, the basis, the positions of the book. Everything the bank observes is a measurable function of $X$.
+
+A \emph{valuation-and-hedging policy} is an element $p$ of a Polish space $\Pi$: a rule that, given the observables up to period $t-1$, sets the valuation of every position and the hedge ratios for period $t$. Its \emph{per-period hedging error} is a measurable map $h:\Pi\times\mathcal X\times\mathcal X\to\R$, and the hedging error of policy $p$ in period $t$ is $e_t(p):=h(p,X_{t-1},X_t)$. The sign convention is that $e_t$ is a shortfall: positive values are losses to the bank.
+
+The policy is \emph{fitted} on a fitting sample $\Dfit:=X_{1:N_0}$ through a measurable map $\pi:\mathcal X^{N_0}\to\Pi$; we write $\pi$ both for the map and for the random element $\pi(\Dfit)$. In the thesis $\pi$ is the time-changed SABR valuation of Chapter~\ref{ch2-preliminaries} with the convention strike shift and volatility scaling of Chapter~\ref{ch5-identifiability}, together with delta and vega hedges computed from it; the certificate does not use this structure and any measurable rule serves.
+
+\subsection{Blocks, gaps and the block score}
+
+Fix a block length $b\in\N$ and a level $\alpha\in(0,1)$. A \emph{block} is a set of $b$ consecutive periods $H=\{t+1,\dots,t+b\}$. Two blocks $H=\{t+1,\dots,t+b\}$ and $H'=\{t'+1,\dots,t'+b\}$ with $t<t'$ are \emph{separated by a gap of length at least $b$} if $t'\ge t+2b$, that is, if at least $b$ periods lie strictly between them. The fitting sample $\Dfit=X_{1:N_0}$ is treated as a block of length $N_0$ for this purpose.
+
+\begin{definition}[Block hedging-error score]\label{def:score}
+Let $\phi:\Pi\times\R^b\to\R$ be measurable. The \emph{block score} of policy $p$ on block $H=\{t+1,\dots,t+b\}$ is
+\[
+S_H(p):=\phi\big(p,\,e_{t+1}(p),\dots,e_{t+b}(p)\big).
+\]
+The default choice throughout the thesis is the cumulative block shortfall $\phi(p,x)=\sum_{i=1}^b x_i$. Other admissible choices are the maximum drawdown $\max_{j\le b}\sum_{i\le j}x_i$ and the absolute cumulative error $|\sum_i x_i|$.
+\end{definition}
+
+The score is a measurable function of $(p,X_{t},\dots,X_{t+b})$. To keep the notation of the blocking lemma clean we absorb the left endpoint into the block and write $S_H(p)=\psi(p,X_H)$ for a measurable $\psi$, where $X_H:=(X_t,X_{t+1},\dots,X_{t+b})$; the gap condition $t'\ge t+2b$ then leaves $b-1\ge0$ periods strictly between $X_H$ and $X_{H'}$, and the coefficient that appears in the proofs is $\beta(b)$ rather than $\beta(b+1)$. Nothing else changes.
+
+The \emph{calibration record} is the segment $X_{N_0+b+1:N_0+b+N}$ of length $N$ that follows the fitting sample and a gap of $b$ periods. Within it, place blocks
+\[
+H_j:=\{N_0+b+(j-1)2b+1,\dots,N_0+b+(j-1)2b+b\},\qquad j=1,\dots,n,\qquad n:=\lfloor N/(2b)\rfloor .
+\]
+Consecutive calibration blocks are separated by exactly $b$ periods, the first is separated from $\Dfit$ by $b$ periods, and the last is followed by at least $b$ unused periods inside the record. The \emph{deployment block} $H_0$ is the block of $b$ periods that begins immediately after the record, so it is separated from $H_n$ by at least $b$ periods. Figure~\ref{fig:blocks} shows the layout.
+
+\figplan{Timeline of the fitting sample $\Dfit$, the gap of $b$, the $n$ calibration blocks $H_1,\dots,H_n$ alternating with gaps of length $b$, the trailing gap, and the deployment block $H_0$; below it the scores $S_1,\dots,S_n$ and $S_0$, and the order statistic $\hat q=S_{(k)}$ marked on a rug plot of the calibration scores.}{Blocking layout. The record of $N$ periods after the fitting sample holds $n=\lfloor N/(2b)\rfloor$ blocks of length $b$ separated by gaps of length $b$; the trailing gap separates the last calibration block from the deployment block. Every pair of blocks, the fitting sample included, is separated by at least $b$ periods, which is what Assumption~\ref{ass:mix} requires and what the coupling of Lemma~\ref{lem:blocks} uses. Half the record is spent on gaps; Chapter~\ref{ch4-sharpness-blocking} shows this is the right price.\label{fig:blocks}}
+
+The \emph{calibration scores} are $S_j:=S_{H_j}(\pi)$, $j=1,\dots,n$, and the \emph{deployment score} is $S_0:=S_{H_0}(\pi)$. Set
+\[
+k:=\lceil(1-\alpha)(n+1)\rceil,\qquad \hat q:=S_{(k)},
+\]
+the $k$-th smallest calibration score, with the convention $\hat q=+\infty$ if $k>n$, that is, if $n<(1-\alpha)/\alpha$. The certificate is the half-line $(-\infty,\hat q]$ and the claim is that $S_0$ lies in it.
+
+\subsection{The $\beta$-mixing coefficient}
+
+\begin{definition}[$\beta$-mixing coefficient]\label{def:beta}
+For random elements $Y,Z$ of Polish spaces on a common probability space, with joint law $\mu_{YZ}$ and marginals $\mu_Y,\mu_Z$,
+\[
+\beta(Y,Z):=\dTV\big(\mu_{YZ},\,\mu_Y\otimes\mu_Z\big)=\sup_{C}\big|\Prob\big((Y,Z)\in C\big)-\mu_Y\otimes\mu_Z(C)\big| ,
+\]
+the supremum over measurable subsets of the product. For a process $(X_t)_{t\ge1}$ and $k\in\N$,
+\[
+\beta(k):=\sup_{t\ge1}\ \beta\big(X_{1:t},\,X_{t+k:\infty}\big).
+\]
+\end{definition}
+
+The supremum over time origins $t$ is the non-stationary definition: it does not assume that the law of the process is shift-invariant, only that its dependence across a gap of $k$ periods is uniformly small. Since $\sigma(X_{t+k+1:\infty})\subset\sigma(X_{t+k:\infty})$, the map $k\mapsto\beta(k)$ is non-increasing. If $Y'$ is a measurable function of $Y$ and $Z'$ of $Z$ then $\beta(Y',Z')\le\beta(Y,Z)$, because the supremum is over a smaller family of events. In particular the hedging-error process $(e_t(p))_t$ of any fixed policy $p$ has $\beta$-coefficients bounded by those of $X$.
+
+Two equivalent forms of the coefficient are used. The first is the definition. The second expresses $\beta$ as the expected total-variation distance between the conditional law of $Z$ given $Y$ and the marginal law of $Z$; it is this form that makes conditional statements possible in Theorem~\ref{thm:cov}(ii).
+
+\begin{lemma}[Disintegration of the $\beta$-coefficient]\label{lem:disint}
+Let $Y,Z$ be as in Definition~\ref{def:beta} and let $\kappa(y,\cdot)$ be a regular conditional distribution of $Z$ given $Y=y$. Then
+\[
+\beta(Y,Z)=\int \dTV\big(\kappa(y,\cdot),\,\mu_Z\big)\,\mu_Y(dy)=\E\Big[\sup_{B}\big|\Prob(Z\in B\mid Y)-\Prob(Z\in B)\big|\Big].
+\]
+\end{lemma}
+
+\begin{proof}
+For any measurable $C$ in the product, with sections $C_y:=\{z:(y,z)\in C\}$,
+\[
+\Prob\big((Y,Z)\in C\big)-\mu_Y\otimes\mu_Z(C)=\int\big[\kappa(y,C_y)-\mu_Z(C_y)\big]\mu_Y(dy)\le\int\dTV\big(\kappa(y,\cdot),\mu_Z\big)\mu_Y(dy),
+\]
+so $\beta(Y,Z)$ is at most the integral. For the reverse inequality let $\lambda(y,\cdot):=\kappa(y,\cdot)+\mu_Z$, and let $f(y,z)$ and $g(y,z)$ be versions of the densities $d\kappa(y,\cdot)/d\lambda(y,\cdot)$ and $d\mu_Z/d\lambda(y,\cdot)$ that are jointly measurable in $(y,z)$; joint measurability is available because $\kappa$ is a kernel between Polish spaces and the densities can be taken as limits of ratios over a countable generating algebra. Put $C:=\{(y,z):f(y,z)>g(y,z)\}$. Then $\kappa(y,C_y)-\mu_Z(C_y)=\int_{C_y}(f-g)\,d\lambda(y,\cdot)=\dTV(\kappa(y,\cdot),\mu_Z)$ for every $y$, and integrating gives equality in the display. The second expression is the same integral written with conditional probabilities.
+\end{proof}
+
+\begin{remark}[Total variation and Kolmogorov distance]
+For laws $P,Q$ on $\R$ with distribution functions $F_P,F_Q$, the Kolmogorov distance is $\dK(P,Q):=\sup_x|F_P(x)-F_Q(x)|$. Since each half-line $(-\infty,x]$ is an event, $\dK(P,Q)\le\dTV(P,Q)$. The certificate evaluates the deployment law only on half-lines, and this is why the drift penalty in Theorem~\ref{thm:cov} is $\dK$ and not $\dTV$: two laws can be far apart in total variation and yet have identical distribution functions at every threshold the procedure could produce. The inequality can be strict by any amount; a law and its rearrangement within each of many small cells have $\dTV$ near $1$ and $\dK$ near $0$.
+\end{remark}
+
+\subsection{The assumption}
+
+\begin{assumption}[Mixing and separation]\label{ass:mix}
+The per-period hedging-error process of the fixed policy $\pi$ is $\beta$-mixing with coefficients $\beta(k)$ (non-stationary definition: supremum over time origins) and stationary on the calibration window. The fitting sample $\Dfit$, the $n$ calibration blocks of length $b$, and the deployment block are pairwise separated by gaps of length at least $b$.
+\end{assumption}
+
+\paragraph{Reading of the assumption.} The coefficients $\beta(k)$ are those of Definition~\ref{def:beta} for the process $(X_t)$ that generates both the fitting sample and the hedging errors; for a fixed policy the hedging-error process inherits them, as noted after Definition~\ref{def:beta}. This reading is needed because the proof couples $\Dfit$ itself with the later blocks, and a coefficient defined for the hedging errors alone, with $\pi$ already frozen, says nothing about the dependence between $\Dfit$ and the calibration record. Stationarity on the calibration window means that the blocks $X_{H_1},\dots,X_{H_n}$ have a common law; no stationarity is assumed for the fitting sample or the deployment block, and the deployment block may have a different law, which is what the drift term measures. The separation condition is exactly the layout of Figure~\ref{fig:blocks}. Without the deployment gap the score $S_0$ could be an arbitrary function of $S_n$, and no statement about $S_0$ follows from any statement about $S_{1:n}$; the gap is what makes $S_0$ nearly independent of the threshold.
+
+\paragraph{Fixed-policy laws.} For a fixed policy value $p\in\Pi$ define
+\[
+P_p:=\mathcal L\big(\psi(p,X_{H_1})\big),\qquad Q_p:=\mathcal L\big(\psi(p,X_{H_0})\big),
+\]
+the laws the calibration and deployment scores would have if the policy were frozen at $p$ and the blocks drawn from their own marginal laws. Under Assumption~\ref{ass:mix}, $P_p$ is also the law of $\psi(p,X_{H_j})$ for every $j\le n$. We write $P:=P_\pi$ and $Q:=Q_\pi$; these are random measures through $\pi=\pi(\Dfit)$ and are fixed once $\Dfit$ is fixed. They are precisely the conditional laws of the coupled copies constructed in the proof of Theorem~\ref{thm:cov}. The actual conditional law of $S_j$ given $\Dfit$ differs from $P_\pi$ because $X_{H_j}$ is not independent of $\Dfit$; that difference is what the coupling term pays for. In Theorem~\ref{thm:cov}(i), where nothing is conditioned on, $\dK(P,Q)$ stands for $\E[\dK(P_\pi,Q_\pi)]$; if $\dK(P_p,Q_p)\le\varepsilon$ for every $p$ then it is simply $\varepsilon$.
+
+\section{The certificate}\label{sec:cert-theorem}
+
+Let $b_{n,k}(\delta):=\Beta^{-1}(\delta;\,k,\,n+1-k)$ denote the $\delta$-quantile of the $\Beta(k,n+1-k)$ law.
+
+\begin{theorem}[Coverage under mixing and drift]\label{thm:cov}
+Under Assumption~\ref{ass:mix}, with calibration scores $S_1,\dots,S_n\sim P$ marginally and deployment score $S_0\sim Q$:
+\begin{enumerate}[nosep,label=(\roman*)]
+\item (Marginal.) $\displaystyle \Prob(S_0\le\hat q)\;\ge\;1-\alpha-\dK(P,Q)-(n+1)\beta(b).$
+\item (Conditional.) For any $\delta,\delta'\in(0,1)$, with probability at least $1-\delta-n\beta(b)$ over $(\Dfit,S_{1:n})$,
+\[
+\Prob\big(S_0\le\hat q\;\big|\;\Dfit,S_{1:n}\big)\;\ge\;b_{n,k}(\delta)-\dK(P,Q)-\beta(b)/\delta',
+\]
+the last term holding on an event of probability at least $1-\delta'$. Moreover $b_{n,k}(\delta)\ge1-\alpha-\sqrt{\log(1/\delta)/(2n)}$, and $b_{n,k}(\delta)\approx1-\alpha-\sqrt{2\alpha(1-\alpha)\log(1/\delta)/n}$, which is about $2.3$ times tighter than the DKW form at $\alpha=0.05$.
+\end{enumerate}
+No assumption is made that the model underlying $\pi$ is correct.
+\end{theorem}
+
+\begin{route}
+(i) Sequential Berbee coupling replaces the $n+1$ separated blocks and $\Dfit$ by independent copies $S^*_{0:n}$ on an event of probability $\ge1-(n+1)\beta(b)$. (ii) On that event, conditional on $\pi$, the calibration copies are i.i.d.\ $P$ and $F_P(\hat q^*)\sim\Beta(k,n+1-k)$, so $\Prob(S^*_0\le\hat q^*)\ge1-\alpha$ if $S^*_0\sim P$. (iii) For $S^*_0\sim Q$ and the fixed half-line $(-\infty,\hat q^*]$, $|Q(S\le\hat q^*)-P(S\le\hat q^*)|\le\dK(P,Q)$. Sum. For the conditional form, couple only $\Dfit$ and the calibration blocks, and control the deployment block through the conditional form of the $\beta$-coefficient and Markov's inequality.
+\end{route}
+
+The three steps are carried out in Sections~\ref{sec:step1}--\ref{sec:step3}; the two forms are assembled in Section~\ref{sec:assemble}. Each borrowed result is stated in full before it is used.
+
+\subsection{Step 1: sequential Berbee coupling}\label{sec:step1}
+
+\begin{lemma}[Berbee's coupling lemma]\label{lem:berbee}
+Let $Y,Z$ be random elements of Polish spaces on a probability space that also carries a random variable $U$ uniform on $(0,1)$ and independent of $(Y,Z)$. There exists a random element $Z^*$, measurable with respect to $\sigma(Y,Z,U)$, such that $Z^*$ has the same law as $Z$, $Z^*$ is independent of $Y$, and
+\[
+\Prob(Z^*\ne Z)=\beta(Y,Z).
+\]
+\end{lemma}
+
+The lemma is due to \cite{berbee1979}; a textbook treatment is \cite{doukhan1994}. It is restated in Chapter~\ref{ch:prelim} and appears again, with the measure-theoretic details of the measurable selection, in Appendix~\ref{appB-proofs-standard}. The proof is given here in the form needed, because the whole certificate rests on it.
+
+\begin{proof}
+Let $\kappa(y,\cdot)$ be a regular conditional distribution of $Z$ given $Y=y$, let $\lambda(y,\cdot):=\kappa(y,\cdot)+\mu_Z$, and let $f(y,z)$, $g(y,z)$ be jointly measurable versions of the densities of $\kappa(y,\cdot)$ and $\mu_Z$ with respect to $\lambda(y,\cdot)$, as in the proof of Lemma~\ref{lem:disint}. Put $\tau(y):=\dTV(\kappa(y,\cdot),\mu_Z)=\int(g-f)_+\,d\lambda(y,\cdot)=1-\int\min(f,g)\,d\lambda(y,\cdot)$. For $y$ with $\tau(y)>0$ define the residual law $\rho(y,\cdot)$ with density $(g-f)_+/\tau(y)$ with respect to $\lambda(y,\cdot)$; it is a probability kernel in $y$. Since the state space of $Z$ is Polish, there is a measurable map $\Gamma(y,u)$ such that $\Gamma(y,U')\sim\rho(y,\cdot)$ for $U'$ uniform on $(0,1)$: compose a Borel isomorphism of the space with a Borel subset of $[0,1]$ with the quantile transform of the image law, both measurable in $y$.
+
+Split the single uniform $U$ into two independent uniforms $U',U''$ by taking alternate binary digits, and define
+\[
+Z^*:=\begin{cases}Z,& U''\le\min\big(f(Y,Z),g(Y,Z)\big)/f(Y,Z),\\ \Gamma(Y,U'),&\text{otherwise},\end{cases}
+\]
+with the convention that the first branch is taken when $f(Y,Z)=0$, a $\Prob$-null event. Then $Z^*$ is $\sigma(Y,Z,U)$-measurable.
+
+\emph{Law of $Z^*$ given $Y$.} Condition on $Y=y$. The first branch is taken with conditional probability $\int\big(\min(f,g)/f\big)f\,d\lambda=\int\min(f,g)\,d\lambda=1-\tau(y)$, and on that branch $Z^*=Z$ has the sub-probability law with density $\min(f,g)$. The second branch has conditional probability $\tau(y)$ and delivers a draw from $\rho(y,\cdot)$, contributing density $\tau(y)\cdot(g-f)_+/\tau(y)=(g-f)_+$. The sum $\min(f,g)+(g-f)_+=g$ is the density of $\mu_Z$. Hence the conditional law of $Z^*$ given $Y=y$ is $\mu_Z$ for every $y$; so $Z^*\sim\mu_Z$ and $Z^*$ is independent of $Y$.
+
+\emph{Failure probability.} Given $Y=y$, $\{Z^*\ne Z\}$ is contained in the second branch, so $\Prob(Z^*\ne Z\mid Y=y)\le\tau(y)$. Conversely, for any random element $Z'$ with conditional law $\mu_Z$ given $Y=y$, and any measurable $B$, $\Prob(Z'\ne Z\mid Y=y)\ge\Prob(Z\in B\mid Y=y)-\Prob(Z'\in B\mid Y=y)=\kappa(y,B)-\mu_Z(B)$, and taking the supremum over $B$ gives $\ge\tau(y)$. Hence $\Prob(Z^*\ne Z\mid Y=y)=\tau(y)$, and integrating against $\mu_Y$ with Lemma~\ref{lem:disint} gives $\Prob(Z^*\ne Z)=\int\tau\,d\mu_Y=\beta(Y,Z)$.
+\end{proof}
+
+The value of the auxiliary variable is that the coupling can be built on an enlarged space without changing the joint law of $(Y,Z)$. The construction is the maximal coupling of $\kappa(y,\cdot)$ with $\mu_Z$, performed conditionally on $y$ and made measurable by the density representation; its failure probability is the conditional total-variation distance, and Lemma~\ref{lem:disint} is what identifies the average of that distance with $\beta(Y,Z)$.
+
+The blocking lemma applies Berbee's lemma once per block, in time order. The statement below is the coupling form of Lemma~4.1 of \cite{yu1994}, whose statement bounds $|\E h(\Xi)-\E h(\Xi^*)|$ by $\|h\|_\infty(m-1)\beta(b)$ for bounded measurable $h$; the coupling form implies it, since $|\E h(\Xi)-\E h(\Xi^*)|\le\|h\|_\infty\Prob(\Xi\ne\Xi^*)$.
+
+\begin{lemma}[Sequential coupling of separated blocks]\label{lem:blocks}
+Let $(X_t)$ have $\beta$-coefficients $\beta(\cdot)$, and let $G_1,\dots,G_m$ be index sets of the form $G_i=\{s_i,\dots,t_i\}$ with $t_i<s_{i+1}$, pairwise separated by at least $b$ indices in the sense that $s_{i+1}\ge t_i+b+1$. Write $\xi_i:=X_{G_i}$. On a probability space enlarged by independent uniforms $U_2,\dots,U_m$ independent of $X$, there exist random elements $\xi^*_1,\dots,\xi^*_m$ such that
+\begin{enumerate}[nosep,label=(\alph*)]
+\item $\xi^*_1=\xi_1$ and $\xi^*_i$ has the law of $\xi_i$ for every $i$;
+\item $\xi^*_1,\dots,\xi^*_m$ are mutually independent;
+\item $\Prob\big(\exists\,i:\xi^*_i\ne\xi_i\big)\le(m-1)\beta(b)$.
+\end{enumerate}
+Consequently $\dTV\big(\mathcal L(\xi_1,\dots,\xi_m),\bigotimes_i\mathcal L(\xi_i)\big)\le(m-1)\beta(b)$.
+\end{lemma}
+
+\begin{proof}
+Set $\xi^*_1:=\xi_1$. For $i=2,\dots,m$ apply Lemma~\ref{lem:berbee} with
+\[
+Y:=(\xi_1,\dots,\xi_{i-1},U_2,\dots,U_{i-1}),\qquad Z:=\xi_i,\qquad U:=U_i .
+\]
+The variable $U_i$ is uniform and independent of $(Y,Z)$ because the uniforms are independent of each other and of $X$. The lemma returns $\xi^*_i$ with the law of $\xi_i$, independent of $Y$, and with $\Prob(\xi^*_i\ne\xi_i)=\beta(Y,Z)$.
+
+We bound $\beta(Y,Z)$. Write $Y=(A,V)$ with $A:=(\xi_1,\dots,\xi_{i-1})$ and $V:=(U_2,\dots,U_{i-1})$, where $V$ is independent of $(A,Z)$. The joint law of $((A,V),Z)$ is $\mu_{AZ}\otimes\mu_V$ up to the order of coordinates and the product of marginals is $\mu_A\otimes\mu_V\otimes\mu_Z$; total variation is unchanged by tensoring both measures with a common factor, so $\beta(Y,Z)=\beta(A,Z)$. Next, $A$ is a measurable function of $X_{1:t_{i-1}}$ and $Z$ of $X_{s_i:\infty}$ with $s_i\ge t_{i-1}+b+1$, so by monotonicity of the coefficient under measurable maps and in the gap,
+\[
+\beta(A,Z)\le\beta\big(X_{1:t_{i-1}},X_{t_{i-1}+b+1:\infty}\big)\le\beta(b+1)\le\beta(b).
+\]
+Hence $\Prob(\xi^*_i\ne\xi_i)\le\beta(b)$ for each $i\ge2$, and a union bound gives (c).
+
+For (b): each $\xi^*_j$ with $j<i$ is measurable with respect to $\sigma(\xi_{1:j},U_{2:j})\subset\sigma(Y)$, so $\xi^*_i$ is independent of $(\xi^*_1,\dots,\xi^*_{i-1})$. Independence of each new element from all its predecessors gives the factorisation $\mathcal L(\xi^*_1,\dots,\xi^*_m)=\bigotimes_i\mathcal L(\xi^*_i)$ by induction on $i$, which is (b). Statement (a) is by construction. The total-variation consequence follows from $\dTV(\mathcal L(\Xi),\mathcal L(\Xi^*))\le\Prob(\Xi\ne\Xi^*)$ for any two random elements on the same space.
+\end{proof}
+
+The proof is written so that the first block is untouched. In the application the first block is the fitting sample, and this is what allows the policy to be carried through the coupling unchanged.
+
+\begin{corollary}[Coupled scores]\label{cor:coupled}
+Under Assumption~\ref{ass:mix}, apply Lemma~\ref{lem:blocks} to the $m=n+2$ blocks $\Dfit,X_{H_1},\dots,X_{H_n},X_{H_0}$, in this time order, and define
+\[
+S^*_j:=\psi\big(\pi(\Dfit),\,X^*_{H_j}\big),\quad j=0,1,\dots,n,\qquad \hat q^*:=S^*_{(k)} .
+\]
+Then on the event $E:=\{X^*_{H_j}=X_{H_j}\ \text{for all } j=0,\dots,n\}$, which has $\Prob(E)\ge1-(n+1)\beta(b)$, one has $S^*_j=S_j$ for all $j$ and $\hat q^*=\hat q$. Moreover, conditionally on $\Dfit$, the variables $S^*_1,\dots,S^*_n$ are i.i.d.\ with law $P_\pi$, $S^*_0$ has law $Q_\pi$, and $S^*_0$ is independent of $(S^*_1,\dots,S^*_n)$.
+\end{corollary}
+
+\begin{proof}
+The first block is $\Dfit$ and is unchanged, so $\pi(\Dfit)$ is the same on both sides. The coupled blocks $X^*_{H_j}$ are mutually independent and independent of $\Dfit$, each with the law of $X_{H_j}$. Conditionally on $\Dfit$, therefore, $S^*_j=\psi(\pi,X^*_{H_j})$ is the image of an independent draw from the marginal law of $X_{H_j}$ under the map $\psi(\pi,\cdot)$ with $\pi$ frozen: its conditional law is $P_\pi$ for $j\le n$ (all $X_{H_j}$, $j\le n$, share one law by stationarity on the calibration window) and $Q_\pi$ for $j=0$, and the conditional independence follows from the independence of the blocks. The bound on $\Prob(E)$ is Lemma~\ref{lem:blocks}(c) with $m-1=n+1$.
+\end{proof}
+
+This is the point at which policy-dependence ceases to matter. Conditionally on $\Dfit$ the policy is a constant, and the coupled calibration scores are an i.i.d.\ sample from a fixed law. Every subsequent step is the exchangeable argument with $\pi$ read as a constant, and the only price paid for having fitted $\pi$ on data is the single extra term $\beta(b)$ for coupling $\Dfit$ with the block that follows it.
+
+\subsection{Step 2: exact conformal coverage on the coupled sample}\label{sec:step2}
+
+\begin{lemma}[Beta law of conformal coverage]\label{lem:beta}
+Let $T_1,\dots,T_n$ be i.i.d.\ with distribution function $F$, let $1\le k\le n$, and let $T_{(k)}$ be the $k$-th order statistic. Then $F(T_{(k)})$ stochastically dominates the $\Beta(k,n+1-k)$ law:
+\[
+\Prob\big(F(T_{(k)})\le u\big)\le\Prob\big(\Beta(k,n+1-k)\le u\big)=\sum_{j=k}^n\binom nj u^j(1-u)^{n-j},\qquad u\in[0,1],
+\]
+with equality for every $u$ when $F$ is continuous. In particular $\E\,F(T_{(k)})\ge k/(n+1)$, with equality when $F$ is continuous.
+\end{lemma}
+
+The lemma is classical; its use for conformal prediction is due to \cite{vovk2012}. The proof is included because the conditional form of the certificate rests on it.
+
+\begin{proof}
+Let $V_1,\dots,V_n$ be i.i.d.\ uniform on $(0,1)$ and independent of the $T_i$, and define the randomised probability integral transforms
+\[
+U_i:=F(T_i^-)+V_i\big(F(T_i)-F(T_i^-)\big),\qquad F(t^-):=\lim_{s\uparrow t}F(s).
+\]
+Each $U_i$ is uniform on $(0,1)$: for $u\in(0,1)$ let $t_u:=\inf\{t:F(t)\ge u\}$; then $\{U_i\le u\}$ is, up to a null set, the disjoint union of $\{T_i<t_u\}$, of probability $F(t_u^-)$, and $\{T_i=t_u,\ V_i\le(u-F(t_u^-))/(F(t_u)-F(t_u^-))\}$, of probability $u-F(t_u^-)$, so $\Prob(U_i\le u)=u$. The $U_i$ are independent because the pairs $(T_i,V_i)$ are. Moreover $U_i\le F(T_i)$ always, and $U_i$ is non-decreasing in $T_i$ in the sense that $T_i<T_j$ implies $U_i\le F(T_i)\le F(T_j^-)\le U_j$.
+
+At least $k$ indices $i$ satisfy $T_i\le T_{(k)}$, and for each of them $U_i\le F(T_i)\le F(T_{(k)})$; hence at least $k$ of the $U_i$ are at most $F(T_{(k)})$, which says $U_{(k)}\le F(T_{(k)})$. Therefore $\Prob(F(T_{(k)})\le u)\le\Prob(U_{(k)}\le u)$.
+
+The law of $U_{(k)}$: the event $\{U_{(k)}\le u\}$ is the event that at least $k$ of $n$ independent uniforms fall in $[0,u]$, a binomial event of probability $\sum_{j\ge k}\binom nju^j(1-u)^{n-j}$. Differentiating in $u$,
+\[
+\frac{d}{du}\sum_{j=k}^n\binom nj u^j(1-u)^{n-j}=\sum_{j=k}^n\binom nj\big[ju^{j-1}(1-u)^{n-j}-(n-j)u^j(1-u)^{n-j-1}\big] ,
+\]
+and since $\binom nj j=\binom{n}{j-1}(n-j+1)$ the term with index $j$ in the first sum cancels the term with index $j-1$ in the second; only the first term of the first sum survives, giving the density
+\[
+\binom nk k\,u^{k-1}(1-u)^{n-k}=\frac{n!}{(k-1)!\,(n-k)!}\,u^{k-1}(1-u)^{n-k},
+\]
+which is the $\Beta(k,n+1-k)$ density. When $F$ is continuous, $F(T_i^-)=F(T_i)$, so $U_i=F(T_i)$ and $F(T_{(k)})=U_{(k)}$ exactly, since $F$ is non-decreasing and the $F(T_i)$ are almost surely distinct. The mean of $\Beta(k,n+1-k)$ is $k/(n+1)$; stochastic domination gives $\E F(T_{(k)})\ge\E U_{(k)}=k/(n+1)$.
+\end{proof}
+
+\begin{corollary}[Coverage on the coupled sample]\label{cor:exact}
+In the setting of Corollary~\ref{cor:coupled}, conditionally on $\Dfit$:
+\begin{enumerate}[nosep,label=(\alph*)]
+\item $F_{P}(\hat q^*)$ stochastically dominates $\Beta(k,n+1-k)$, with equality in law when $F_P$ is continuous; hence $\Prob\big(F_P(\hat q^*)<b_{n,k}(\delta)\mid\Dfit\big)\le\delta$;
+\item $\E\big[F_{P}(\hat q^*)\mid\Dfit\big]\ge k/(n+1)\ge1-\alpha$.
+\end{enumerate}
+\end{corollary}
+
+\begin{proof}
+Given $\Dfit$, the $S^*_j$, $j\le n$, are i.i.d.\ with distribution function $F_P$, $P=P_\pi$, so Lemma~\ref{lem:beta} applies with $T_j=S^*_j$. For (a), if $\Prob(F_P(\hat q^*)<u\mid\Dfit)>\delta$ for some $u\le b_{n,k}(\delta)$ then $\Prob(\Beta(k,n+1-k)<u)>\delta$, contradicting the definition of the $\delta$-quantile. For (b), $k=\lceil(1-\alpha)(n+1)\rceil\ge(1-\alpha)(n+1)$.
+\end{proof}
+
+\begin{remark}[Why $k/(n+1)$ and not $k/n$]
+The threshold is the $k$-th of $n$ scores but the guarantee is $k/(n+1)$. The extra one in the denominator is the deployment score itself: among the $n+1$ exchangeable values $S^*_0,S^*_1,\dots,S^*_n$, the event $S^*_0>S^*_{(k)}$ is the event that $S^*_0$ ranks above at least $k$ of the others, which by exchangeability has probability at most $(n+1-k)/(n+1)$. The Beta law is the refinement of this counting argument that carries the whole conditional distribution.
+\end{remark}
+
+\paragraph{The DKW form as a corollary.} The bound $b_{n,k}(\delta)\ge1-\alpha-\sqrt{\log(1/\delta)/(2n)}$ in Theorem~\ref{thm:cov}(ii) is the one-sided Dvoretzky--Kiefer--Wolfowitz inequality \cite{dkw1956} with the constant of \cite{massart1990}, evaluated at the single point $\hat q^*$. It follows from the Beta law and Hoeffding's inequality without any uniform empirical-process bound, which is the sense in which DKW is a corollary here rather than the tool.
+
+\begin{lemma}[Hoeffding's inequality for a binomial proportion]\label{lem:hoeffding}
+Let $B_1,\dots,B_n$ be i.i.d.\ Bernoulli with mean $u$ and let $\bar B:=n^{-1}\sum_iB_i$. For every $t>0$, $\Prob(\bar B-u\ge t)\le e^{-2nt^2}$.
+\end{lemma}
+
+\begin{proof}[Proof \textup{(\cite{hoeffding1963})}]
+For $\lambda\ge0$ let $\Lambda(\lambda):=\log\E e^{\lambda(B_1-u)}=\log(1-u+ue^\lambda)-\lambda u$. Then $\Lambda(0)=0$, $\Lambda'(0)=0$ and
+\[
+\Lambda''(\lambda)=\frac{ue^\lambda(1-u)}{(1-u+ue^\lambda)^2}=\theta(1-\theta)\le\tfrac14,\qquad\theta:=\frac{ue^\lambda}{1-u+ue^\lambda}\in(0,1),
+\]
+so $\Lambda(\lambda)\le\lambda^2/8$ by Taylor's theorem. By Markov's inequality and independence,
+\[
+\Prob(\bar B-u\ge t)\le e^{-\lambda nt}\,\E e^{\lambda\sum_i(B_i-u)}=e^{-\lambda nt+n\Lambda(\lambda)}\le e^{-\lambda nt+n\lambda^2/8},
+\]
+and the choice $\lambda=4t$ gives $e^{-2nt^2}$.
+\end{proof}
+
+\begin{corollary}[Explicit lower bound on the Beta quantile]\label{cor:dkw}
+For $k=\lceil(1-\alpha)(n+1)\rceil\le n$ and $\delta\in(0,1)$,
+\[
+b_{n,k}(\delta)\;\ge\;1-\alpha-\sqrt{\frac{\log(1/\delta)}{2n}} .
+\]
+\end{corollary}
+
+\begin{proof}
+Put $t:=\sqrt{\log(1/\delta)/(2n)}$ and $u:=1-\alpha-t$; if $u\le0$ there is nothing to prove. Otherwise, by Lemma~\ref{lem:beta}, $\Prob(\Beta(k,n+1-k)\le u)$ is the probability that a $\mathrm{Bin}(n,u)$ variable is at least $k$, that is $\Prob(\bar B\ge k/n)$ with $\bar B$ a proportion of $n$ Bernoulli$(u)$ trials. Since $k/n\ge(1-\alpha)(n+1)/n>1-\alpha=u+t$, Lemma~\ref{lem:hoeffding} gives $\Prob(\bar B\ge k/n)\le\Prob(\bar B-u\ge t)\le e^{-2nt^2}=\delta$. Hence the $\delta$-quantile of $\Beta(k,n+1-k)$ is at least $u$.
+\end{proof}
+
+\paragraph{The normal approximation.} The $\Beta(k,n+1-k)$ law has mean $k/(n+1)$ and variance $k(n+1-k)/\big((n+1)^2(n+2)\big)$, which for $k\approx(1-\alpha)(n+1)$ is approximately $\alpha(1-\alpha)/n$. Replacing the Beta law by a normal law with these moments and the normal $\delta$-quantile $z_\delta$ by the tail approximation $-\sqrt{2\log(1/\delta)}$ gives $b_{n,k}(\delta)\approx1-\alpha-\sqrt{2\alpha(1-\alpha)\log(1/\delta)/n}$. The ratio of the DKW-form deficit to this one is $\sqrt{1/2}\big/\sqrt{2\alpha(1-\alpha)}=1/\big(2\sqrt{\alpha(1-\alpha)}\big)$, which equals $2.29$ at $\alpha=0.05$ and $1.67$ at $\alpha=0.10$. The approximation is a large-$n$ statement about a skewed law and is not used in any proof; the certificate always uses the exact quantile $b_{n,k}(\delta)$, which is computed from the binomial sum. Section~\ref{sec:cert-example} shows that at $n=25$ the approximation is poor while the exact quantile is available at no cost.
+
+\figplan{Density of $\Beta(k,n+1-k)$ for $n=25,k=24$ and for $n=100,k=91$, with the exact $5\%$ quantile $b_{n,k}(0.05)$, the DKW-form bound $1-\alpha-\sqrt{\log 20/(2n)}$ and the normal approximation marked as vertical lines on each panel.}{The conditional coverage $F_P(\hat q^*)$ of the split-conformal threshold on an i.i.d.\ sample has the $\Beta(k,n+1-k)$ law (Lemma~\ref{lem:beta}). The DKW-form bound sits far to the left of the exact quantile at both sample sizes; the normal approximation is close at $n=100$ and poor at $n=25$. The figure requires no data.\label{fig:beta}}
+
+\subsection{Step 3: the drift term on a fixed half-line}\label{sec:step3}
+
+\begin{lemma}[Half-line comparison]\label{lem:halfline}
+Let $P,Q$ be laws on $\R$ and $x\in\R$. Then $F_Q(x)\ge F_P(x)-\dK(P,Q)$.
+\end{lemma}
+
+\begin{proof}
+$F_P(x)-F_Q(x)\le\sup_y|F_P(y)-F_Q(y)|=\dK(P,Q)$.
+\end{proof}
+
+The content of the step is not the inequality but the fact that it can be applied. Before coupling, the threshold $\hat q$ and the deployment score $S_0$ are dependent, and $\Prob(S_0\le\hat q)$ is not the deployment law evaluated at a fixed point. After coupling, $S^*_0$ is independent of $(\Dfit,S^*_{1:n})$ and hence of $\hat q^*$, so
+\[
+\Prob\big(S^*_0\le\hat q^*\;\big|\;\Dfit,S^*_{1:n}\big)=F_{Q}(\hat q^*),
+\]
+the distribution function of $Q=Q_\pi$ evaluated at the number $\hat q^*$. Lemma~\ref{lem:halfline} at $x=\hat q^*$ then compares it with $F_P(\hat q^*)$, which Step~2 controls. Since only half-lines $(-\infty,x]$ are ever evaluated, the penalty is $\dK$; a total-variation penalty would be correct but larger, and Chapter~\ref{ch4-sharpness-blocking} shows that the constant $1$ on $\dK$ cannot be improved.
+
+\subsection{Assembly of the two forms}\label{sec:assemble}
+
+\begin{proof}[Proof of Theorem~\ref{thm:cov}]
+\emph{Part (i).} Let $E$ be the coupling event of Corollary~\ref{cor:coupled}, $\Prob(E)\ge1-(n+1)\beta(b)$. On $E$, $S_0=S^*_0$ and $\hat q=\hat q^*$, so
+\[
+\Prob(S_0\le\hat q)\ge\Prob\big(\{S^*_0\le\hat q^*\}\cap E\big)\ge\Prob(S^*_0\le\hat q^*)-\Prob(E^c)\ge\Prob(S^*_0\le\hat q^*)-(n+1)\beta(b).
+\]
+Condition on $\Dfit$ and then on $S^*_{1:n}$. By the independence in Corollary~\ref{cor:coupled} and Lemma~\ref{lem:halfline},
+\[
+\Prob\big(S^*_0\le\hat q^*\mid\Dfit,S^*_{1:n}\big)=F_{Q_\pi}(\hat q^*)\ge F_{P_\pi}(\hat q^*)-\dK(P_\pi,Q_\pi).
+\]
+Taking the conditional expectation given $\Dfit$ and using Corollary~\ref{cor:exact}(b),
+\[
+\Prob\big(S^*_0\le\hat q^*\mid\Dfit\big)\ge\E\big[F_{P_\pi}(\hat q^*)\mid\Dfit\big]-\dK(P_\pi,Q_\pi)\ge1-\alpha-\dK(P_\pi,Q_\pi).
+\]
+Taking the expectation over $\Dfit$ and combining with the first display gives (i), with $\dK(P,Q)$ read as $\E[\dK(P_\pi,Q_\pi)]$ in accordance with the convention of Section~\ref{sec:cert-scores}.
+
+\emph{Part (ii): the calibration side.} Apply Lemma~\ref{lem:blocks} to the $m=n+1$ blocks $\Dfit,X_{H_1},\dots,X_{H_n}$ only, leaving the deployment block uncoupled, and let $E_n$ be the event that all $n$ calibration blocks are coupled, $\Prob(E_n)\ge1-n\beta(b)$. On $E_n$, $S_{1:n}=S^*_{1:n}$ and $\hat q=\hat q^*$. Let $A$ be the event $\{F_{P_\pi}(\hat q^*)\ge b_{n,k}(\delta)\}$; by Corollary~\ref{cor:exact}(a), $\Prob(A^c\mid\Dfit)\le\delta$, so $\Prob(A^c)\le\delta$. On the event $E_n\cap A$, which has probability at least $1-\delta-n\beta(b)$,
+\begin{equation}\label{eq:calside}
+F_{P_\pi}(\hat q)=F_{P_\pi}(\hat q^*)\ge b_{n,k}(\delta).
+\end{equation}
+The event $E_n\cap A$ is determined by $(\Dfit,S_{1:n})$ and the auxiliary uniforms, which is the sense of ``with probability at least $1-\delta-n\beta(b)$ over $(\Dfit,S_{1:n})$''.
+
+\emph{Part (ii): the deployment side.} Let $t$ be the last index of $H_n$, let $\mathcal G:=\sigma(\Dfit,S_{1:n})\subset\sigma(X_{1:t})$, and let $\kappa(X_{1:t},\cdot)$ be a regular conditional distribution of $X_{H_0}$ given $X_{1:t}$; write $\mu_0$ for the marginal law of $X_{H_0}$. Both $\pi$ and $\hat q$ are $\sigma(X_{1:t})$-measurable, and $S_0=\psi(\pi,X_{H_0})$, so by the freezing property of regular conditional distributions
+\[
+\Prob\big(S_0\le\hat q\mid X_{1:t}\big)=\kappa\big(X_{1:t},\,A_{\pi,\hat q}\big),\qquad A_{p,q}:=\{x:\psi(p,x)\le q\}.
+\]
+By definition of $Q_p$, $\mu_0(A_{p,q})=F_{Q_p}(q)$. Put $D:=\dTV\big(\kappa(X_{1:t},\cdot),\mu_0\big)$, a $\sigma(X_{1:t})$-measurable random variable. Then
+\[
+\Prob\big(S_0\le\hat q\mid X_{1:t}\big)\ge\mu_0(A_{\pi,\hat q})-D=F_{Q_\pi}(\hat q)-D ,
+\]
+and conditioning down to $\mathcal G$, since $F_{Q_\pi}(\hat q)$ is $\mathcal G$-measurable,
+\begin{equation}\label{eq:depside}
+\Prob\big(S_0\le\hat q\mid\mathcal G\big)\ge F_{Q_\pi}(\hat q)-\E[D\mid\mathcal G].
+\end{equation}
+By Lemma~\ref{lem:disint} and Definition~\ref{def:beta}, and because $H_0$ begins at least $b+1$ indices after $t$,
+\[
+\E D=\beta\big(X_{1:t},X_{H_0}\big)\le\beta\big(X_{1:t},X_{t+b+1:\infty}\big)\le\beta(b).
+\]
+The variable $\E[D\mid\mathcal G]$ is non-negative with mean $\E D\le\beta(b)$, so Markov's inequality gives
+\[
+\Prob\big(\E[D\mid\mathcal G]>\beta(b)/\delta'\big)\le\frac{\E D}{\beta(b)/\delta'}\le\delta' .
+\]
+On the complementary event $E'$, of probability at least $1-\delta'$, \eqref{eq:depside} becomes $\Prob(S_0\le\hat q\mid\mathcal G)\ge F_{Q_\pi}(\hat q)-\beta(b)/\delta'$.
+
+\emph{Part (ii): assembly.} By Lemma~\ref{lem:halfline}, $F_{Q_\pi}(\hat q)\ge F_{P_\pi}(\hat q)-\dK(P_\pi,Q_\pi)$ always. On $E_n\cap A$ insert \eqref{eq:calside}; on $E'$ insert the Markov bound. On $E_n\cap A\cap E'$,
+\[
+\Prob\big(S_0\le\hat q\mid\Dfit,S_{1:n}\big)\ge b_{n,k}(\delta)-\dK(P_\pi,Q_\pi)-\beta(b)/\delta',
+\]
+which is the conditional statement, with $\dK(P,Q)=\dK(P_\pi,Q_\pi)$ the fixed-policy distance, a function of $\Dfit$. The explicit lower bound on $b_{n,k}(\delta)$ is Corollary~\ref{cor:dkw}, and the approximation and the factor $2.3$ are the computation following it. The final sentence of the theorem holds because no step used any property of $\pi$ other than measurability.
+\end{proof}
+
+\begin{remark}[Why a joint total-variation bound does not give conditional statements]\label{rem:jointtv}
+Lemma~\ref{lem:blocks} gives a single event $E$ of probability at least $1-(n+1)\beta(b)$ on which all blocks, the deployment block included, are coupled. It is tempting to argue: on $E$, conditional coverage equals $F_Q(\hat q^*)$, so conditional coverage is at least $F_Q(\hat q^*)$ with probability $1-(n+1)\beta(b)$. The argument is wrong because the event $E$ is not $\mathcal G$-measurable: whether the deployment block has been coupled is not determined by $(\Dfit,S_{1:n})$. What one obtains is $\Prob(S_0\le\hat q\mid\mathcal G)\ge\Prob(S^*_0\le\hat q^*\mid\mathcal G)-\Prob(E^c\mid\mathcal G)$, and $\Prob(E^c\mid\mathcal G)$ is a random variable whose expectation is at most $(n+1)\beta(b)$ but which may equal $1$ on a set of $\mathcal G$ of probability $(n+1)\beta(b)$. Turning a bound on its mean into a bound holding with high probability is Markov's inequality, and it costs the factor $1/\delta'$. More generally, two joint laws at total-variation distance $\varepsilon$ can have conditional probabilities that differ by $1$ on a conditioning set of probability $\varepsilon$; total variation of joint laws controls averages of conditional discrepancies, never their level. The proof above avoids coupling the deployment block altogether and instead uses the defining property of $\beta$-mixing in the form of Lemma~\ref{lem:disint}: the coefficient is the \emph{expected} conditional total-variation discrepancy. This is why $\beta$-mixing, and not the weaker $\alpha$-mixing, is the right hypothesis: $\alpha$-mixing controls $\sup_{A,B}|\Prob(A\cap B)-\Prob(A)\Prob(B)|$, a bound on individual events, which does not disintegrate into a conditional statement. The marginal form (i) pays $\beta(b)$ once for the deployment block; the conditional form pays $\beta(b)/\delta'$ for the same block, and the difference is the price of a statement that holds for the particular threshold in hand rather than on average over thresholds.
+\end{remark}
+
+\begin{remark}[On the strength of the two forms]
+Form (i) is the statement a regulator reads: a single number bounding the probability of a breach. Form (ii) is the statement a risk manager needs: having computed this particular $\hat q$, how likely is a breach on the next block? Form (ii) is stronger in that it holds conditionally, and weaker in that it holds only on an event and with the quantile $b_{n,k}(\delta)$ in place of $1-\alpha$. Neither implies the other. The thesis reports both.
+\end{remark}
+
+\gap{Three items in the proof of Theorem~\ref{thm:cov} rest on material outside this chapter or on a reading of the hypothesis. (1) Lemma~\ref{lem:berbee} is stated, not proved, here; its full proof is scheduled for Appendix~\ref{appB-proofs-standard}, and the chapter is complete only once that appendix is written. (2) The coefficients $\beta(k)$ of Assumption~\ref{ass:mix} are read as those of the state process generating both $\Dfit$ and the hedging errors (Section~\ref{sec:cert-scores}); under the literal reading, mixing of the hedging-error process of an already-fixed policy, the coupling of $\Dfit$ with the calibration blocks in Lemma~\ref{lem:blocks} has no hypothesis to rest on and the term $(n+1)\beta(b)$ would have to be replaced by $n\beta(b)$ under an assumption of conditional mixing given $\Dfit$, uniform in the conditioning value. The stronger reading is adopted; the statement is unchanged. (3) The approximation $b_{n,k}(\delta)\approx1-\alpha-\sqrt{2\alpha(1-\alpha)\log(1/\delta)/n}$ and the factor $2.3$ are a normal approximation to a skewed law and are not proved as an inequality; Section~\ref{sec:cert-example} shows the approximation is off by $0.07$ at $n=25$. Nothing in the certificate uses the approximation.}
+
+\section{Bounding the drift term from data}\label{sec:cert-drift}
+
+The drift term $\dK(P,Q)$ involves the deployment law $Q$, which is never fully observed. Two routes are available: assume a bound $\varepsilon$ on $\dK(P,Q)$ as a stress input, or estimate a transport distance between $P$ and $Q$ from a sample of deployment scores and convert it to a Kolmogorov bound. The conversion is the subject of this section. It needs a regularity assumption on $Q$, because Kolmogorov distance is not controlled by Wasserstein distance without one: a point mass and a nearby narrow uniform are close in $\Wone$ and at Kolmogorov distance one.
+
+\subsection{Distances}
+
+\begin{definition}[Wasserstein distances on $\R$]\label{def:wass}
+For laws $P,Q$ on $\R$ with finite first moments, $\Wone(P,Q):=\inf\E|Y-Z|$ and $\Winf(P,Q):=\inf\esssup|Y-Z|$, the infima over all couplings $(Y,Z)$ with $Y\sim P$, $Z\sim Q$.
+\end{definition}
+
+\begin{lemma}[Area between distribution functions]\label{lem:w1area}
+For laws $P,Q$ on $\R$ with finite first moments, $\Wone(P,Q)\ge\int_\R|F_P(x)-F_Q(x)|\,dx$. Equality holds.
+\end{lemma}
+
+\begin{proof}
+Only the inequality is used below, and it needs no duality theory. Let $(Y,Z)$ be any coupling and let $f:\R\to\R$ be $1$-Lipschitz. Then $|\E f(Y)-\E f(Z)|\le\E|Y-Z|$, so $\Wone(P,Q)\ge\sup_f\big(\E f(Y)-\E f(Z)\big)$. Take $f(x):=-\int_0^x\operatorname{sgn}\big(F_P(u)-F_Q(u)\big)\,du$, which is $1$-Lipschitz. Integration by parts for a Lipschitz $f$ against the finite signed measure $P-Q$, whose distribution function $F_P-F_Q$ is integrable and vanishes at $\pm\infty$, gives
+\[
+\E f(Y)-\E f(Z)=\int f\,d(P-Q)=-\int f'(x)\big(F_P(x)-F_Q(x)\big)\,dx=\int|F_P(x)-F_Q(x)|\,dx .
+\]
+Equality in the lemma is the one-dimensional Kantorovich--Rubinstein identity, attained by the monotone coupling $(F_P^{-1}(U),F_Q^{-1}(U))$; see \cite{bobkov2019}, and Chapter~\ref{ch:prelim}.
+\end{proof}
+
+\begin{lemma}[$\Winf$ and the quantile functions]\label{lem:winf}
+For laws $P,Q$ on $\R$, $\Winf(P,Q)=\sup_{u\in(0,1)}|F_P^{-1}(u)-F_Q^{-1}(u)|$, where $F^{-1}(u):=\inf\{x:F(x)\ge u\}$, and the supremum is attained by the monotone coupling $(F_P^{-1}(U),F_Q^{-1}(U))$ with $U$ uniform on $(0,1)$.
+\end{lemma}
+
+\begin{proof}
+The monotone coupling has $\esssup|F_P^{-1}(U)-F_Q^{-1}(U)|=\sup_u|F_P^{-1}(u)-F_Q^{-1}(u)|$, so $\Winf$ is at most the supremum. Conversely let $(Y,Z)$ be any coupling with $|Y-Z|\le w$ almost surely. Then $\{Y\le x\}\subset\{Z\le x+w\}$, so $F_P(x)\le F_Q(x+w)$ for all $x$, and symmetrically $F_Q(x)\le F_P(x+w)$. If $F_P(x)\ge u$ then $F_Q(x+w)\ge u$ and so $F_Q^{-1}(u)\le x+w$; taking the infimum over such $x$ gives $F_Q^{-1}(u)\le F_P^{-1}(u)+w$, and symmetrically. Hence $\sup_u|F_P^{-1}(u)-F_Q^{-1}(u)|\le w$ for every admissible $w$, and taking the infimum over couplings gives the reverse inequality.
+\end{proof}
+
+\subsection{The drift bound}
+
+\begin{proposition}[Drift penalty bounded by $\Wone$]\label{prop:w1}
+If $Q$ has a density bounded by $L$ (no assumption on $P$), then for all $x$, $F_P(x)-F_Q(x)\le\sqrt{2L\,\Wone(P,Q)}$. If both have densities bounded by $L$, $\dK(P,Q)\le\sqrt{L\,\Wone(P,Q)}$. Also $F_P(x)-F_Q(x)\le L\,\Winf(P,Q)$.
+\end{proposition}
+
+\begin{proof}
+A law with a density bounded by $L$ has an $L$-Lipschitz distribution function: $F_Q(y)-F_Q(x)=\int_x^yq\le L(y-x)$ for $y\ge x$.
+
+\emph{The one-sided $\Wone$ bound.} Let $D:=F_P-F_Q$ and suppose $D(x_0)=d>0$ for some $x_0$. For $x\in[x_0,x_0+d/L]$, monotonicity of $F_P$ gives $F_P(x)\ge F_P(x_0)$ and the Lipschitz property of $F_Q$ gives $F_Q(x)\le F_Q(x_0)+L(x-x_0)$; hence
+\[
+D(x)\ge d-L(x-x_0)\ge0\qquad\text{on }[x_0,x_0+d/L].
+\]
+By Lemma~\ref{lem:w1area},
+\[
+\Wone(P,Q)\ge\int_\R|D|\ge\int_{x_0}^{x_0+d/L}\big(d-L(x-x_0)\big)\,dx=\frac{d^2}{2L},
+\]
+so $d\le\sqrt{2L\Wone(P,Q)}$. If $D(x_0)\le0$ there is nothing to prove.
+
+\emph{The two-sided bound.} Suppose now that $F_P$ is also $L$-Lipschitz and $D(x_0)=d>0$. The argument above gives $D(x)\ge d-L(x-x_0)$ for $x\ge x_0$. For $x\le x_0$, monotonicity of $F_Q$ gives $F_Q(x)\le F_Q(x_0)$ and the Lipschitz property of $F_P$ gives $F_P(x)\ge F_P(x_0)-L(x_0-x)$, so $D(x)\ge d-L(x_0-x)$. Together, $|D(x)|\ge\big(d-L|x-x_0|\big)_+$ for all $x$, a triangle of height $d$ and base $2d/L$, whence $\Wone(P,Q)\ge\int|D|\ge d^2/L$ and $d\le\sqrt{L\Wone}$. The case $D(x_0)=-d<0$ is symmetric with the roles of $P$ and $Q$ exchanged, which is why both densities must be bounded. Taking the supremum over $x_0$ gives $\dK(P,Q)\le\sqrt{L\Wone(P,Q)}$.
+
+\emph{The $\Winf$ bound.} Let $w:=\Winf(P,Q)$. By Lemma~\ref{lem:winf}, the monotone coupling $(Y,Z)=(F_P^{-1}(U),F_Q^{-1}(U))$ satisfies $|Y-Z|\le w$ almost surely, so $\{Y\le x\}\subset\{Z\le x+w\}$ and
+\[
+F_P(x)\le F_Q(x+w)\le F_Q(x)+Lw ,
+\]
+the last step by the Lipschitz property of $F_Q$.
+\end{proof}
+
+\begin{remark}[The linear bound is false, and the square root is sharp]\label{rem:counter}
+The first draft of this proposition claimed $|F_P(x)-F_Q(x)|\le L\Wone(P,Q)$. Take $P=\delta_0$ and $Q$ uniform on $[0,1/L]$, which has density exactly $L$. Then
+\[
+\Wone(P,Q)=\int_0^{1/L}|1-Lx|\,dx=\frac1{2L},\qquad F_P(0)-F_Q(0)=1-0=1,
+\]
+so $L\Wone(P,Q)=\tfrac12<1$ and the linear bound fails. The correct bound gives $\sqrt{2L\cdot1/(2L)}=1$, which is attained: the constant $\sqrt2$ in Proposition~\ref{prop:w1} cannot be improved without further assumptions. The failure is structural rather than a matter of constants. A distribution function can jump while its $\Wone$-neighbour is spread thinly; the area between them scales as the square of the jump divided by the density bound, so $\Wone$ controls $\dK$ only through a square root. Only when $P$ is also regular does the two-sided triangle recover the better constant $1$ under the root; the square root itself is intrinsic.
+\end{remark}
+
+\subsection{The plug-in and its rate}
+
+Suppose that $m$ deployment scores $S_0^{(1)},\dots,S_0^{(m)}$ are observed, in addition to the $n$ calibration scores, and let $P_n$ and $Q_m$ be the respective empirical laws. The natural estimate of the drift penalty is
+\begin{equation}\label{eq:plugin}
+\hat\varepsilon:=\sqrt{2L\,\Wone(P_n,Q_m)},\qquad \Wone(P_n,Q_m)=\int|F_{P_n}-F_{Q_m}|\,dx,
+\end{equation}
+computed exactly from the two sorted samples. The triangle inequality for $\Wone$ gives
+\[
+\Wone(P,Q)\le\Wone(P_n,Q_m)+\Wone(P_n,P)+\Wone(Q_m,Q),
+\]
+so the certificate can be stated with $\hat\varepsilon$ in place of $\dK(P,Q)$ provided the two empirical errors are controlled. For the calibration side, on the coupling event the scores are an i.i.d.\ sample from $P$ conditionally on $\pi$, and the rate is known.
+
+\begin{lemma}[Bobkov--Ledoux rate in one dimension]\label{lem:bl}
+Let $T_1,\dots,T_n$ be i.i.d.\ with law $P$ on $\R$, distribution function $F$, and empirical law $P_n$. Then
+\[
+\E\,\Wone(P_n,P)\le\frac{J_1(P)}{\sqrt n},\qquad J_1(P):=\int_\R\sqrt{F(x)\big(1-F(x)\big)}\,dx ,
+\]
+whenever $J_1(P)<\infty$.
+\end{lemma}
+
+\begin{proof}
+By Lemma~\ref{lem:w1area} (with equality, or with the inequality in the direction needed here supplied by the same monotone coupling), $\Wone(P_n,P)=\int|F_n-F|\,dx$. For each fixed $x$, $nF_n(x)$ is binomial with parameters $n$ and $F(x)$, so $\E(F_n(x)-F(x))^2=F(x)(1-F(x))/n$. By Fubini and the Cauchy--Schwarz inequality $\E|Y|\le\sqrt{\E Y^2}$,
+\[
+\E\int|F_n-F|\,dx=\int\E|F_n(x)-F(x)|\,dx\le\int\sqrt{\frac{F(x)(1-F(x))}{n}}\,dx=\frac{J_1(P)}{\sqrt n}. \qedhere
+\]
+\end{proof}
+
+The bound is that of \cite{bobkov2019}, who also show that the rate $n^{-1/2}$ is attained if and only if $J_1(P)<\infty$, a condition slightly stronger than a finite second moment; a finite $(2+\epsilon)$-th moment suffices, and every score law considered in the thesis satisfies it.
+
+\paragraph{The $n^{-1/4}$ rate.} Inserting Lemma~\ref{lem:bl} into \eqref{eq:plugin}, the estimation error of the plug-in penalty on the calibration side is of order $\sqrt{2L\cdot n^{-1/2}J_1(P)}\asymp n^{-1/4}$. This is a consequence of the square root in Proposition~\ref{prop:w1} and cannot be improved by a better estimate of $\Wone$: the map from $\Wone$ to the certified Kolmogorov penalty is a square root, and an $n^{-1/2}$-accurate input yields an $n^{-1/4}$-accurate output. The first draft's linear bound would have given $n^{-1/2}$; Remark~\ref{rem:counter} shows that rate is unavailable.
+
+\paragraph{The deployment side is dependent.} Lemma~\ref{lem:bl} does not apply to $\Wone(Q_m,Q)$. The $m$ deployment scores come from $m$ consecutive or overlapping blocks of the deployment window; they are not separated by gaps, they are not coupled to independent copies, and their empirical law is that of a dependent sequence. For $\beta$-mixing sequences \cite{dedecker2017} obtain rates for $\E\Wone(Q_m,Q)$ under moment and mixing conditions, and the constant in front of $m^{-1/2}$ depends on the mixing rate. The version needed here, with an explicit constant $c_r$ over the class $\Bclass{r}$ and with the coupling of Lemma~\ref{lem:blocks} as the tool, is Theorem~9(iii) of the ground truth and is deferred to Chapter~\ref{ch4-sharpness-blocking}. Until it is in place, the plug-in \eqref{eq:plugin} is an estimate whose deployment-side error is not certified, and the certificate that uses it is a certificate given $\Wone(Q_m,Q)$.
+
+\datanote{The empirical Wasserstein distance in \eqref{eq:plugin} is computed as $\int|F_{P_n}-F_{Q_m}|\,dx$ by merging the two sorted samples and summing the absolute difference of the two step functions times the spacing between consecutive merged points; cost $O((n+m)\log(n+m))$. The density bound $L$ is not estimated from data in the certificate; Chapter~\ref{ch6-usd-validation} reports the sensitivity of the certified level to $L$ over a stated range and Chapter~\ref{ch7-zar-coda} states the value adopted for the converted book as an assumption.}
+
+\section{What is and is not estimable}\label{sec:cert-estimable}
+
+The certificate has three inputs that are not computed from the calibration record: the mixing coefficient $\beta(b)$, the drift bound (through $\dK(P,Q)$ or through $L$ and $\Wone$), and the density bound $L$. This section states precisely what can and cannot be learned about them.
+
+\subsection{The mixing coefficient is not estimable}
+
+\begin{proposition}[Non-estimability of $\beta(b)$]\label{prop:noest}
+For every $N\ge2$, every $b<N$ and every $\epsilon\in(0,1)$ there exist two strictly stationary processes $\Prob_1$ and $\Prob_2$ with values in $\{0,1\}$ such that
+\begin{enumerate}[nosep,label=(\alph*)]
+\item the laws of $X_{1:N}$ under $\Prob_1$ and $\Prob_2$ coincide;
+\item $\Prob_1$ is an i.i.d.\ process, so $\beta_1(k)=0$ for all $k$;
+\item $\Prob_2$ is geometrically $\beta$-mixing, $\beta_2(k)\le N(1-\epsilon)^{\lfloor k/N\rfloor}$, and yet $\beta_2(b)\ge(1-\epsilon)/2$.
+\end{enumerate}
+Consequently every estimator $\hat\beta$ of $\beta(b)$ based on $X_{1:N}$ satisfies $\max_{i\in\{1,2\}}\E_i|\hat\beta-\beta_i(b)|\ge(1-\epsilon)/4$.
+\end{proposition}
+
+\begin{proof}
+Let $\Prob_1$ be the law of i.i.d.\ Bernoulli$(\tfrac12)$ variables. For $\Prob_2$, let $X_1,\dots,X_N$ be i.i.d.\ Bernoulli$(\tfrac12)$ and, for $t>N$, let $\xi_t\sim$Bernoulli$(\epsilon)$ and $\zeta_t\sim$Bernoulli$(\tfrac12)$ be independent of everything else and set
+\[
+X_t:=(1-\xi_t)X_{t-N}+\xi_t\zeta_t .
+\]
+Each new value copies the value $N$ periods earlier with probability $1-\epsilon$ and is refreshed otherwise. The vector of the last $N$ values is a Markov chain on $\{0,1\}^N$; if its state is i.i.d.\ Bernoulli$(\tfrac12)$ then the next value $X_t$ is Bernoulli$(\tfrac12)$ and independent of $X_{t-N+1:t-1}$ (it depends only on $X_{t-N}$, $\xi_t$, $\zeta_t$), so the i.i.d.\ law is invariant and the process started from it is strictly stationary. Every window of $N$ consecutive values is a state of the chain and has the invariant law; this gives (a). Statement (b) is immediate.
+
+For the upper bound in (c): after $k$ steps every one of the $N$ coordinates of the state has been refreshed at least once unless some coordinate went $\lfloor k/N\rfloor$ consecutive copies without refresh, an event of probability at most $N(1-\epsilon)^{\lfloor k/N\rfloor}$; on the complementary event the future $X_{t+k:\infty}$ is a function of the refresh variables alone and hence independent of $X_{1:t}$. Lemma~\ref{lem:berbee} in reverse (any coupling that agrees with an independent copy off an event of probability $\eta$ certifies $\beta\le\eta$) gives the bound.
+
+For the lower bound in (c): fix $t$ and note $t+N\ge t+b$, so $X_{t+N}$ is $\sigma(X_{t+b:\infty})$-measurable and $\beta_2(b)\ge\beta(X_t,X_{t+N})$. The pair $(X_t,X_{t+N})$ has $\Prob_2(X_t=X_{t+N})=(1-\epsilon)+\epsilon/2=1-\epsilon/2$, split equally between $(0,0)$ and $(1,1)$, while the product of the marginals puts mass $\tfrac14$ on each of the four points. Hence
+\[
+\beta(X_t,X_{t+N})=\tfrac12\Big[2\Big(\frac{1-\epsilon/2}{2}-\frac14\Big)+2\Big(\frac14-\frac{\epsilon/2}{2}\Big)\Big]=\frac{1-\epsilon}{2}.
+\]
+
+For the consequence: $\hat\beta(X_{1:N})$ has the same law under $\Prob_1$ and $\Prob_2$ by (a), so $\E_1|\hat\beta-0|=\E_2|\hat\beta|$ and
+\[
+\E_1|\hat\beta-\beta_1(b)|+\E_2|\hat\beta-\beta_2(b)|=\E_2\big[|\hat\beta|+|\hat\beta-\beta_2(b)|\big]\ge\beta_2(b)\ge\frac{1-\epsilon}2 ,
+\]
+so the larger of the two risks is at least $(1-\epsilon)/4$.
+\end{proof}
+
+The construction is elementary and its message is exact: a record of $N$ periods that is indistinguishable from white noise is compatible with a coupling deficit $(n+1)\beta(b)$ that exceeds one. The result is of the type established by \cite{adams2010} for the ergodic class. Their theorem states that for every stationary ergodic process and every class of sets of finite Vapnik--Chervonenkis dimension, the empirical frequencies converge to the true probabilities uniformly over the class, almost surely; it carries no rate, and none can be attached uniformly over the ergodic class, since for any prescribed rate there is an ergodic process converging more slowly. Proposition~\ref{prop:noest} is the finite-sample form relevant to the certificate: the mixing coefficient, which is the rate at which the process forgets, is invisible in any finite record.
+
+The consequence for the thesis is stated once and inherited by every later chapter. \emph{The certificate is conditional on an assumed mixing class.} Assumption~\ref{ass:mix} is supplemented, wherever a number is reported, by the class $\Bclass{r}=\{\beta(k)\le Ck^{-r}\}$ with stated $(C,r)$, and the coupling term is evaluated as $(n+1)Cb^{-r}$. The process of Proposition~\ref{prop:noest} lies in $\Bclass{r}$ only with $C\ge\tfrac12N^r$, and the assumption of a moderate $C$ is what excludes it. The class is an assumption about the market, not an estimate from it. Chapter~\ref{ch6-usd-validation} tests the assumption indirectly, by checking realised breach frequencies against certified levels on the USD record where the truth became observable, and Chapter~\ref{ch4-sharpness-blocking} shows how the block length should be chosen within the class.
+
+\subsection{The drift term is about an unobserved law}
+
+The Kolmogorov distance $\dK(P,Q)$ involves $Q$, the law of the deployment score. Before deployment, $Q$ is not observed at all, and $\dK(P,Q)$ is a stress input: the bank names the largest shift in the distribution function of its block hedging error that it is prepared to certify against, and the theorem tells it the corresponding loss of level. After some deployment blocks have been observed, Section~\ref{sec:cert-drift} converts a sample of deployment scores into a bound, but the conversion needs the density bound $L$ on $Q$, and $L$ is a property of the same unobserved law. A density bound cannot be verified from a finite sample: any sample is consistent with a law that has an atom at an unobserved point. The thesis therefore treats $L$ as an assumption, reports the certified level as a function of $L$, and does not describe it as estimated.
+
+\subsection{What is estimable}
+
+Everything else is. The threshold $\hat q$, the counts $n$ and $k$, the exact quantile $b_{n,k}(\delta)$, and the empirical distance $\Wone(P_n,Q_m)$ are computed from data with no assumption beyond measurability. On the coupling event the calibration scores are an i.i.d.\ sample from $P$ given $\pi$, and any functional of $P$ with a finite-sample confidence bound under i.i.d.\ sampling, such as its distribution function by the DKW inequality or its $\Wone$ distance to $P_n$ by Lemma~\ref{lem:bl}, inherits that bound at the cost of $n\beta(b)$. The certificate is honest about the split: the quantities that are estimated are estimated with proved error bounds; the quantities that cannot be estimated are named as assumptions in the statement of the level.
+
+\section{Algorithm}\label{sec:cert-algorithm}
+
+\begin{algorithmenv}[Hedging-error certificate]\label{alg:cert}
+\textbf{Inputs.} The fitted policy $\pi$ and the last index $N_0$ of its fitting sample; the per-period hedging errors $e_{N_0+b+1},\dots,e_{N_0+b+N}$ of $\pi$ on the record of $N$ periods that follows the fitting sample and a gap of $b$; the score map $\phi$; the block length $b$; the level $\alpha$; the conditional levels $\delta,\delta'$; the assumed mixing class $(C,r)$; and one of: an assumed drift bound $\varepsilon$, or a sample of $m$ deployment scores together with an assumed density bound $L$.
+
+\textbf{Steps.}
+\begin{enumerate}[nosep,label=\arabic*.]
+\item \emph{Block count.} Set $n:=\lfloor N/(2b)\rfloor$. If $n<(1-\alpha)/\alpha$, return $\hat q:=+\infty$ with the note that the record is too short for level $\alpha$ at block length $b$, and stop.
+\item \emph{Blocking with gaps.} For $j=1,\dots,n$ let $H_j$ be the $b$ periods beginning at index $N_0+b+(j-1)2b+1$. The gap after each block is the next $b$ periods; the gap after $H_n$ is the trailing part of the record. Confirm that the deployment block begins after the record.
+\item \emph{Scores.} Compute $S_j:=\phi(\pi,(e_t)_{t\in H_j})$ for $j=1,\dots,n$.
+\item \emph{Order statistic.} Set $k:=\lceil(1-\alpha)(n+1)\rceil$ and $\hat q:=S_{(k)}$, the $k$-th smallest score.
+\item \emph{Mixing term.} Set $\bar\beta:=Cb^{-r}$ from the assumed class.
+\item \emph{Beta quantile.} Compute $b_{n,k}(\delta)$ as the root in $u$ of $\sum_{j=k}^n\binom nju^j(1-u)^{n-j}=\delta$, by bisection on $[0,1]$.
+\item \emph{Drift term.} If $\varepsilon$ is assumed, set $\hat\varepsilon:=\varepsilon$. Otherwise sort the calibration and deployment scores, compute $\Wone(P_n,Q_m)=\int|F_{P_n}-F_{Q_m}|\,dx$ as the area between the two empirical distribution functions, and set $\hat\varepsilon:=\sqrt{2L\,\Wone(P_n,Q_m)}$; flag that the deployment-side estimation error is not certified in this chapter.
+\item \emph{Output.} Return the certificate interval $(-\infty,\hat q]$ for the deployment score and the two levels
+\[
+\text{marginal: }1-\alpha-\hat\varepsilon-(n+1)\bar\beta;\qquad
+\text{conditional: }b_{n,k}(\delta)-\hat\varepsilon-\bar\beta/\delta'\ \text{ with confidence }1-\delta-n\bar\beta\ \text{and }1-\delta',
+\]
+together with the assumptions on which they rest: the class $(C,r)$, and $\varepsilon$ or $L$.
+\end{enumerate}
+\end{algorithmenv}
+
+Two remarks on the inputs. The block length $b$ is treated here as given. It trades off the number of blocks against the coupling cost: a larger $b$ makes $\beta(b)$ smaller and $n$ smaller, and Chapter~\ref{ch4-sharpness-blocking} shows that within $\Bclass{r}$ the deficit $\sqrt{b/N}+Nb^{-(r+1)}$ is minimised at $b^*\asymp N^{3/(2r+3)}$. Section~\ref{sec:cert-example} exhibits the trade-off numerically. The gap length is set equal to $b$ because Assumption~\ref{ass:mix} demands at least $b$ and any longer gap wastes record; a gap longer than $b$ can be used with the coefficient $\beta(\text{gap})$ in place of $\beta(b)$, and the algorithm is unchanged.
+
+The cost of the algorithm is one sort of $n$ numbers, one bisection, and, if the plug-in is used, one merge of two sorted samples. The certificate is recomputed whenever a new block of $b$ periods completes, with the record extended by $2b$ and $n$ increased by one; nothing is refitted.
+
+\section{Worked example}\label{sec:cert-example}
+
+The example is fully synthetic so that every input of the certificate is known and the arithmetic can be checked by hand. It uses a Gaussian autoregression for the per-period hedging error, for which the mixing coefficient can be bounded explicitly.
+
+\subsection{An explicit mixing bound for Gaussian AR(1)}
+
+Let $X_t=\varphi X_{t-1}+\sigma\zeta_t$ with $|\varphi|<1$, $\zeta_t$ i.i.d.\ standard normal, started from the stationary law $\mathcal N(0,v)$, $v:=\sigma^2/(1-\varphi^2)$. The process is strictly stationary and Markov. Stationary Gaussian autoregressions, and more generally linear processes with geometrically decaying coefficients and an innovation density, are geometrically $\beta$-mixing; see \cite{doukhan1994}. The explicit bound below is proved here because the example needs a number, not a rate.
+
+\begin{lemma}[$\beta$-coefficient of a stationary Markov chain]\label{lem:markovbeta}
+Let $(X_t)$ be a strictly stationary Markov chain with transition kernel $\mathsf P$, $k$-step kernel $\mathsf P^k$ and stationary law $\mu$. Then $\beta(k)=\int\dTV\big(\mathsf P^k(x,\cdot),\mu\big)\,\mu(dx)$.
+\end{lemma}
+
+\begin{proof}
+Fix $t$. By the Markov property, a regular conditional distribution of $X_{t+k:\infty}$ given $X_{1:t}$ is $\mathsf P^k(X_t,\cdot)\otimes\mathsf K$, where $\mathsf K(y,\cdot)$ is the law of $X_{t+k+1:\infty}$ given $X_{t+k}=y$; the marginal law of $X_{t+k:\infty}$ is $\mu\otimes\mathsf K$ by stationarity. For any two laws $\nu_1,\nu_2$ and any kernel $\mathsf K$, $\dTV(\nu_1\otimes\mathsf K,\nu_2\otimes\mathsf K)=\dTV(\nu_1,\nu_2)$: the inequality $\ge$ holds by restricting to events depending on the first coordinate, and $\le$ holds because for any $C$, $|\nu_1\otimes\mathsf K(C)-\nu_2\otimes\mathsf K(C)|=|\int\mathsf K(y,C_y)(\nu_1-\nu_2)(dy)|\le\dTV(\nu_1,\nu_2)$ since $0\le\mathsf K(y,C_y)\le1$. Lemma~\ref{lem:disint} then gives $\beta(X_{1:t},X_{t+k:\infty})=\E\,\dTV(\mathsf P^k(X_t,\cdot),\mu)$, which does not depend on $t$ because $X_t\sim\mu$.
+\end{proof}
+
+\begin{lemma}[Explicit bound for Gaussian AR(1)]\label{lem:ar1}
+For the stationary Gaussian AR(1) above,
+\[
+\beta(k)\le\tfrac12\sqrt{-\log\big(1-\varphi^{2k}\big)}\;\le\;\tfrac12|\varphi|^k\big(1-\varphi^{2k}\big)^{-1/2}.
+\]
+\end{lemma}
+
+\begin{proof}
+The $k$-step kernel from $x$ is $\mathsf P^k(x,\cdot)=\mathcal N\big(\varphi^kx,\,v(1-\varphi^{2k})\big)$, obtained by iterating the recursion. Pinsker's inequality, $\dTV(\nu_1,\nu_2)\le\sqrt{\mathrm{KL}(\nu_1\|\nu_2)/2}$ (see \cite{tsybakov2009}), and the closed form of the Kullback--Leibler divergence between normal laws,
+\[
+\mathrm{KL}\big(\mathcal N(m_1,v_1)\,\|\,\mathcal N(m_2,v_2)\big)=\tfrac12\Big[\frac{v_1}{v_2}+\frac{(m_1-m_2)^2}{v_2}-1+\log\frac{v_2}{v_1}\Big],
+\]
+give, with $m_1=\varphi^kx$, $v_1=v(1-\varphi^{2k})$, $m_2=0$, $v_2=v$,
+\[
+\mathrm{KL}\big(\mathsf P^k(x,\cdot)\,\|\,\mu\big)=\tfrac12\Big[\varphi^{2k}\Big(\frac{x^2}{v}-1\Big)-\log\big(1-\varphi^{2k}\big)\Big].
+\]
+Under $\mu=\mathcal N(0,v)$, $\E[x^2/v]=1$, so $\E\,\mathrm{KL}=-\tfrac12\log(1-\varphi^{2k})$. By Lemma~\ref{lem:markovbeta}, Pinsker's inequality and Jensen's inequality for the concave square root,
+\[
+\beta(k)=\E\,\dTV\big(\mathsf P^k(X_0,\cdot),\mu\big)\le\E\sqrt{\tfrac12\mathrm{KL}}\le\sqrt{\tfrac12\E\,\mathrm{KL}}=\tfrac12\sqrt{-\log(1-\varphi^{2k})}.
+\]
+The second inequality of the lemma is $-\log(1-y)\le y/(1-y)$ for $y\in(0,1)$.
+\end{proof}
+
+For $\varphi=\tfrac12$ and $k=10$, $\varphi^{2k}=2^{-20}$ and the bound is $\tfrac12\cdot2^{-10}\sqrt{1+O(2^{-20})}$, so $\beta(10)\le2^{-11}=4.883\times10^{-4}$ to four significant figures.
+
+\subsection{The synthetic hedging-error process}
+
+Let the per-period hedging shortfall of the fixed policy be $e_t:=X_t$ with $X$ the Gaussian AR(1) with $\varphi=\tfrac12$ and stationary variance $v=1$, in units of the per-period standard deviation. The block score is the cumulative block shortfall $S=\sum_{t\in H}e_t$. On the calibration window the block score has law
+\[
+P=\mathcal N(0,v_b),\qquad v_b=\Var\Big(\sum_{t=1}^bX_t\Big)=b+2\sum_{h=1}^{b-1}(b-h)\varphi^h .
+\]
+For $b=10$ and $\varphi=\tfrac12$ the sum is
+\[
+\sum_{h=1}^{9}(10-h)2^{-h}=4.5+2+0.875+0.375+0.15625+0.0625+0.0234375+0.0078125+0.0019531=8.0019531,
+\]
+so $v_b=10+16.0039=26.0039$ and $\sqrt{v_b}=5.0994$.
+
+On the deployment block the shortfall acquires a mean shift $\mu$ per period, $e_t=\mu+X_t$: the converted book is hedged with a policy tuned to the old regime, and the drift is the systematic component of the hedging error after the transition. A deterministic time-dependent shift does not change the $\sigma$-algebras generated by the process, so the $\beta$-coefficients are unchanged and Assumption~\ref{ass:mix} holds with the same $\beta(\cdot)$. The deployment law is $Q=\mathcal N(b\mu,v_b)$ and the Kolmogorov distance between two normal laws with common variance and means differing by $b\mu$ is attained at the midpoint:
+\[
+\dK(P,Q)=2\Phi\Big(\frac{b\mu}{2\sqrt{v_b}}\Big)-1 .
+\]
+With $\mu=0.05$, $b\mu=0.5$ and $b\mu/(2\sqrt{v_b})=0.5/10.199=0.04902$; $\Phi(0.04902)=0.51955$, so $\dK(P,Q)=0.0391$. A shift of five per cent of one per-period standard deviation, accumulated over a ten-period block, costs four percentage points of certified level.
+
+\subsection{The certificate by hand}
+
+Take $N=500$, $b=10$, $\alpha=0.1$.
+
+\emph{Blocks.} $n=\lfloor500/20\rfloor=25$. The layout uses $25\times10=250$ periods for blocks, $24\times10=240$ for interior gaps, and the remaining $10$ periods as the trailing gap before the deployment block: $250+240+10=500$ exactly.
+
+\emph{Order statistic.} $k=\lceil0.9\times26\rceil=\lceil23.4\rceil=24$, so $\hat q$ is the second-largest of the $25$ calibration scores, and $k/(n+1)=24/26=0.9231$.
+
+\emph{The three deficit terms of the marginal form.} The conformal term is $\alpha=0.1$, or, using the exact Beta mean since $P$ is continuous, $1-k/(n+1)=0.0769$. The drift term is $\dK(P,Q)=0.0391$. The coupling term is $(n+1)\beta(b)=26\times4.883\times10^{-4}=0.01270$.
+
+\emph{Guaranteed marginal coverage.} By Theorem~\ref{thm:cov}(i),
+\[
+\Prob(S_0\le\hat q)\ge1-0.1-0.0391-0.0127=0.8482 ,
+\]
+and, using the exact conformal term available for continuous $P$, $\ge0.9231-0.0391-0.0127=0.8713$. The actual coverage in this example, which is computable because $P$ and $Q$ are known, is $\E F_Q(\hat q^*)$ up to the coupling error, and Figure~\ref{fig:example} compares it to the two bounds.
+
+\emph{The conditional form.} Take $\delta=\delta'=0.05$. The exact quantile $b_{25,24}(0.05)$ solves $\Prob(\mathrm{Bin}(25,u)\ge24)=25u^{24}(1-u)+u^{25}=u^{24}(25-24u)=0.05$. At $u=0.82$ the left side is $0.0454$ and at $u=0.825$ it is $0.0514$; bisection gives $u=0.8239$. The Markov term is $\beta(b)/\delta'=4.883\times10^{-4}/0.05=0.00977$. Hence, with probability at least $1-0.05-25\times4.883\times10^{-4}=0.9378$ over $(\Dfit,S_{1:25})$, and on a further event of probability at least $0.95$,
+\[
+\Prob\big(S_0\le\hat q\mid\Dfit,S_{1:25}\big)\ge0.8239-0.0391-0.0098=0.7750 .
+\]
+The joint event has probability at least $0.8878$.
+
+\emph{The two approximations to $b_{n,k}(\delta)$.} The DKW-form bound is $1-0.1-\sqrt{\log20/50}=0.9-0.2448=0.6552$. The normal approximation is $0.9-\sqrt{2\times0.09\times\log20/25}=0.9-0.1469=0.7531$. The exact quantile is $0.8239$. At $n=25$ the exact quantile is $0.17$ above the DKW form and $0.07$ above the normal approximation; the $\Beta(24,2)$ law has mean $0.923$ and standard deviation $0.051$ and is strongly left-skewed, so neither approximation is good, and the exact quantile costs one bisection.
+
+\begin{table}[htbp]
+\centering\small
+\caption{The certificate for the synthetic AR(1) example, $N=500$, $\alpha=0.1$, $\varphi=\tfrac12$, $\mu=0.05$, $\delta=\delta'=0.05$, at three block lengths. The coupling bound is Lemma~\ref{lem:ar1}; $\dK$ is recomputed with $v_b$ at each $b$. At $b=5$ the coupling term dominates and the certificate is nearly vacuous; at $b=20$ it is negligible but $n$ has fallen to $12$ and the conformal term has grown.}\label{tab:example}
+\begin{tabular}{@{}lrrr@{}}
+\toprule
+ & $b=5$ & $b=10$ & $b=20$ \\
+\midrule
+$n=\lfloor N/(2b)\rfloor$ & 50 & 25 & 12 \\
+$k=\lceil0.9(n+1)\rceil$ & 46 & 24 & 12 \\
+$k/(n+1)$ & 0.9020 & 0.9231 & 0.9231 \\
+$\beta(b)$ bound & $1.563\times10^{-2}$ & $4.883\times10^{-4}$ & $4.768\times10^{-7}$ \\
+$(n+1)\beta(b)$ & 0.7971 & 0.0127 & $6.2\times10^{-6}$ \\
+$\dK(P,Q)$ & 0.0299 & 0.0391 & 0.0533 \\
+Marginal level, Theorem~\ref{thm:cov}(i) & 0.0730 & 0.8482 & 0.8467 \\
+$b_{n,k}(0.05)$ & 0.8262 & 0.8239 & 0.7791 \\
+$\beta(b)/\delta'$ & 0.3126 & 0.0098 & $9.5\times10^{-6}$ \\
+Conditional level, Theorem~\ref{thm:cov}(ii) & 0.4837 & 0.7750 & 0.7258 \\
+Confidence $1-\delta-n\beta(b)$ & 0.1686 & 0.9378 & 0.9500 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\datanote{Table~\ref{tab:example} at $b=5$ and $b=20$ is computed by the same formulas as the $b=10$ column: $v_5=5+2\sum_{h=1}^4(5-h)2^{-h}=5+2(2+0.75+0.25+0.0625)=11.125$, $\dK=2\Phi(0.25/(2\sqrt{11.125}))-1=2\Phi(0.03748)-1=0.0299$; $v_{20}=20+2\sum_{h=1}^{19}(20-h)2^{-h}=56.0000$ to four decimals, $\dK=2\Phi(1/(2\sqrt{56}))-1=2\Phi(0.06682)-1=0.0533$; the Beta quantiles are the roots of $\Prob(\mathrm{Bin}(50,u)\ge46)=0.05$, namely $u=0.8262$, and of $\Prob(\mathrm{Bin}(12,u)\ge12)=u^{12}=0.05$, namely $u=0.05^{1/12}=0.7791$. At $b=5$ the conditional level $0.4837$ is stated with confidence only $0.1686$, because $n\beta(b)=0.78$; the row is reported to show the failure, not as a usable certificate. The table is to be regenerated by the code of Appendix~\ref{appC-data-code} before submission and the hand values checked against it.}
+
+\emph{Reading the table.} The three columns show the trade-off that Chapter~\ref{ch4-sharpness-blocking} optimises. With $\varphi=\tfrac12$ the process forgets quickly and $b=10$ is already enough for the coupling term to be small; the certified level is then dominated by the drift and by the conformal term. For a slowly mixing process the picture changes. With $\varphi=0.8$, Lemma~\ref{lem:ar1} gives $\beta(10)\le0.0538$ and $(n+1)\beta(10)\le1.40$: the certificate at $b=10$ is vacuous, and one must take $b=20$ ($n=12$, $\beta(20)\le0.00576$, $(n+1)\beta(20)\le0.0749$) or a longer record. The block length is not a nuisance parameter. It is the design variable of the method, and its choice requires a mixing class to be assumed.
+
+\figplan{Two panels for the synthetic AR(1) example, $\varphi\in\{0.5,0.8\}$. Horizontal axis: block length $b$ from $2$ to $50$ at $N=500$. Series: the coupling term $(n+1)\beta(b)$ from Lemma~\ref{lem:ar1}; the conformal term $1-k/(n+1)$; the drift term $\dK(P,Q)$ at $\mu=0.05$; their sum; and the realised breach frequency of the certificate over $10^4$ Monte Carlo replications of the whole procedure, with the nominal $\alpha=0.1$ as a horizontal line.}{Deficit terms of the certificate as a function of block length for the synthetic hedging-error process. The coupling term falls geometrically in $b$, the conformal term rises as $n=\lfloor N/(2b)\rfloor$ falls, and the drift term rises with $b$ because the mean shift accumulates over the block. The Monte Carlo breach frequency tests the claim that the realised breach rate never exceeds $\alpha$ plus the sum of the three terms; the gap between the two curves measures the slack in the bound, most of it in the coupling term.\label{fig:example}}
+
+\datanote{The Monte Carlo series of Figure~\ref{fig:example} is produced by simulating $N_0+b+N+b$ periods of the AR(1), computing $\hat q$ from the blocked record, drawing the deployment block with the mean shift, and recording $\ind{S_0>\hat q}$; $10^4$ replications give a standard error of $0.003$ on a breach frequency near $0.1$. Code and seed are specified in Appendix~\ref{appC-data-code}. No market data enter.}
+
+\section{The bootstrap and breach-count backtests}\label{sec:cert-backtests}
+
+The certificate is not the only tool a bank can use to bound its hedging error. This section describes the three alternatives against which Chapter~\ref{ch6-usd-validation} compares it, states what each assumes and what each delivers, and explains why no theorem comparing them to the certificate is claimed.
+
+\subsection{Block bootstraps}
+
+The moving block bootstrap of \cite{kunsch1989} resamples the record $e_{1:N}$ in blocks of a fixed length $\ell$: draw $\lceil N/\ell\rceil$ starting indices uniformly from $\{1,\dots,N-\ell+1\}$ with replacement, concatenate the corresponding blocks, and truncate to length $N$. The stationary bootstrap of \cite{politis1994} replaces the fixed length by independent geometric lengths with mean $1/p$ and wraps the record circularly, so that the resampled series is stationary conditionally on the data. In either case a statistic of interest, here the $(1-\alpha)$-quantile of the block score, is recomputed on each pseudo-series and the bootstrap distribution of the statistic is used to form a percentile interval or to inflate the threshold.
+
+The theory of these methods is asymptotic and is developed in \cite{lahiri2003}. For smooth functionals of means of a $\beta$-mixing sequence, the block bootstrap is consistent when $\ell\to\infty$ with $\ell/N\to0$, and with $\ell\asymp N^{1/3}$ it is second-order accurate, with a coverage error of order $N^{-1/2}$ or better. For a quantile of the block score, the relevant statistic is an order statistic of a dependent sequence. Its Edgeworth expansion involves the density of the score law at the quantile and the long-run variance of the indicator process $\ind{S\le q}$, both unknown, and the coefficients of the correction terms depend on the mixing rate through constants that are not available. A statement of the form ``the bootstrap threshold covers the next block with probability at least $1-\alpha-\eta_N$'' with an explicit $\eta_N$ and explicit constants is therefore not available under Assumption~\ref{ass:mix}, and none is claimed. The first draft of this thesis stated a theorem to the effect that the certificate was the only method with a provable finite-sample level. That statement compared assumptions, not results, and it has been dropped.
+
+What can be said is this. The certificate's level is a proved finite-sample statement under stated assumptions. The bootstrap's level is an asymptotic statement whose finite-sample accuracy is unknown, but the bootstrap uses the whole record rather than half of it, does not require gaps, and adapts to the dependence structure through $\ell$ or $p$ without an assumed class. In a regime where $N$ is large and the mixing is fast, the bootstrap threshold may well be tighter than $\hat q$ with no worse realised coverage. Which regime the USD and ZAR records are in is an empirical question and is treated as one.
+
+\subsection{Breach-count tests}
+
+A threshold, however obtained, can be tested after the fact by counting breaches. Let $I_t:=\ind{S_t>q_t}$ be the breach indicator over $M$ deployment blocks with nominal breach probability $\alpha$, and $x:=\sum_tI_t$.
+
+The proportion-of-failures test of \cite{kupiec1995} is the likelihood-ratio test of $H_0:\Prob(I_t=1)=\alpha$ against the unrestricted Bernoulli alternative,
+\[
+\mathrm{LR}_{\mathrm{uc}}:=-2\log\frac{(1-\alpha)^{M-x}\alpha^{x}}{(1-\hat\alpha)^{M-x}\hat\alpha^{x}},\qquad\hat\alpha:=x/M ,
+\]
+asymptotically $\chi^2_1$ under $H_0$ when the $I_t$ are independent. The test of \cite{christoffersen1998} adds a test of independence: with $n_{ij}$ the number of transitions from $I_{t-1}=i$ to $I_t=j$, and $\hat\pi_i:=n_{i1}/(n_{i0}+n_{i1})$, $\hat\pi:=(n_{01}+n_{11})/M$,
+\[
+\mathrm{LR}_{\mathrm{ind}}:=-2\log\frac{(1-\hat\pi)^{n_{00}+n_{10}}\hat\pi^{n_{01}+n_{11}}}{(1-\hat\pi_0)^{n_{00}}\hat\pi_0^{n_{01}}(1-\hat\pi_1)^{n_{10}}\hat\pi_1^{n_{11}}}\ \sim\ \chi^2_1 ,
+\]
+and the conditional-coverage statistic $\mathrm{LR}_{\mathrm{cc}}:=\mathrm{LR}_{\mathrm{uc}}+\mathrm{LR}_{\mathrm{ind}}$ is asymptotically $\chi^2_2$. Both are asymptotic in $M$, both assume at most first-order Markov dependence in the breach sequence under the alternative, and both are diagnostics of a threshold already in use, not constructions of one. They will be applied in Chapter~\ref{ch6-usd-validation} to the certificate threshold and to the bootstrap threshold alike, on the same deployment blocks, so that the two can be compared on realised breaches.
+
+\subsection{Regulatory backtests}
+
+The Basel market-risk framework \cite{bcbs2019} contains two backtests relevant here. The first is the traffic-light count of value-at-risk exceptions over $250$ trading days at the $99\%$ level, with zones green (at most four exceptions), amber (five to nine) and red (ten or more), each carrying a capital multiplier. The second is the profit-and-loss attribution test of the internal-models approach, which compares the risk-theoretical P\&L produced by the desk's pricing model with the hypothetical P\&L produced by the front-office system, over the same days, by a Spearman rank correlation and a Kolmogorov--Smirnov distance between the two empirical distributions, with green, amber and red zones defined by thresholds on the two statistics. The attribution test is the regulatory analogue of the certificate's question, since a systematic hedging error is exactly a gap between model P\&L and realised P\&L, but it is a two-sample comparison at a fixed sample size with asymptotic critical values, and it says nothing about the next block.
+
+\datanote{The zone boundaries of the profit-and-loss attribution test (Spearman correlation above $0.80$ and Kolmogorov--Smirnov statistic below $0.09$ for green; Spearman below $0.70$ or Kolmogorov--Smirnov above $0.12$ for red; amber otherwise) and the paragraph numbers of \cite{bcbs2019} are to be verified against the January 2019 text and the 2024 consolidated framework before Chapter~\ref{ch6-usd-validation} uses them; the values quoted here are from the author's reading and are not yet cross-checked.}
+
+\subsection{What Chapter~\ref{ch6-usd-validation} will measure}
+
+On the USD LIBOR-to-SOFR record, where the successor smile became observable and the truth of the hedging error is known, Chapter~\ref{ch6-usd-validation} computes, for each of the certificate, the stationary bootstrap and the unblocked empirical quantile: the threshold $\hat q$ and its level as stated by the method; the realised breach frequency over the deployment blocks; the Kupiec and Christoffersen statistics on the breach sequence; the behaviour of each threshold through the transition window, where the drift term is active; and the sensitivity of the certificate to $b$ and to the assumed $(C,r)$. The comparison measures realised coverage against stated coverage. It does not, and cannot, establish that one method dominates another under Assumption~\ref{ass:mix}, for the reason given above.
+
+\section{Discussion}\label{sec:cert-discussion}
+
+\paragraph{What was shown.} A fixed valuation-and-hedging policy on a book with no options market can be certified: the split-conformal threshold on gap-separated block scores covers the next gap-separated block with probability at least $1-\alpha$ less three named deficits, and the statement holds both marginally and conditionally on the data used to compute the threshold. The proof assembles three standard tools, each restated in full. Berbee's coupling, applied sequentially in time order with the fitting sample as the first block, replaces the dependent record by independent copies at a cost of $\beta(b)$ per coupled block, $(n+1)\beta(b)$ in all, and carries the policy through unchanged. The Beta law of the order statistic gives the conformal coverage exactly, and the DKW form is recovered from it by Hoeffding's inequality in two lines, which settles the order in which the two results stand. The drift is paid in Kolmogorov distance, on a half-line that the coupling has made fixed. The conditional form uses the disintegrated form of the $\beta$-coefficient and Markov's inequality, and Remark~\ref{rem:jointtv} explains why nothing weaker than $\beta$-mixing, and nothing cheaper than Markov, would do.
+
+\paragraph{The drift bound.} Proposition~\ref{prop:w1} converts a Wasserstein distance into a Kolmogorov penalty at the cost of a square root, and Remark~\ref{rem:counter} shows the square root is intrinsic and its constant sharp. The consequence is that the plug-in penalty converges at $n^{-1/4}$, not $n^{-1/2}$, and this rate is a property of the problem, not of the estimator.
+
+\paragraph{Limitations.} The certificate has four. First, the mixing coefficient is not estimable (Proposition~\ref{prop:noest}), so the coupling term is evaluated under an assumed class $\Bclass{r}$, and a process outside the class can defeat the certificate while looking like white noise on the record. Second, the density bound $L$ on the deployment law is an assumption, and the deployment-side error of the plug-in drift estimate is not yet controlled under dependence. Third, the certificate is one-sided and concerns one deployment block; a certificate for a sequence of deployment blocks, each separated from the last by a gap, follows by applying the theorem to each and paying $\beta(b)$ per block, but a joint statement over the sequence is not given here. Fourth, half of the record is spent on gaps, and the block length must be chosen before the coupling term can be evaluated; Section~\ref{sec:cert-example} shows that the wrong choice makes the certificate vacuous.
+
+\paragraph{Connection to Chapter~\ref{ch4-sharpness-blocking}.} Three of these limitations are the subject of the next chapter. The constant $1$ on $\dK$ in Theorem~\ref{thm:cov} is shown to be sharp by an adversarial construction that moves the bottom-$\varepsilon$ mass of $P$ to a far point. The block length is optimised within $\Bclass{r}$, giving $b^*\asymp N^{3/(2r+3)}$ and a deficit of order $N^{-r/(2r+3)}$, and a hidden-regime construction of the kind used in Proposition~\ref{prop:noest} is the route to a matching minimax lower bound over the class. The dependent-data version of Lemma~\ref{lem:bl} closes the gap left in Section~\ref{sec:cert-drift}. Theorem~\ref{thm:cov} is the tool; the rate, the design and the lower bound are the contribution.
+
+\paragraph{Connection to the finance chapters.} The certificate requires only a fixed policy, and Chapter~\ref{ch5-identifiability} supplies one: the successor smile is identified within an interval of half-width $\eta$, and any policy chosen from that interval is a legitimate input to Algorithm~\ref{alg:cert}. The identifiability result says how wrong the policy can be; the certificate says how much that error costs on the next block, with a probability attached, without asking which point in the interval is the truth. Chapter~\ref{ch6-usd-validation} runs the certificate on the USD record where the truth became observable, and Chapter~\ref{ch7-zar-coda} applies it to the converted South African book with the record available at the time of writing.
+
+\paragraph{Chapter notes.} The blocking-and-coupling argument for conformal prediction under mixing is due to \cite{oliveira2024}, who obtain marginal coverage bounds of the form $1-\alpha-O(n\beta(b))$ for split conformal on $\beta$-mixing data; \cite{barber2023} give a different route, through weighted exchangeability, that yields a total-variation penalty without blocking. The conditional form through the Beta law is in the spirit of \cite{vovk2012}. The contributions of this chapter relative to that literature are the treatment of the fitting sample as a block so that policy dependence costs one $\beta(b)$, the gap-separated deployment block, the Kolmogorov drift term placed after coupling, the conditional statement through the disintegrated coefficient, and the drift bound of Proposition~\ref{prop:w1} with its counterexample. None of these is deep; together they make the certificate usable on a hedging record, and Chapter~\ref{ch4-sharpness-blocking} makes it sharp and rate-optimal.

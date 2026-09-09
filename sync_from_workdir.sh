@@ -16,7 +16,7 @@ cpif "$W/chapters/ch8-conclusions.tex" "$R/Thesis/Chapter 8/src/chapter8_conclus
 cpif "$W/appendices/appA-tenor.tex" "$R/Thesis/Annexures/annexureA_tenor_consistency.tex" "Tenor Consistency of Compounded-Rate Smiles"
 cpif "$W/appendices/appB-proofs-standard.tex" "$R/Thesis/Annexures/annexureB_standard_proofs.tex" "Proofs of Standard Results"
 # Appendix C is assembled from its parts
-{ echo '\chapter{Data, Code and Reproducibility}\label{appC-data-code}';
+{ echo '\chapter{Data, Code and Reproducibility}\label{appC-data-code}\label{app:data}';
   echo '\section{USD data}'; cat "$W/appendices/appC-usd-data.tex" 2>/dev/null || true;
   echo '\section{ZAR data}'; cat "$W/appendices/appC-zar-data.tex" 2>/dev/null || true;
   echo '\section{Code architecture}'; cat "$W/appendices/appC-code.tex" 2>/dev/null || true;

@@ -1,5 +1,184 @@
 \section{USD data}
-\gap{Section pending: appC-usd-data.}
+% appC-usd-data.tex -- \input under \section{USD data} in appC-data-code.tex
+% Written by thesis-data-engineer-usd, 2026-09-09. Every ticker below was read
+% from a primary document (Bloomberg BISL fact sheet v7.2, ISDA, NY Fed, FRED,
+% FCA, Federal Reserve Reg ZZ, LSEG developer forum) or is marked
+% "to be confirmed on terminal". Nothing here has been pulled from a terminal.
+
+\subsection{Purpose and scope}\label{appC:usd-purpose}
+
+Chapter~\ref{ch6-usd-validation} treats the USD LIBOR-to-SOFR transition as the one benchmark transition in which the successor smile became observable. Its two tests need, on every business day of the window, (i) the observed USD LIBOR caplet and swaption smiles, (ii) the observed SOFR caplet and swaption smiles, (iii) the LIBOR--SOFR basis, (iv) the ISDA fallback spread $s$ by tenor, (v) SOFR discounting and forward curves, and (vi) the calendar of cessation events that fixes the deployment window. This section specifies each dataset: what it is, the vendor field, the public alternative, the date range, frequency, licence, and the quality issues known before any data is pulled. The section is a specification, not a report of data held. Nothing below has been downloaded yet; Section~\ref{appC:usd-minimum} states the smallest set on which Chapter~\ref{ch6-usd-validation} can run.
+
+Notation for tenors follows the ISDA convention: O/N, 1W, 1M, 2M, 3M, 6M, 12M. Bloomberg tickers are written as \texttt{TICKER <Index>} or \texttt{TICKER <Curncy>} with the yellow-key suffix Bloomberg uses; Refinitiv identifiers are written as RICs.
+
+\subsection{Calendar of cessation events}\label{appC:usd-calendar}
+
+The calendar fixes the fitting window $\Dfit$, the deployment window, and the spread-adjustment fixing date used in every chapter that writes $L=F+B+s$.
+
+\begin{table}[htbp]
+\centering\small
+\caption{USD LIBOR cessation calendar. Sources: FCA and IBA announcements of 5~March~2021 as summarised by ISDA (5~March~2021); FCA news of 3~July~2023 and September~2024; ISDA guidance on the USD LIBOR ICE Swap Rate (28~Nov~2022, updated 13~Apr~2023); CFTC MRAC press releases of 13~July and 2021 Q4.}
+\label{tab:usd-calendar}
+\begin{tabular}{@{}p{3.1cm}p{9.4cm}@{}}
+\toprule
+Date & Event \\
+\midrule
+3 Apr 2018 & New York Fed begins publishing SOFR (first value date 2~Apr~2018). \\
+7 May 2018 & CME lists one- and three-month SOFR futures. \\
+2 Mar 2020 & New York Fed begins official publication of 30-, 90-, 180-day SOFR Averages and the SOFR Index (indicative history back to Apr~2018). \\
+5 Mar 2021 & FCA announces future cessation or non-representativeness of all LIBOR settings. ISDA: Index Cessation Event; all LIBOR spread adjustments fixed on this date. \\
+21 Apr 2021 & CME Term SOFR published for 1M, 3M, 6M (12M added later in 2021); ARRC formally recommends it on 29~Jul~2021. \\
+May 2021 & First SOFR swaptions appear in US SDR data (Clarus). \\
+1 Oct 2021 & IBA starts publishing the USD SOFR Spread-Adjusted ICE Swap Rate in beta form. \\
+8 Nov 2021 & CFTC MRAC ``SOFR First'' for non-linear derivatives (swaptions, caps, floors) in the interdealer market. \\
+31 Dec 2021 & 1W and 2M USD LIBOR cease. US regulators' ``no new LIBOR'' guidance takes effect. \\
+21--22 Apr 2023, 20 May 2023 & CME (21~Apr) and LCH (22~Apr, 20~May) convert cleared USD LIBOR swaps to SOFR. \\
+30 Jun 2023 & USD LIBOR panel ends. O/N and 12M cease permanently. USD LIBOR ICE Swap Rate ceases. 1M, 3M, 6M continue as synthetic LIBOR = CME Term SOFR + ISDA spread adjustment. \\
+30 Sep 2024 & Final publication of synthetic 1M, 3M, 6M USD LIBOR. End of LIBOR. \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Two consequences for Chapter~\ref{ch6-usd-validation}. First, the ``truth'' against which the predicted SOFR smile is compared exists as a quoted market only from roughly November~2021; before that the SOFR non-linear market is thin (Section~\ref{appC:usd-sofr-vol}). Second, the LIBOR smile after 31~December~2021 is a market in a benchmark that regulators had told banks to stop using, and after 30~June~2023 it is a synthetic rate with no option market at all. The natural fitting window is therefore 2019--2021 on LIBOR and the natural deployment window is November~2021 to June~2023 on SOFR, with 2019 chosen so that the September~2019 repo spike is inside $\Dfit$ rather than a surprise in deployment.
+
+\subsection{Fallback spread adjustments}\label{appC:usd-spread}
+
+The constant $s$ of the thesis is, for USD, the ISDA fallback spread adjustment: the five-year historical median of USD LIBOR minus SOFR compounded in arrears over the matching tenor, fixed on the Spread Adjustment Fixing Date of 5~March~2021 and published by Bloomberg Index Services Limited (BISL) as ISDA's adjustment-services vendor.
+
+\begin{table}[htbp]
+\centering\small
+\caption{USD LIBOR fallback spread adjustments fixed 5~March~2021, and the BISL tickers that carry them. The five values with numbers are those enacted in Federal Reserve Regulation~ZZ (12~CFR~253, implementing the Adjustable Interest Rate (LIBOR) Act), which the Board states equal the ISDA spread adjustments. Tickers from the BISL IBOR Fallbacks fact sheet v7.2 (26~Sep~2025), Appendix~2. All tickers carry the \texttt{<Index>} yellow key.}
+\label{tab:usd-spread}
+\begin{tabular}{@{}lrlll@{}}
+\toprule
+Tenor & Spread (\%) & Spread ticker & Adjusted SOFR ticker & Fallback rate ticker \\
+\midrule
+O/N & 0.00644 & \texttt{YUS00ON} & \texttt{XSOFRON} & \texttt{VUS00ON} \\
+1W & to be confirmed on terminal & \texttt{YUS0001W} & \texttt{XSOFR1W} & \texttt{VUS0001W} \\
+1M & 0.11448 & \texttt{YUS0001M} & \texttt{XSOFR1M} & \texttt{VUS0001M} \\
+2M & to be confirmed on terminal & \texttt{YUS0002M} & \texttt{XSOFR2M} & \texttt{VUS0002M} \\
+3M & 0.26161 & \texttt{YUS0003M} & \texttt{XSOFR3M} & \texttt{VUS0003M} \\
+6M & 0.42826 & \texttt{YUS0006M} & \texttt{XSOFR6M} & \texttt{VUS0006M} \\
+12M & 0.71513 & \texttt{YUS001Y} & \texttt{XSOFR1Y} & \texttt{VUS001Y} \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+The 3M value, $s = 26.161$~bp, is the one Chapter~\ref{ch6-usd-validation} uses, because the USD caplet and swaption markets are written on 3M LIBOR. The fact sheet also gives the fallback-rate ticker \texttt{FUS0003M <Index>} for the all-in 3M fallback (adjusted SOFR plus spread) and confirms the underlying fixings \texttt{US0003M <Index>} (3M USD LIBOR) and \texttt{SOFRRATE <Index>} (SOFR). The \texttt{Y}-tickers are constant after 5~March~2021 and are useful only as a check; the \texttt{X}-tickers give the compounded-in-arrears SOFR over each LIBOR tenor with the two-day backward shift of the BISL Rule Book, which is exactly the realised compounded rate $R(T,T+\Delta)$ of Chapter~\ref{ch:prelim} up to the day-count and shift conventions stated there.
+
+\datanote{The 1W and 2M spread adjustments were fixed on the same date but are not in Regulation~ZZ (the LIBOR Act covers only O/N, 1M, 3M, 6M, 12M) and the BISL technical notice of 5~March~2021 that lists all seven could not be read as text on 2026-09-09 (the PDF at \url{https://assets.bbhub.io/professional/sites/10/IBOR_Fallbacks_LIBOR_Cessation_Announcement-2021-Mar.pdf} rendered as images only). Read them from \texttt{YUS0001W} and \texttt{YUS0002M} on the terminal. Neither tenor is used in the thesis.}
+
+\paragraph{Public alternatives.} The five LIBOR Act values are in Regulation~ZZ, 12~CFR~253.4(c), which is public. ISDA's Fallbacks FAQ (v13, August~2024) and Bloomberg's fact sheet give the methodology. ARRC's recommended spread adjustments for cash products equal the ISDA values by construction.
+
+\paragraph{Licence.} BISL states that a licence is required for ``re-distribution or usage'' of the adjusted RFRs, spread adjustments and fallback rates, with usage-licence fees waived for institutions below USD~5bn total assets using a single rate set. Quoting the five public values and using them as the constant $s$ in an academic thesis is use of Regulation~ZZ, not of Bloomberg's data. Downloading the daily \texttt{X}-ticker history from a university terminal falls under the terminal agreement, which permits internal academic use; redistributing it in the reproducibility package does not. The package will therefore recompute the compounded SOFR from the New York Fed's SOFR series rather than ship the \texttt{X}-ticker history.
+
+\subsection{SOFR and the SOFR OIS curve}\label{appC:usd-ois}
+
+\paragraph{SOFR fixings.} Administered by the Federal Reserve Bank of New York; published each business day at approximately 08:00~ET with a same-day revision at about 14:30~ET if the correction exceeds one basis point; first published 3~April~2018 for value date 2~April~2018. Fields published daily: rate, 1st, 25th, 75th and 99th percentiles, and volume. The 30-, 90- and 180-day compounded averages and the SOFR Index (initial value 1.00000000 on 2~April~2018) are official from 2~March~2020 with indicative history back to April~2018.
+
+\begin{itemize}[nosep]
+\item Public source: New York Fed Markets Data API, \url{https://markets.newyorkfed.org/} (endpoints under \texttt{/api/rates/secured/sofr/}, CSV, JSON and XML). Licence: the New York Fed grants ``a non-exclusive license \ldots\ to use, copy, and distribute Content'' with an attribution notice; redistribution in the reproducibility package is permitted with that notice.
+\item Public mirror: FRED series \texttt{SOFR}, \texttt{SOFR30DAYAVG}, \texttt{SOFR90DAYAVG}, \texttt{SOFR180DAYAVG}, \texttt{SOFRINDEX}, \texttt{SOFR75}, \texttt{SOFRVOL} (daily, percent, not seasonally adjusted; \texttt{SOFRINDEX} from 2018-04-02).
+\item Bloomberg: \texttt{SOFRRATE <Index>}. Refinitiv: \texttt{USDSOFR=} (reported on the LSEG developer forum; to be confirmed in Workspace).
+\end{itemize}
+
+\paragraph{USD LIBOR fixings.} \texttt{US0003M <Index>} on Bloomberg; \texttt{USD3MFSR=} on Refinitiv (reported on the Refinitiv developer forum as the 3M USD LIBOR fixing RIC; to be confirmed). Public history is a problem: FRED removed all IBA series (including \texttt{USD3MTD156N}) on 31~January~2022 at IBA's request. IBA's own Historical LIBOR Rates webpage provides the previous day's rates ``for Your information purposes only'' and its user agreement forbids copying, redistribution and ``pricing or valuation purposes''; IBA's fee schedule prices an Educational Usage Licence at USD~5{,}000 per benchmark per year. The thesis will therefore take LIBOR fixings from the university terminal and will not ship them; the package ships code that reads a user-supplied CSV.
+
+\paragraph{SOFR OIS curve.} Chapter~\ref{ch6-usd-validation} needs the SOFR discount curve and the forward compounded rates $F_t$ at each caplet start. Inputs: SOFR OIS par rates for 1W to 50Y (annual fixed versus compounded SOFR, Act/360, T+2) and, at the short end, SOFR futures.
+
+\begin{itemize}[nosep]
+\item Bloomberg: the SOFR OIS par-rate family whose 10Y member is reported as \texttt{USOSFR10 <Curncy>} (seen in third-party material, not in a Bloomberg document; to be confirmed on terminal via \texttt{SWDF} or \texttt{ICVS} curve~490, the Bloomberg USD SOFR curve, whose number is also to be confirmed). The Bloomberg benchmark 5Y SOFR swap rate index is \texttt{USISSO05 <Index>} (from an SEC filing that names it).
+\item Refinitiv: composite SOFR OIS RIC \texttt{USDSROIS=} (real-time, streaming; reported on the LSEG developer forum) and the Tradition-contributed curve chain; zero curves are on the \texttt{RFRZERO} page. Individual tenor RICs to be confirmed in Workspace.
+\item Public: CME publishes daily settlement prices for one- and three-month SOFR futures (\url{https://www.cmegroup.com/markets/interest-rates/stirs/}) for view-only use; historical settlements require a CME DataMine order and licence. There is no public daily history of SOFR OIS par rates. For the deployment window the discount curve can be replaced by the realised SOFR path itself, because the certificate scores realised hedging error, not model value; only the forward-looking $F_t$ at fitting dates needs a curve.
+\end{itemize}
+
+\datanote{No SOFR OIS par-rate history is public. If the terminal export of the OIS strip is refused or incomplete, the fallback is to bootstrap $F_t$ from CME SOFR futures settlements out to two years (the longest caplet expiry the thesis uses) and to state the convexity adjustment used. CME settlement history for 2019--2023 must then be licensed through DataMine or transcribed from the terminal (\texttt{SFRA <Cmdty>} is the front three-month SOFR future; to be confirmed).}
+
+\subsection{USD LIBOR cap/floor and swaption volatility surfaces, 2019--2023}\label{appC:usd-libor-vol}
+
+\paragraph{What is needed.} For each business day in $\Dfit$: (a) cap/floor normal volatilities on 3M USD LIBOR for expiries 1Y to 10Y and strikes ATM and a fixed absolute grid (at least 1\%, 1.5\%, 2\%, 2.5\%, 3\%, 4\%, 5\%, plus ATM$\pm$25, $\pm$50, $\pm$100~bp where quoted), from which caplet volatilities are stripped; (b) ATM swaption normal volatilities on the expiry~$\times$~tail grid \{1M, 3M, 6M, 1Y, 2Y, 5Y\}~$\times$~\{1Y, 2Y, 5Y, 10Y\} and, where available, the smile at $\pm$25, $\pm$50, $\pm$100~bp. Normal (basis-point) volatility is the market convention throughout the window; lognormal quotes, if downloaded, must be converted with the forward of the same day.
+
+\paragraph{Bloomberg.} Volatility cube monitor \texttt{VCUB <GO>} (verified as Bloomberg's interest-rate volatility cube monitor) with source \texttt{BVOL} (Bloomberg's composite, derived from contributed broker quotes) or \texttt{BBIR}. Cap volatilities are stripped on \texttt{VCUB} into caplet volatilities and can be exported by strike and expiry. Swaption ATM normal volatilities are carried by the \texttt{USSN\ldots <Curncy>} family (third-party sources name \texttt{USSNAC10} and \texttt{USSNAC2}; the encoding of expiry and tail in the suffix is to be confirmed on terminal, and the smile tickers are to be confirmed). Cap volatility tickers: to be confirmed on terminal. Daily history is available through \texttt{HP} or the Desktop API (\texttt{BDH}) under the standard terminal agreement, which permits internal academic use but not redistribution.
+
+\paragraph{Refinitiv.} Swaption and cap/floor surfaces are served through Instrument Pricing Analytics (volatility-surface endpoints, \texttt{NormalizedVolatility} output) rather than as fixed RICs; historical surfaces depend on the Workspace entitlement. RICs to be confirmed.
+
+\paragraph{Public alternatives.} None for the surface. The CME options on three-month SOFR futures (listed from January~2020; to be confirmed) give a public smile on the short end only and are on SOFR, not LIBOR. There is no public USD LIBOR cap or swaption volatility history.
+
+\paragraph{Frequency and range.} Daily close, 2~January~2019 to 30~June~2023 for LIBOR. After 31~December~2021 the LIBOR surface is a shrinking interdealer market and after 30~June~2023 it does not exist; Chapter~\ref{ch6-usd-validation} uses LIBOR quotes only to 31~December~2021 for fitting and reports the 2022--2023 LIBOR quotes, if downloaded, as a diagnostic of a dying market rather than as data.
+
+\paragraph{Known quality issues.}
+\begin{enumerate}[nosep]
+\item Composite surfaces are filled. Bloomberg's \texttt{BVOL} and Refinitiv's IPA surfaces interpolate and extrapolate where brokers did not quote; off-ATM swaption quotes between August~2019 and April~2020 are documented in the literature as largely missing, so a smile downloaded for that period may be model output. The thesis records, for each day and point, whether the vendor flags the point as quoted or derived, where the vendor exposes that flag; where it does not, the thesis treats strikes beyond $\pm$100~bp as unquoted.
+\item Negative-rate handling. In 2020--2021 the ATM 3M forward fell to about 0.2\%; quotes in the shifted-lognormal convention may appear alongside normal quotes. The convention field must be exported with each value.
+\item Strike grid drift. Absolute strike grids are re-centred by vendors as rates move; a strike present in 2019 may be absent in 2021. The stripping code in Appendix~\ref{appC-data-code} interpolates in strike only within the quoted range.
+\item The 2022 hiking cycle. Front-end LIBOR volatility in 2022 is in the SOFR-first regime with LIBOR quotes derived from SOFR quotes plus the fixed spread. Fitting on LIBOR in 2022 would fit a transformed SOFR surface and would not test the thesis.
+\end{enumerate}
+
+\subsection{SOFR cap/floor and swaption volatility surfaces, emergence to 2024}\label{appC:usd-sofr-vol}
+
+\paragraph{What is needed.} The same grids as Section~\ref{appC:usd-libor-vol} on compounded 3M SOFR (caps) and on SOFR OIS swaps (swaptions), daily, from the first date the vendor shows a quoted (not derived) SOFR surface to 31~December~2024. The early part of this history is the observed successor smile that Chapter~\ref{ch6-usd-validation} compares with the smile predicted from LIBOR under the identifiability theorem of Chapter~\ref{ch5-identifiability} plus the $\pm\eta$ interval; the later part is the deployment sample for the certificate.
+
+\paragraph{Emergence dates.} Clarus SDR data show SOFR swaptions from May~2021 and the first day above USD~2bn notional on 8~November~2021 (13\% of USD swaption notional that day; 29\% in the following week; USD~32bn against USD~80bn of LIBOR swaptions). SOFR caps and floors were trading before that date, at 19\% of cap/floor notional in the week of 8--12~November~2021. Risk.net reported in September~2022 that SOFR swaption volatility data ``from major vendors remains unavailable'' and that banks were mapping LIBOR swaption surfaces to SOFR by shifting strikes by the spread. The date on which Bloomberg's \texttt{BVOL} SOFR surface switched from derived to quoted is therefore the first thing to establish on the terminal.
+
+\paragraph{Bloomberg.} \texttt{VCUB <GO>} with the SOFR underlying selected; Bloomberg states that it builds RFR volatility cubes and prices SOFR caps, floors and swaptions from them. SOFR cap normal volatilities are quoted in basis points on a tenor~$\times$~strike table (the Deriscope SOFR cap example of 30~December~2022 shows the layout). Tickers for SOFR cap and swaption volatilities: to be confirmed on terminal. Settlement convention matters for swaptions: interdealer SOFR swaptions were physically settled from November~2021 pending a tradeable SOFR swap-rate benchmark; ISDA Supplement~88 (10~November~2021) and Settlement Matrix v3.0 set the cash-settlement rate for USD SOFR transactions to the USD SOFR ICE Swap Rate, with Collateralised Cash Price the USD standard. Export the settlement type with each quote.
+
+\paragraph{Refinitiv.} IPA volatility surfaces with the SOFR underlying; RICs to be confirmed.
+
+\paragraph{Public alternatives.} CME options on three-month SOFR futures: daily settlement prices are viewable on cmegroup.com and the implied smile on the first eight quarterly contracts is a genuine public successor smile out to two years. This is the only public SOFR option market and is sufficient for the identifiability test at the 3M~$\times$~\{3M,\ldots,2Y\} expiries, though not for the swaption grid. Historical settlements need a DataMine licence.
+
+\paragraph{Known quality issues.}
+\begin{enumerate}[nosep]
+\item Derived versus quoted. Until vendors had SOFR broker quotes, the SOFR surface was the LIBOR surface shifted by $s$ with volatility carried across. A predicted-versus-observed comparison on such data is circular. The thesis reports the identifiability test only from the first month in which the vendor surface is marked as quoted, and states that month.
+\item Compounded versus Term SOFR caps. Dealer caps trade on compounded-in-arrears SOFR; loan-market caps trade on CME Term SOFR. CME Term SOFR derivatives are restricted to end-user hedging, so the Term SOFR option market is thin and one-sided. The thesis uses compounded caps only.
+\item Convention change. The 2021 ISDA Definitions took effect for cleared trades on 2--3~October~2021; quotes straddling that weekend may change day count or payment lag.
+\item FOMC-date discontinuities. SOFR forwards jump at FOMC dates; the SABR-on-a-continuous-forward description of Chapter~\ref{ch:prelim} holds between meeting dates, and short-expiry SOFR caplets spanning a meeting are excluded from the smile fit \cite{brace2024}.
+\item Repo spikes. SOFR printed 5.25\% on 17~September~2019 against 2.43\% the day before; the compounded 3M rate absorbs this as roughly 3~bp, but daily-frequency scores must not treat the spike as a data error. The New York Fed's revision policy (one-basis-point threshold, 14:30~ET) means the 08:00 and 14:30 prints can differ; use the final print.
+\end{enumerate}
+
+\subsection{LIBOR--SOFR basis swaps}\label{appC:usd-basis}
+
+\paragraph{What is needed.} Daily par spreads of 3M USD LIBOR versus compounded SOFR basis swaps, 1Y to 30Y, 2019 to April~2023, to estimate the basis process $B_t$ under the physical measure: its level, volatility $\eta$ and the correlations $\rho_{BF}$, $\rho_{B\alpha}$ that Chapter~\ref{ch5-identifiability} shows the option market does not identify. The historical estimate is the ambiguity set the certificate of the certification chapter takes as input, and Chapter~\ref{ch6-usd-validation} tests whether it was wide enough.
+
+\paragraph{Refinitiv.} The Tradition-contributed curve \texttt{USDSR3LBS=TPSR} (3M LIBOR versus SOFR basis), with tenor points \texttt{USDSR3L3M=TPSR}, \texttt{USDSR3L6M=TPSR}, \texttt{USDSR3L1Y=TPSR}, \ldots, \texttt{USDSR3L50Y=TPSR} (reported on the LSEG developer forum as the RICs for the individual curve points). The ten-year point \texttt{USDSR3L10Y=} also appears without the contributor suffix. History depth to be confirmed; contributed curves often have short history in Workspace.
+
+\paragraph{Bloomberg.} Basis-swap tickers: to be confirmed on terminal (the LIBOR/SOFR basis family is reachable from \texttt{SWPM} with the basis-swap template and from \texttt{ICVS}; the ticker roots are not given in any Bloomberg document read for this section).
+
+\paragraph{Public alternatives.} None for quoted basis swaps. Two substitutes: (i) the realised basis, $\text{3M LIBOR fixing} - \text{compounded SOFR over the same period} - s$, computable from the fixings in Section~\ref{appC:usd-ois} and the definition of the BISL \texttt{X}-tickers; (ii) the Fed-funds--SOFR and LIBOR--Fed-funds basis pairs, whose cleared versions were converted by CME and LCH in April--May~2023 and whose history is on the same terminals. The realised basis is what the thesis's $B_t$ denotes; the quoted basis swap is its risk-neutral expectation and is needed only as a check on drift.
+
+\paragraph{Known quality issues.} Quoted basis spreads compress mechanically toward $s$ as June~2023 approaches, because the cleared swaps were converted at the fixed spread; the last twelve months of the series are a convergence trade, not a free market. Estimation of $\eta$ uses 2019 to mid-2022 only. Realised basis from fixings is available for the whole of 2018--2023 and is the primary series.
+
+\subsection{Dataset register}\label{appC:usd-register}
+
+\begin{table}[htbp]
+\centering\scriptsize
+\caption{USD datasets for Chapter~\ref{ch6-usd-validation}. ``Public'' means downloadable without a vendor contract; ``terminal'' means the university Bloomberg or Refinitiv terminal under its standard agreement (internal use, no redistribution). ``TBC'' means to be confirmed on terminal.}
+\label{tab:usd-register}
+\begin{tabular}{@{}p{2.6cm}p{2.5cm}p{2.3cm}p{2.0cm}p{1.2cm}p{2.5cm}@{}}
+\toprule
+Dataset & Vendor field & Public source & Range & Freq. & Licence \\
+\midrule
+Cessation calendar & --- & FCA, ISDA, CFTC, CME, LCH notices & 2018--2024 & event & public \\
+Fallback spread $s$ by tenor & \texttt{YUS0003M} etc.\ \texttt{<Index>} & Reg.~ZZ 12~CFR~253.4(c) (five tenors) & fixed 5~Mar~2021 & constant & public (Reg.~ZZ); BISL licence for tickers \\
+SOFR fixings & \texttt{SOFRRATE <Index>}; \texttt{USDSOFR=} & NY Fed API; FRED \texttt{SOFR} & 2018-04-02-- & daily & NY Fed ToU, redistributable with notice \\
+SOFR averages, index & --- & NY Fed API; FRED \texttt{SOFR30/90/180DAYAVG}, \texttt{SOFRINDEX} & 2018-04-02-- (official from 2020-03-02) & daily & as above \\
+USD LIBOR fixings & \texttt{US0003M <Index>}; \texttt{USD3MFSR=} & none (FRED removed 31~Jan~2022; IBA page view-only) & to 2023-06-30 (synthetic to 2024-09-30) & daily & terminal; IBA educational licence USD~5k/yr \\
+Compounded SOFR by LIBOR tenor & \texttt{XSOFR3M <Index>} & recompute from NY Fed SOFR & 2018-- & daily & BISL licence; recompute instead \\
+SOFR OIS par rates & \texttt{USOSFR\ldots <Curncy>} (TBC); \texttt{USDSROIS=} & none & 2019-- & daily & terminal \\
+SOFR futures settlements & --- & CME settlements page (view only); DataMine (licensed) & 2018-05-07-- & daily & CME ToU / DataMine \\
+LIBOR cap/floor vols & \texttt{VCUB}/\texttt{BVOL}; tickers TBC & none & 2019-01-02 to 2021-12-31 (to 2023-06-30 as diagnostic) & daily & terminal \\
+LIBOR swaption vols & \texttt{VCUB}; \texttt{USSN\ldots <Curncy>} (TBC) & none & as above & daily & terminal \\
+SOFR cap/floor vols & \texttt{VCUB}/\texttt{BVOL}, SOFR underlying; tickers TBC & CME SOFR futures options (short end) & first quoted month (TBC, $\ge$~Nov~2021) to 2024-12-31 & daily & terminal; CME for options \\
+SOFR swaption vols & \texttt{VCUB}; tickers TBC & none & as above & daily & terminal \\
+LIBOR--SOFR basis swaps & \texttt{USDSR3LBS=TPSR} points; Bloomberg TBC & realised basis from fixings & 2019 to mid-2022 (quoted); 2018--2023 (realised) & daily & terminal; realised basis redistributable \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{Minimum viable data}\label{appC:usd-minimum}
+
+Chapter~\ref{ch6-usd-validation} can be written on three terminal exports and two public downloads. The terminal exports are: the daily 3M USD LIBOR fixing from 2~January~2018 to 30~June~2023; the daily \texttt{VCUB} caplet-volatility strip on 3M LIBOR at ATM and $\pm$50, $\pm$100~bp for expiries 3M to 2Y from 2~January~2019 to 31~December~2021; and the same strip on compounded SOFR from the first quoted month to 31~December~2024. The public downloads are the New York Fed SOFR series from 2~April~2018 and the five Regulation~ZZ spread adjustments. From these five inputs the realised compounded rate $R(T,T+\Delta)$, the realised basis $B_t$, the constant $s=26.161$~bp, the fitted SABR smiles, the predicted SOFR smile with its $\pm\eta$ interval and the realised hedging-error scores of the certificate all follow. Everything else in Table~\ref{tab:usd-register} improves the chapter: the swaption grid extends the identifiability test beyond two years, the OIS strip replaces the futures-implied forward, the quoted basis swaps check the drift of $B_t$, and the CME options give a public cross-check of the SOFR smile. If the terminal export of volatilities is refused, the chapter cannot be written on public data alone, because no public LIBOR option surface exists; the CME SOFR options then support only the second half of the chapter, and Chapter~\ref{ch1-introduction} must say so.
+
+\datanote{Everything in this section is a specification written on 2026-09-09 from public documents. No terminal has been queried. The items marked ``to be confirmed on terminal'' are to be resolved in a single terminal session and this section updated with the exact tickers, the first quoted date of the SOFR surface, and the history depth of the basis-swap RICs before Chapter~\ref{ch6-usd-validation} is drafted.}
 \section{ZAR data}
 % appC-zar-data.tex --- \input under \section{ZAR data} in appC-data-code.tex
 % Written by thesis-data-engineer-zar, 2026-09-09. Every URL was opened on that date
