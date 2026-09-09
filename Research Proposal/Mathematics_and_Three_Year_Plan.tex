@@ -59,7 +59,7 @@ Theorem~\ref{thm:ident} & JIBAR caplet is priced under $\Q^{T+\Delta}$, not $\Q^
 Theorem~\ref{thm:two} & Becomes a corollary of Theorem~\ref{thm:ident}; difference is at the money, not wing-only; rank condition is trivial. Demoted from difficulty 4 to 2--3. \\
 Proposition~\ref{prop:tenor} & ``Static arbitrage'' replaced by ``model inconsistency''; exact only for normal SABR with equal volatilities; otherwise leading order in variance. Demoted to proposition, appendix in the three-year plan. \\
 Theorem~\ref{thm:cov} & Coupling cost $(n+1)\beta(b)$, not $2n\beta(b)$; deployment block must be gap-separated; conditional form uses the Beta law of conformal coverage, not DKW; drift penalty is Kolmogorov distance $\dK \le \dTV$, applied after coupling. \\
-Proposition~\ref{prop:w1} & The first version was false (counterexample: point mass versus narrow uniform). Correct bound is $\sqrt{2LW_1}$; plug-in rate $n^{-1/4}$; the dependent-data version of the empirical $W_1$ bound is currently missing. \\
+Proposition~\ref{prop:w1} & Attribution: the $\sqrt{2LW_1}$ inequality is in print (Ross 2011; Xu et al.\ 2025, Prop.\ 1) and is specialised, not claimed. The first version was false (counterexample: point mass versus narrow uniform). Correct bound is $\sqrt{2LW_1}$; plug-in rate $n^{-1/4}$; the dependent-data version of the empirical $W_1$ bound is currently missing. \\
 Theorem~\ref{thm:sharp} & $\delta_{+\infty}$ is not a measure on $\R$; construction replaced; the sharp constant is $1$, not $1-\alpha$; the argument is adversarial, not Le Cam. \\
 First-draft bootstrap theorem & Dropped as a theorem. Empirical comparison with block bootstrap retained. \\
 Theorem~\ref{thm:block} & \textbf{New in the second version; corrected in the third.} The claimed minimax rate $N^{-r/(2r+3)}$ was false: Barber and Pananjady (2026) obtain the marginal deficit $N^{-r/(r+1)}$ over $\mathcal B_r$ without blocking, and the unblocked sample quantile has conditional coverage error $N^{-1/2}$ for every $r>1$. The deficit $\sqrt{b/N}+Nb^{-(r+1)}$ comes from Theorem~\ref{thm:cov}(ii), not (i). Exact minimiser $(2(r+1))^{2/(2r+3)}N^{3/(2r+3)}$ added. Restated as the minimax calibration-conditional coverage error at confidence $\delta$ over $\mathcal B_r$, with a mixing-driven lower bound; positioned against Halkiewicz (2026), whose lower bound is drift-driven. This is the doctoral theorem. \\
@@ -96,7 +96,7 @@ The dimensionless basis scale is $\varepsilon:=\eta/(\alpha_0F_0^{\beta})$. \cor
 
 \section{Finance results}
 
-\begin{lemma}[Time-changed SABR; Willems 2020, Lyashenko--Mercurio 2019]\label{lem:tc}
+\begin{lemma}[Time-changed SABR; Lyashenko--Mercurio 2019, Remark in Willems 2020]\label{lem:tc}
 Under \eqref{eq:sabr} with the same $g$ on both diffusion coefficients, $(F_t,\alpha_t)=(\tilde F_{\tau(t)},\tilde\alpha_{\tau(t)})$ where $(\tilde F,\tilde\alpha)$ is constant-parameter SABR$(\alpha_0,\beta,\rho,\nu)$. Hence
 \begin{equation}
 P(0,T+\Delta)\,\E^{\Q^{T+\Delta}}\big[(F_{T+\Delta}-K')^+\big]=P(0,T+\Delta)\,C^{\mathrm{SABR}}\big(F_0,K',\tau(T+\Delta);\alpha_0,\beta,\rho,\nu\big),
@@ -107,7 +107,7 @@ with the Hagan approximation carrying its usual $O(\alpha^2\tau)$ error.
 Because $\tau$ is deterministic, $(\int_0^t g\,dW,\int_0^t g\,dZ)$ is a correlated Brownian pair in the clock $\tau$; substitute. \corr{no Dambis--Dubins--Schwarz needed; the same-$g$ condition is what makes the substitution exact}
 \end{proof}
 
-\begin{proposition}[Non-decaying vol-of-vol; \target]\label{prop:novol}
+\begin{proposition}[Non-decaying vol-of-vol; Willems 2020, Theorems 4.1--4.2; \target]\label{prop:novol}
 If instead $d\alpha_t=\nu\alpha_t\,dZ_t$ (vol-of-vol does not run off, the physically defensible choice), then in the clock $\tau$ the vol-of-vol is $\nu/g(\tau^{-1}(u))$ and no closed form exists.
 \begin{enumerate}[nosep,label=(\roman*)]
 \item (Total variance.) The total vol-of-vol variance is $\nu^2(T+\Delta)$ rather than $\nu^2(T+\Delta/3)$: an excess of $\tfrac23\nu^2\Delta$, which is $15.4\%$ of $\nu^2\tau^*$ and $16.7\%$ of $\nu^2T$ for $T=1$y, $\Delta=3$m. This quantity is the variance of $\log\alpha_{T+\Delta}$; it does not by itself determine the smile.
@@ -188,7 +188,7 @@ the last term holding on an event of probability at least $1-\delta'$. Moreover 
 \end{enumerate}
 No assumption is made that the model underlying $\pi$ is correct.
 \end{theorem}
-\corr{coupling cost is $(n+1)\beta(b)$ (Yu 1994, Lemma 4.1: $(m-1)\beta(b)$ for $m$ blocks, plus independence from $\mathcal D_{\mathrm{fit}}$ and the deployment block); the conditional statement cannot be obtained from a joint total-variation bound and uses the $\beta$-mixing definition with Markov's inequality; the conformal coverage is $\Beta(k,n+1-k)$-distributed (Vovk 2012), so DKW is a corollary, not the tool; the drift penalty is Kolmogorov distance because only half-lines are evaluated, applied to the fixed set $(-\infty,\hat q^*]$ after coupling has made $S^*_0$ independent of $\hat q^*$.}
+\corr{coupling cost is $(n+1)\beta(b)$ (Yu 1994, Lemma 4.1: $(m-1)\beta(b)$ for $m$ blocks, plus independence from $\mathcal D_{\mathrm{fit}}$ and the deployment block); the conditional statement cannot be obtained from a joint total-variation bound and uses the $\beta$-mixing definition with Markov's inequality; the conformal coverage is $\Beta(k,n+1-k)$-distributed, the Beta form of Vovk (2012, Proposition 2b, stated there in binomial form), so DKW is a corollary, not the tool; the drift penalty is Kolmogorov distance because only half-lines are evaluated, applied to the fixed set $(-\infty,\hat q^*]$ after coupling has made $S^*_0$ independent of $\hat q^*$.}
 \begin{route}
 (i) Sequential Berbee coupling replaces the $n+1$ separated blocks and $\mathcal D_{\mathrm{fit}}$ by independent copies $S^*_{0:n}$ on an event of probability $\ge1-(n+1)\beta(b)$. (ii) On that event, conditional on $\pi$, the calibration copies are i.i.d.\ $P$ and $F_P(\hat q^*)\sim\Beta(k,n+1-k)$, so $\Prob(S^*_0\le\hat q^*)\ge1-\alpha$ if $S^*_0\sim P$. (iii) For $S^*_0\sim Q$ and the fixed half-line $(-\infty,\hat q^*]$, $|Q(S\le\hat q^*)-P(S\le\hat q^*)|\le\dK(P,Q)$. Sum.
 \end{route}
@@ -196,7 +196,7 @@ No assumption is made that the model underlying $\pi$ is correct.
 $\beta(b)$ is not estimable from data (Adams--Nobel-type impossibility). The certificate is conditional on an \emph{assumed} mixing class $\{\beta(k)\le Ck^{-r}\}$, and the thesis says so. \corr{added}
 \end{remark}
 
-\begin{proposition}[Drift penalty bounded by $W_1$; \target]\label{prop:w1}
+\begin{proposition}[Drift penalty bounded by $W_1$; known: Ross 2011, Xu et al.\ 2025 Prop.\ 1]\label{prop:w1}
 If $Q$ has a density bounded by $L$ (no assumption on $P$), then for all $x$, $F_P(x)-F_Q(x)\le\sqrt{2L\,W_1(P,Q)}$. If both have densities bounded by $L$, $\dK(P,Q)\le\sqrt{L\,W_1(P,Q)}$. Also $F_P(x)-F_Q(x)\le L\,W_\infty(P,Q)$.
 \end{proposition}
 \begin{proof}
@@ -338,6 +338,8 @@ Months & Activity & Milestone \\
 \item Oliveira, R.\,I., Orenstein, P., Ramos, T., Romano, J.\,V. (2024). Split conformal prediction and non-exchangeable data. \emph{J.\ Mach.\ Learn.\ Res.} 25.
 \item Piterbarg, V. (2020). Interest rates benchmark reform and options markets. SSRN 3537925.
 \item Rio, E. (2017). \emph{Asymptotic Theory of Weakly Dependent Random Processes}. Probability Theory and Stochastic Modelling 80, Springer.
+\item Ross, N. (2011). Fundamentals of Stein's method. \emph{Probab.\ Surveys} 8, 210--293. (Kolmogorov--Wasserstein inequality; attribution recorded by the librarian, pending verification of the proposition number.)
+\item Xu, R., Chen, C., Sun, Y., Venkitasubramaniam, P., Xie, S. (2025). Wasserstein-regularized conformal prediction under general distribution shift. \emph{ICLR}. arXiv:2501.13430.
 \item Vovk, V. (2012). Conditional validity of inductive conformal predictors. \emph{Proc.\ ACML}, JMLR W\&CP 25, 475--490.
 \item Willems, S. (2020). SABR smiles for RFR caplets. arXiv:2004.04501.
 \item Yu, B. (1994). Rates of convergence for empirical processes of stationary mixing sequences. \emph{Ann.\ Probab.} 22(1), 94--116.
