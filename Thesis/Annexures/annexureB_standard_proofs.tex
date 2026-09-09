@@ -18,7 +18,7 @@ For each $u$, $\tau^{-1}(u)$ is a deterministic time, so $\tilde W_u=M_{\tau^{-1
 
 \section{Proof of the time change of stochastic integrals}\label{appB:tcint}
 
-This section proves the time change of stochastic integrals, stated as Lemma~\ref{eq:prelim-tc-int} in Chapter~\ref{ch:prelim}.
+This section proves the time change of stochastic integrals, stated as Lemma~\ref{lem:prelim-tc-int} in Chapter~\ref{ch:prelim}.
 
 \begin{proof}
 Measurability: the map $(u,\omega)\mapsto(\tau^{-1}(u),\omega)$ is measurable from $[0,v]\times\Omega$ with the $\sigma$-field $\mathcal B([0,v])\otimes\mathcal G_v$ to $[0,\tau^{-1}(v)]\times\Omega$ with $\mathcal B\otimes\mathcal F_{\tau^{-1}(v)}$, and progressive measurability of $H$ is preserved under composition. Integrability: substituting $u=\tau(s)$, $du=g(s)^2ds$,
@@ -48,7 +48,7 @@ For the direct statement, fix $u\in(0,1)$. Since $F$ is continuous, the set $\{x
 
 \section{Proof of the order-statistic density}\label{appB:orderstat}
 
-This section proves the order-statistic density, stated as Lemma~\ref{eq:prelim-beta-density} in Chapter~\ref{ch:prelim}.
+This section proves the order-statistic density, stated as Lemma~\ref{lem:prelim-order-stat} in Chapter~\ref{ch:prelim}.
 
 \begin{proof}
 The event $\{U_{(k)}\le u\}$ is the event that at least $k$ of the $n$ uniforms fall in $[0,u]$, and the number that do is binomial with parameters $(n,u)$: this is the last assertion. Hence
@@ -123,7 +123,7 @@ so $\Prob(Y\ne Y')\ge\dTV(P_{XY},P_X\otimes P_Y)=\beta$ by Lemma~\ref{lem:prelim
 
 \section{Proof of the sequential coupling lemma}\label{appB:yu}
 
-This section proves the sequential coupling lemma, stated as Lemma~\ref{eq:prelim-yu-coupling} in Chapter~\ref{ch:prelim}.
+This section proves the sequential coupling lemma, stated as Lemma~\ref{lem:prelim-yu} in Chapter~\ref{ch:prelim}.
 
 \begin{proof}
 Write $\mu_j$ for the law of $(X_1,\dots,X_j)$ and $\lambda_j$ for the law of $X_j$. We prove \eqref{eq:prelim-yu-tv} by induction on $m$; for $m=1$ both sides are $0$. For the step, insert the intermediate law $\mu_{m-1}\otimes\lambda_m$ and use the triangle inequality:
@@ -139,7 +139,7 @@ For blocks of a $\beta$-mixing process, if the block $X_j$ occupies times in $[u
 
 \section{Proof of the Wasserstein-one area identity}\label{appB:w1}
 
-This section proves the Wasserstein-one area identity, stated as Theorem~\ref{eq:prelim-w1-identity} in Chapter~\ref{ch:prelim}.
+This section proves the Wasserstein-one area identity, stated as Theorem~\ref{thm:prelim-w1-identity} in Chapter~\ref{ch:prelim}.
 
 \begin{proof}
 \emph{Lower bound for every coupling.} For real $a,b$, $|a-b|=\int_{\R}|\ind{a\le x}-\ind{b\le x}|\,dx$: the integrand is $1$ exactly when $x$ lies in $[\min(a,b),\max(a,b))$, an interval of length $|a-b|$. Let $(X,Y)$ be any coupling. By Tonelli's theorem, since the integrand is non-negative,

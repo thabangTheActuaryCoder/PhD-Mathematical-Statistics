@@ -45,8 +45,8 @@
 | Ch7 The South African converted book | 20 |
 | Ch8 Conclusions | 10 |
 | App A Tenor consistency | 14 |
-| App B Proofs of standard results | 30 |
-| App C Data, code, reproducibility | 16 |
+| App B Proofs of standard results | 18 (reallocated 2026-09-09: the nine moved proofs run about six pages, so twelve pages go to Appendix C) |
+| App C Data, code, reproducibility | 28 (reallocated 2026-09-09: the citation and data-note boxes the zero-hallucination rule requires cost more space than the prose they certify) |
 | Bibliography | 10 |
 Roughly 300 words per page at 12pt, 1.5 spacing, Wits margins (verified by scout) with displayed mathematics.
 
