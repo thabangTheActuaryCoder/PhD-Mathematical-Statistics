@@ -23,3 +23,4 @@ cpif "$W/appendices/appB-proofs-standard.tex" "$R/Thesis/Annexures/annexureB_sta
   echo '\section{Reproducibility protocol}'; echo '\gap{Written by thesis-writer-appC-data once code and data sections exist.}'; } > "$R/Thesis/Annexures/annexureC_data_code.tex"
 [ -d "$W/code" ] && rsync -a --delete "$W/code/" "$R/Code/"
 echo synced
+[ -d "$W/reviews" ] && rsync -a "$W/reviews/" "$R/Reviews/" && echo "reviews synced"
