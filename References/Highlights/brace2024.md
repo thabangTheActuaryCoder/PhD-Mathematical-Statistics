@@ -1,0 +1,5 @@
+# brace2024 — Brace, Gellert, Schlögl (2024), SOFR term structure dynamics
+
+**Record.** Brace, A., Gellert, K., Schlögl, E. (2024). SOFR term structure dynamics—Discontinuous short rates and stochastic volatility forward rates. *Journal of Futures Markets* 44(6), 936–985. DOI 10.1002/fut.22499. Preprint: SSRN 4270811 (posted 2022), DOI 10.2139/ssrn.4270811.
+**Status.** **Paywalled: obtain via institutional library.** Wiley record closed (OpenAlex). SSRN returns HTTP 403 to non-browser downloads on 2026-09-09; a human user may be able to download the SSRN version. Not on arXiv (the related arXiv:2101.04308 is Gellert–Schlögl 2021, "Short Rate Dynamics: A Fed Funds and SOFR perspective", a different paper). Not downloaded.
+**Highlights.** None on disk. Intended use (ch6 USD validation, ch2 preliminaries): a SOFR term-structure model with jumps at FOMC dates and stochastic-volatility forward rates, i.e. the successor-rate dynamics on the USD side; cite for the empirical features of SOFR (scheduled jumps, diffusive forwards) rather than for any theorem until the copy is read. No locator may be written yet.

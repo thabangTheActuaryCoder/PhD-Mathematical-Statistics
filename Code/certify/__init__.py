@@ -1,7 +1,7 @@
 """Blocked conformal certificate for hedging error (thesis Chapter 3).
 
 Reference implementation of ground-truth Theorem 6, Proposition 7 and
-Theorem 9(i) of ~/PhD-Topic-Council/13-mathematics-3yr.tex, plus the
+Theorem 9(i) of "Council Workspace/13-mathematics-3yr.tex", plus the
 stationary block bootstrap used only as an empirical comparison.
 numpy + scipy only.  All functions are pure; nothing is estimated that
 the theory says is not estimable (beta(b) is supplied, never fitted).
@@ -13,16 +13,16 @@ from scipy.integrate import quad
 # ---------------------------------------------------------------- blocking
 
 def blocks(N, b, n_fit=0):
-    """Start indices of n non-overlapping calibration blocks of length b.
+    """Start indices of n = floor((N - s0) / (2b)) calibration blocks of length b.
 
-    Layout on the record [0, N):  [fit prefix n_fit][gap b][block][gap b][block]...
+    Layout on the record [0, N):  [fit prefix n_fit][gap b][block][gap b]...[block][gap b].
     Consecutive blocks are separated by gaps of exactly b; the first block
-    starts b after the fitting prefix (no gap if n_fit == 0).  A deployment
-    block must start at least b after the last returned block ends; the
-    caller places it (see `deployment_start`).
+    starts b after the fitting prefix (no gap if n_fit == 0); the record ends
+    with a trailing gap of b, so the deployment block starts at N (ch3 Sec. 3.7:
+    250 + 240 + 10 = 500).  With n_fit == 0 this is n = floor(N/(2b)) of Thm 9(i).
     """
     s0 = n_fit + b if n_fit > 0 else 0
-    n = (N - s0 + b) // (2 * b)          # ponytail: floor; leftover tail is unused
+    n = (N - s0) // (2 * b)              # ponytail: floor; leftover tail is unused
     return s0 + 2 * b * np.arange(max(n, 0))
 
 def deployment_start(starts, b):
@@ -30,9 +30,12 @@ def deployment_start(starts, b):
     return int(starts[-1]) + 2 * b
 
 def block_scores(x, starts, b):
-    """Score of each block = summed per-period hedging error over the block."""
-    x = np.asarray(x, float)
-    return np.array([x[s:s + b].sum() for s in starts])
+    """Score of each block = summed per-period hedging error over the block.
+    x may be 1-D (one path) or 2-D (paths, time); blocks index the last axis."""
+    cs = np.cumsum(np.asarray(x, float), axis=-1)
+    cs = np.concatenate([np.zeros(cs.shape[:-1] + (1,)), cs], axis=-1)
+    starts = np.asarray(starts)
+    return cs[..., starts + b] - cs[..., starts]
 
 # ---------------------------------------------------------------- threshold
 
@@ -40,10 +43,12 @@ def conformal_k(n, alpha):
     return int(np.ceil((1 - alpha) * (n + 1)))
 
 def conformal_threshold(scores, alpha):
-    """q_hat = k-th order statistic, k = ceil((1-alpha)(n+1)); +inf if k > n."""
-    s = np.sort(np.asarray(scores, float))
-    k = conformal_k(len(s), alpha)
-    return s[k - 1] if k <= len(s) else np.inf
+    """q_hat = k-th order statistic, k = ceil((1-alpha)(n+1)); +inf if k > n.
+    scores may be 2-D (paths, n): one threshold per row."""
+    s = np.sort(np.asarray(scores, float), axis=-1)
+    n = s.shape[-1]
+    k = conformal_k(n, alpha)
+    return s[..., k - 1] if k <= n else np.full(s.shape[:-1], np.inf)
 
 # ---------------------------------------------------------------- Theorem 6 deficit terms
 
@@ -60,8 +65,8 @@ def coupling_cost(n, b, beta_fn):
     return (n + 1) * beta_fn(b)
 
 def certificate(n, b, alpha, beta_fn, delta=0.05, delta_prime=0.05, dK=0.0):
-    """Both parts of Theorem 6 as numbers.  dK is a plug-in placeholder
-    (Kolmogorov distance P vs Q); pass `sqrt_drift_bound(...)` or 0 if Q = P."""
+    """Both parts of Theorem 6 as numbers.  dK is the Kolmogorov distance P vs Q
+    (a stress input or `sqrt_drift_bound(...)`); 0 if Q = P."""
     k = conformal_k(n, alpha)
     bb = beta_fn(b)
     return dict(
@@ -71,6 +76,7 @@ def certificate(n, b, alpha, beta_fn, delta=0.05, delta_prime=0.05, dK=0.0):
         marginal=1 - alpha - dK - (n + 1) * bb,                 # Thm 6(i)
         beta_quantile=beta_quantile(n, k, delta),
         dkw_level=dkw_level(n, alpha, delta),
+        markov=bb / delta_prime,
         conditional=beta_quantile(n, k, delta) - dK - bb / delta_prime,  # Thm 6(ii)
         conditional_prob=1 - delta - n * bb,                    # holds w.p. >= this
     )
@@ -100,31 +106,43 @@ def sqrt_drift_bound(L, W1):
 
 # ---------------------------------------------------------------- Theorem 9(i)
 
-def optimal_block_length(N, r):
-    """b* = N^{3/(2r+3)} (up to constants)."""
-    return N ** (3 / (2 * r + 3))
-
 def deficit_curve(N, r, bs):
-    """E(b, N) = sqrt(b/N) + N b^{-(r+1)}, the constant-free deficit of Theorem 9."""
+    """f(b) = sqrt(b/N) + N b^{-(r+1)}, the constant-free expected conditional
+    shortfall bound of Theorem 9(i) over B_r = {beta(k) <= C k^{-r}}."""
     bs = np.asarray(bs, float)
     return np.sqrt(bs / N) + N * bs ** (-(r + 1))
 
-def deficit_actual(N, b, alpha, beta_fn, delta):
-    """Finite-sample deficit with constants: DKW slack + coupling, for the n that b yields."""
+def optimal_block_length(N, r):
+    """Exact minimiser of deficit_curve: b* = (2(r+1))^{2/(2r+3)} N^{3/(2r+3)}
+    (ground-truth Thm 9(i); 23.9 at N=500, r=2)."""
+    return (2 * (r + 1)) ** (2 / (2 * r + 3)) * N ** (3 / (2 * r + 3))
+
+def optimal_deficit(N, r):
+    """f(b*) = (2r+3)/(2(r+1)) (2(r+1))^{1/(2r+3)} N^{-r/(2r+3)} (1.51 N^{-r/(2r+3)} at r=2)."""
+    return (2 * r + 3) / (2 * (r + 1)) * (2 * (r + 1)) ** (1 / (2 * r + 3)) * N ** (-r / (2 * r + 3))
+
+def balance_block_length(N, r):
+    """Bare balance sqrt(b/N) = N b^{-(r+1)}, i.e. N^{3/(2r+3)}.  NOT the minimiser
+    (ground-truth correction 10); kept only to show the gap to optimal_block_length."""
+    return N ** (3 / (2 * r + 3))
+
+def expected_shortfall_bound(N, b, beta_fn):
+    """Theorem 9(i) with constants: E[(1-alpha-F_P(q_hat))^+] <= 1/(2 sqrt(n+2)) + (n+1) beta(b)
+    (from Thm 6(ii) via E|Beta - k/(n+1)| <= sd(Beta)), with the n that b yields."""
     n = len(blocks(N, b))
-    return np.sqrt(np.log(1 / delta) / (2 * n)) + (n + 1) * beta_fn(b)
+    return 1 / (2 * np.sqrt(n + 2)) + (n + 1) * beta_fn(b)
 
 # ---------------------------------------------------------------- Gaussian AR(1) example
 
 def ar1_beta_bound(phi):
-    """beta(k) <= C phi^k for a stationary Gaussian AR(1), C = 1 / (2 sqrt(1 - phi^2)).
+    """Chapter 3 Lemma ar1, first inequality: beta(k) <= (1/2) sqrt(-log(1 - phi^{2k})).
 
-    Derivation: by the Markov property beta(k) = E_x ||P^k(x,.) - pi||_TV.
-    Pinsker + Jensen give beta(k) <= sqrt(E KL / 2) with
-    E KL(P^k(x,.) || pi) = -log(1 - phi^{2k}) / 2, and -log(1-u) <= u/(1-u).
+    Markov property gives beta(k) = E_x d_TV(P^k(x,.), mu); Pinsker + Jensen give
+    beta(k) <= sqrt(E KL / 2) with E KL(P^k(x,.) || mu) = -log(1 - phi^{2k}) / 2.
+    The looser k-uniform forms (1/2)|phi|^k (1-phi^{2k})^{-1/2} <= |phi|^k / (2 sqrt(1-phi^2))
+    and ch2's |phi|^k / sqrt 2 are valid too; the thesis quotes each with its source.
     """
-    C = 1 / (2 * np.sqrt(1 - phi ** 2))
-    return lambda k: C * abs(phi) ** k, C
+    return lambda k: 0.5 * np.sqrt(-np.log1p(-abs(phi) ** (2 * k)))
 
 def ar1_beta_exact(phi, k):
     """Exact beta(k) of the Gaussian AR(1) by 1-D quadrature (to gauge the bound)."""
@@ -136,11 +154,18 @@ def ar1_beta_exact(phi, k):
         return 0.5 * np.trapezoid(np.abs(f), z)
     return quad(lambda x: tv(x) * norm.pdf(x, 0, np.sqrt(s2)), -8 * np.sqrt(s2), 8 * np.sqrt(s2))[0]
 
+def ar1_block_var(phi, b, v=1.0):
+    """v_b = Var(sum_{t=1}^b X_t) = v (b + 2 sum_{h<b} (b-h) phi^h) for stationary variance v."""
+    h = np.arange(1, b)
+    return v * (b + 2 * np.sum((b - h) * phi ** h))
+
 def ar1_block_sd(phi, b, sigma=1.0):
     """Exact sd of a b-period block sum of a stationary AR(1) with innovation sd sigma."""
-    j = np.arange(1, b)
-    var_x = sigma ** 2 / (1 - phi ** 2)
-    return np.sqrt(var_x * (b + 2 * np.sum((b - j) * phi ** j)))
+    return np.sqrt(ar1_block_var(phi, b, sigma ** 2 / (1 - phi ** 2)))
+
+def ar1_drift_dK(phi, b, mu, v=1.0):
+    """Kolmogorov distance between P = N(0, v_b) and Q = N(b mu, v_b): 2 Phi(b mu / (2 sqrt v_b)) - 1."""
+    return 2 * norm.cdf(b * mu / (2 * np.sqrt(ar1_block_var(phi, b, v)))) - 1
 
 def simulate_ar1(phi, T, reps, rng, sigma=1.0, burn=200):
     """reps stationary Gaussian AR(1) paths of length T, shape (reps, T)."""

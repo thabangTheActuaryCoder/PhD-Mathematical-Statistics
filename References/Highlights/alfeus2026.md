@@ -1,0 +1,18 @@
+# alfeus2026 — Alfeus (2026), Event-aware jump-diffusion for the JIBAR–ZARONIA spread
+
+**Record.** Alfeus, M. (2026). Event-aware jump-diffusion for the JIBAR–ZARONIA spread. South African Reserve Bank Working Paper WP/26/06. Title page: "Authorised for publication by Konstantin Makrelov, 19 February 2026". Externally refereed (SARB series note, p. 2 of PDF).
+**Bibliographic check.** References.bib has `month = jun`; the document itself is dated **19 February 2026**. Correct the month to `feb` (or drop it) — see LESSONS.
+**File.** `References/PDF/alfeus2026.pdf`, 28 PDF pages, downloaded 2026-09-09 from https://www.resbank.co.za/content/dam/sarb/publications/working-papers/2026/26-06/jibar-zaronia.pdf (SARB primary document; © SARB, reproduction permitted with acknowledgement). Landing page https://www.resbank.co.za/en/home/publications/publication-detail-pages/working-papers/2026/jibar-zaronia. Printed page = PDF page − 2.
+**Highlighted copy.** `References/PDF/alfeus2026.highlighted.pdf`.
+
+| Printed p. (PDF) | As printed | Excerpt (verbatim) | Why it matters here | Locator |
+|---|---|---|---|---|
+| 1 (3) | Abstract | "We analyse the spread between JIBAR and ZARONIA and develop a model that allows the spread to evolve smoothly on most days but also to jump on economically important dates." | The only SA paper modelling the basis B_t = L − F − s dynamically; ch5 failure mode ("basis mean reversion comparable to 1/T") and ch7 coda. No options, smile or SABR content (checked by full-text search: none). | `[Abstract]` |
+| 5 (7) | Sec. 3 | "JIBAR is obtained from Bloomberg for 4 January 2016 to 31 August 2024." | Sample window for the physical-measure basis estimate that Thm 6 takes as ambiguity-set input. | `[Sec.~3]` |
+| 5 (7) | Sec. 3 | "Official ZARONIA publication starts in November 2022; prior observations are treated as a proxy series supplied by the SARB." | Data caveat for ch7 / App. C: pre-Nov-2022 ZARONIA is a SARB proxy, not a published fixing. | `[Sec.~3]` |
+| 5 (7) | Sec. 3 | "The spread has mean 44.15 basis points (bp) and sd 17.12 bp; skewness -0.2808; kurtosis 2.255." | Magnitude of η (basis volatility) and B_0 for the worked example in ch5 and the ±η interval. Note: the 3M spread here is term-equivalent ZARONIA vs 3M JIBAR. | `[Sec.~3, p.~5]` |
+| 11 (13) | Sec. 5.1, Table 4 | "With κ̂ = 0.028 (t = 27.97), the implied half-life is t_{1/2} = ln 2/κ̂ ≈ 24.8 time units; its economic meaning depends on the sampling scale used in estimation (e.g. ≈ 25 years if ∆t is in years; ≈ 25 days if ∆t is in days)." | Mean-reversion speed of the basis; the paper itself leaves the time unit ambiguous — do not quote a half-life in days or years without a `\datanote{}`. Feeds the Thm 3 failure mode h(κT). | `[Sec.~5.1, Table~4]` |
+| 17 (19) | Sec. 6 | "With the formal announcement that JIBAR will cease after its final publication on 31 December 2026, the results have direct relevance to the transition." | Cessation date, stated by a SARB publication; ch1 factual record (primary source for the date remains the SARB 3 Dec 2025 announcement). | `[Sec.~6, p.~17]` |
+| 18 (20) | Sec. 6 | "A standardised credit adjustment spread helps reduce value transfer in legacy contract conversion, but it does not eliminate short-horizon basis risk." | Motivates the reserve decomposition of the converted book (ch7) and the basis term in ch5. | `[Sec.~6, p.~18]` |
+
+**Notes.** Model: CIR-type diffusion with scheduled (MPC) and detected jumps, feasible GLS; outputs VaR/PFE. Estimates: θ̂ = 15.2977, σ̂ = 0.4092, µ̂_J = −0.0003 (p = 0.282) (p. 11–12). Units of the spread in Table 4 are not stated as bp explicitly beside θ̂ — quote with care.

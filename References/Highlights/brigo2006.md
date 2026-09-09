@@ -1,0 +1,5 @@
+# brigo2006 — Brigo and Mercurio (2006), Interest Rate Models: Theory and Practice
+
+**Record.** Brigo, D., Mercurio, F. (2006). *Interest Rate Models — Theory and Practice: With Smile, Inflation and Credit*. 2nd ed. Springer Finance, Springer, Berlin. ISBN 978-3-540-22149-4; DOI 10.1007/978-3-540-34604-3.
+**Status.** Book — **no file** (copyright; no open preprint of the relevant chapters). Available in most university libraries and via SpringerLink institutional access.
+**Highlights.** None on disk. Standard locators the thesis will need (chapter-level, from the 2nd-edition table of contents; verify page numbers on the library copy before citing): change of numéraire and forward measures — Ch. 2 (§2.2 "Forward Measures", §2.3 "Change of numeraire"); caplet pricing under the forward measure and the lognormal forward-LIBOR model — Ch. 6 (§6.3–6.4); SABR is treated in Ch. 11 (§11.3, "The SABR functional form") in the smile part. Write `\citep[Ch.~2]{brigo2006}` etc. only with the section confirmed on the copy; the thesis' own forward-measure derivation (ch2 `thm:prelim-numeraire`) carries the proof.

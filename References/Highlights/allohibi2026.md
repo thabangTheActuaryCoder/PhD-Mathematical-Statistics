@@ -1,0 +1,16 @@
+# allohibi2026 — Allohibi (2026), Conformal prediction intervals for semi-functional partial linear regression under β-mixing dependence
+
+**Record.** Allohibi, J. (2026). Conformal prediction intervals for semi-functional partial linear regression under β-mixing dependence. *Mathematics* 14(17), 3201. MDPI, open access (CC BY 4.0). Author affiliation printed: Taibah University, Madinah.
+**File.** `References/PDF/allohibi2026.pdf`, 35 pp., downloaded 2026-09-09 from https://mdpi-res.com/d_attachment/mathematics/mathematics-14-03201/article_deploy/mathematics-14-03201.pdf (publisher OA). Printed pages equal PDF pages (MDPI "n of 35").
+**Highlighted copy.** `References/PDF/allohibi2026.highlighted.pdf`.
+
+| p. | As printed | Excerpt (verbatim) | Why it matters here | Locator |
+|---|---|---|---|---|
+| 1 | Abstract | "Marginal validity of split conformal prediction with a trained score under β-mixing is available from generic results of Oliveira et al. and of Barber and Pananjady, without any buffer and without accuracy requirements on the fitted estimators." | Independent confirmation that marginal validity under β-mixing needs no buffer/blocking; supports the LESSONS repositioning of Thm 6(i) as a route to the conditional statement, not as new. | `[Abstract]` |
+| 6 | Sec. 2.5, eq. (11) | "The buffer length g_n controls the conditional dependence between the training estimators and the calibration scores, and between the calibration scores and the future score." | Three-way split with two buffer gaps is the same geometry as Assumption (mixing and separation) in GROUND-TRUTH (fit / calibration / deployment separated by gaps ≥ b). | `[Sec.~2.5]` |
+| 15 | Remark 6 | "These results require no operational buffer and do not require consistency of the fitted regression or scale estimators." | Attribution: buffer-free marginal validity is Oliveira et al. Thms 1 and 4 and Barber–Pananjady Thm 4 / Cor. 2; ch3 chapter notes. | `[Remark~6]` |
+| 15 | Theorem 1, eq. (28) and ∆_n | "The first is the Yu-coupling contribution for replacing the dependent calibration block sequence by an independent block surrogate, and the second is the calibration empirical process cost under that surrogate" | Seven-term finite-sample penalty with a Yu-coupling term C_1 (n_2/b_{2,n}) β(b_{2,n}) and an empirical-process term √(b log n / n): the same two terms that drive Thm 9(i) trade-off. Cite as prior blocked penalty; note it does not optimise b. | `[Thm.~1]` |
+| 15 | Theorem 1 discussion | "The third term C_2 β(g_n) aggregates the costs of two distinct Berbee–Yu couplings across buffers of length g_n" | Two separate couplings across two gaps, each at cost β(g_n) — matches the "(n+1) β(b) plus deployment gap" accounting of Thm 6. | `[Thm.~1]` |
+| 31 | Sec. 7 (Discussion) | "that theory does not imply equality of their finite-sample coverage estimates or interval lengths." | Their simulation found no measurable gain from the buffer at tested n; relevant to ch6 acceptance criteria (blocking buys a certificate, not rate). | `[Sec.~7]` |
+
+**Notes.** No optimal block length and no lower bound in the paper (checked: Theorem 1 states a decomposition only). Published date per Crossref 4 Sep 2026 (LESSONS scout-literature).

@@ -1,2 +1,290 @@
+% Appendix A — Tenor consistency of compounded-rate smiles
+% Written against STANDARD.md, LESSONS.md and GROUND-TRUTH (13-mathematics-3yr.tex, Proposition 5).
 \chapter{Tenor Consistency of Compounded-Rate Smiles}\label{appA-tenor}\label{app:tenor}
-\gap{Chapter not yet drafted; scheduled in the loop order of LOOP.md.}
+
+\begin{quote}\itshape
+This appendix treats ground-truth Proposition~5. Two adjacent three-month compounding windows and the six-month window that covers them are tied by an exact pathwise identity between forward compounded rates, because all three are ratios of zero-coupon bonds. The appendix proves that identity, proves that linear decay profiles compose exactly with an explicit cross term $c=T_1+\Delta_{12}/2$ in the clocks, and proves the exact case (a): in the normal decaying-SABR class with a common volatility driver, the arithmetic six-month forward is a member of the same class with the linear profile if and only if the two three-month volatility levels coincide, in which case $(\rho,\nu)$ are inherited. For unequal parameters it derives the variance-matched projection and the leading-order constraints on $\rho$ and $\nu$ (case (b)). It then shows that a violation of these constraints is a model inconsistency and not a static arbitrage, because $(R_{13}-K)^+$ is not in the span of three-month instruments (case (c)), gives a diagnostic algorithm for a transported 3M/6M pair, and works one numerical example. What it leaves open is stated in one box: the sense in which ``exact'' holds for the compounded, rather than the arithmetic, six-month rate.
+\end{quote}
+
+\section{Introduction to the appendix}\label{sec:appA-intro}
+
+Chapter~\ref{ch:identifiability} transports a JIBAR smile to the compounded-rate smile of the same accrual window. JIBAR is published in one-, three-, six- and twelve-month tenors, and a converted book holds caplets on more than one of them. Transporting each tenor separately produces, for each date, a three-month compounded smile for $[T_1,T_2]$, another for $[T_2,T_3]$, and a six-month compounded smile for $[T_1,T_3]$. The compounded rates themselves are not free: the six-month rate is determined by the two three-month rates through the compounding identity. The question of this appendix is what that identity implies for the three smiles, and what a failure of the implication means.
+
+The answer has three parts, corresponding to ground-truth Proposition~5. Part~(a) is exact and is proved in Section~\ref{sec:appA-exact}: within the normal decaying-SABR class of Chapter~\ref{ch:prelim} with a single volatility driver, the six-month model is the same class with the linear profile if and only if the three-month volatility levels agree, and then the clocks compose by an explicit formula. Part~(b), in Section~\ref{sec:appA-projection}, is a leading-order statement: for unequal parameters the six-month level is the variance-matched projection and the six-month $(\rho,\nu)$ are tied to the three-month ones by approximate constraints, which are written out. Part~(c), in Section~\ref{sec:appA-inconsistency}, is a remark with a proof: a violation is a statement about the model class and not a static arbitrage, because the six-month caplet payoff is not spanned by three-month instruments. Section~\ref{sec:appA-diagnostic} turns (a)--(b) into a test that flags a transported pair as inconsistent, Section~\ref{sec:appA-worked} runs the test on numbers taken from the worked example of Chapter~\ref{ch:prelim}, and Section~\ref{sec:appA-discussion} records limitations.
+
+Two conventions are inherited. Both three-month caplets and the six-month caplet are priced under the forward measure of their own payment date, and the joint model of Section~\ref{sec:appA-exact} is written under $\Q^{T_3}$; no convexity term is introduced anywhere. The linear decay profile is Assumption~\ref{ass:prelim-linear} of Chapter~\ref{ch:prelim}, and every result below that uses $\tau(T_i+\Delta)=T_i+\Delta/3$ inherits it; Remark~\ref{rem:appA-hjm} says which results survive a different profile.
+
+\section{Setting and the exact identity}\label{sec:appA-identity}
+
+Fix dates $0<T_1<T_2<T_3$ and write $\Delta_{12}:=T_2-T_1$, $\Delta_{23}:=T_3-T_2$, $\Delta_{13}:=T_3-T_1=\Delta_{12}+\Delta_{23}$. For $ij\in\{12,23,13\}$ let $R_{ij}:=R(T_i,T_j)$ be the realised compounded rate of Definition~\ref{def:prelim-R} and $F^{ij}_t$ the forward compounded rate of Definition~\ref{def:prelim-F}, a $\Q^{T_j}$-martingale on $[0,T_j]$ with $F^{ij}_{T_j}=R_{ij}$. We extend $F^{12}$ to $(T_2,T_3]$ by $F^{12}_t:=R_{12}$, which is its terminal value and makes it a constant process after $T_2$. Write $Y^{ij}_t:=1+\Delta_{ij}F^{ij}_t$.
+
+\begin{proposition}[Exact identity for nested windows; ground-truth Proposition~5, preamble]\label{prop:appA-identity}
+For every $t\in[0,T_3]$, pathwise,
+\begin{equation}\label{eq:appA-identity}
+1+\Delta_{13}F^{13}_t=\big(1+\Delta_{12}F^{12}_t\big)\big(1+\Delta_{23}F^{23}_t\big).
+\end{equation}
+In particular, at $t=T_3$, $\;1+\Delta_{13}R_{13}=(1+\Delta_{12}R_{12})(1+\Delta_{23}R_{23})$.
+\end{proposition}
+
+\begin{proof}
+By Proposition~\ref{prop:prelim-F-bond}(iv), with the extended bond $P(t,U):=\beta_t/\beta_U$ for $t>U$, the single formula $Y^{ij}_t=P(t,T_i)/P(t,T_j)$ holds for all $t\in[0,T_j]$ and each window. For $t\le T_2$ all three formulas apply directly and
+\[
+\frac{P(t,T_1)}{P(t,T_3)}=\frac{P(t,T_1)}{P(t,T_2)}\cdot\frac{P(t,T_2)}{P(t,T_3)},
+\]
+which is \eqref{eq:appA-identity}. For $t\in(T_2,T_3]$ the extended bonds give $P(t,T_1)/P(t,T_2)=(\beta_t/\beta_{T_1})/(\beta_t/\beta_{T_2})=\beta_{T_2}/\beta_{T_1}=1+\Delta_{12}R_{12}$ by \eqref{eq:prelim-R-cont}, which is $Y^{12}_t$ under our extension, and the same factorisation applies. The statement at $T_3$ is the case $t=T_3$, where $F^{ij}_{T_3}=R_{ij}$ for each window.
+\end{proof}
+
+The identity is measure-free: it is an algebraic identity between bond prices, holding pathwise, and it does not depend on any model. It has two immediate consequences.
+
+\begin{corollary}\label{cor:appA-function}
+\begin{enumerate}[nosep,label=(\roman*)]
+\item $R_{13}=\psi(R_{12},R_{23})$ with $\psi(x,y):=\big((1+\Delta_{12}x)(1+\Delta_{23}y)-1\big)/\Delta_{13}$, a function strictly increasing in each argument on $\{1+\Delta_{12}x>0,\,1+\Delta_{23}y>0\}$.
+\item Define the \emph{arithmetic} six-month forward $\bar F^{13}_t:=(\Delta_{12}F^{12}_t+\Delta_{23}F^{23}_t)/\Delta_{13}$ and its terminal value $\bar R_{13}:=(\Delta_{12}R_{12}+\Delta_{23}R_{23})/\Delta_{13}$. Then, exactly,
+\begin{equation}\label{eq:appA-product}
+F^{13}_t=\bar F^{13}_t+\frac{\Delta_{12}\Delta_{23}}{\Delta_{13}}\,F^{12}_tF^{23}_t,\qquad 0\le t\le T_3 .
+\end{equation}
+\end{enumerate}
+\end{corollary}
+
+\begin{proof}
+(i) is \eqref{eq:appA-identity} at $T_3$ solved for $R_{13}$; monotonicity is because each factor is positive and increasing on the stated set. (ii) is \eqref{eq:appA-identity} expanded: $\Delta_{13}F^{13}=\Delta_{12}F^{12}+\Delta_{23}F^{23}+\Delta_{12}\Delta_{23}F^{12}F^{23}$.
+\end{proof}
+
+The product term in \eqref{eq:appA-product} is of relative size $\Delta F$, about $0.25\times7\%=1.75\%$ for a three-month window at $7\%$. It is the only difference between the compounded and the arithmetic six-month rate, and it is the reason the word ``exact'' in part~(a) needs the care given to it in Remark~\ref{rem:appA-remainders}.
+
+\section{Linear profiles compose}\label{sec:appA-profiles}
+
+For each window let $g_{ij}$ be the linear decay profile of Assumption~\ref{ass:prelim-linear}: $g_{ij}(t)=1$ for $t\le T_i$, $g_{ij}(t)=(T_j-t)/\Delta_{ij}$ for $t\in(T_i,T_j]$, and, for the extended $F^{12}$, $g_{12}(t)=0$ for $t>T_2$. Let $\tau_{ij}(t):=\int_0^tg_{ij}^2$ be the clock and $\tau_{ij}:=\tau_{ij}(T_j)=T_i+\Delta_{ij}/3$ its terminal value (Proposition~\ref{prop:prelim-clock-linear}).
+
+\begin{lemma}[Linear profiles compose]\label{lem:appA-profiles}
+For every $t\in[0,T_3]$,
+\begin{equation}\label{eq:appA-profiles}
+\Delta_{12}\,g_{12}(t)+\Delta_{23}\,g_{23}(t)=\Delta_{13}\,g_{13}(t).
+\end{equation}
+\end{lemma}
+
+\begin{proof}
+Each side is piecewise linear and continuous, so it suffices to check the three pieces. For $t\le T_1$ all profiles equal $1$ and the identity reads $\Delta_{12}+\Delta_{23}=\Delta_{13}$. For $t\in(T_1,T_2]$ the left side is $\Delta_{12}(T_2-t)/\Delta_{12}+\Delta_{23}=(T_2-t)+(T_3-T_2)=T_3-t$, and the right side is $\Delta_{13}(T_3-t)/\Delta_{13}=T_3-t$. For $t\in(T_2,T_3]$ the left side is $0+\Delta_{23}(T_3-t)/\Delta_{23}=T_3-t$, and the right side is again $T_3-t$.
+\end{proof}
+
+Equivalently, $\Delta_{ij}g_{ij}(t)=\min(\Delta_{ij},\,T_j-t)$ for $t\le T_j$, the remaining length of the window capped at its full length, and remaining lengths of adjacent windows add.
+
+\begin{proposition}[Clock composition; ground-truth Proposition~5(a), displayed relation]\label{prop:appA-clocks}
+With linear profiles,
+\begin{equation}\label{eq:appA-clocks}
+\Delta_{13}^2\,\tau_{13}=\Delta_{12}^2\,\tau_{12}+\Delta_{23}^2\,\tau_{23}+2\,\Delta_{12}\Delta_{23}\,c,\qquad c:=\int_0^{T_3}g_{12}(t)\,g_{23}(t)\,dt=T_1+\frac{\Delta_{12}}{2},
+\end{equation}
+exactly.
+\end{proposition}
+
+\begin{proof}
+Square \eqref{eq:appA-profiles} and integrate over $[0,T_3]$:
+\[
+\Delta_{13}^2\int_0^{T_3}g_{13}^2=\Delta_{12}^2\int_0^{T_3}g_{12}^2+\Delta_{23}^2\int_0^{T_3}g_{23}^2+2\Delta_{12}\Delta_{23}\int_0^{T_3}g_{12}g_{23}.
+\]
+The first two integrals are $\tau_{12}$ and $\tau_{23}$ (the integrand $g_{12}^2$ vanishes on $(T_2,T_3]$). For the cross term, on $[0,T_1]$ both profiles are $1$, contributing $T_1$; on $(T_1,T_2]$, $g_{23}=1$ and $g_{12}=(T_2-t)/\Delta_{12}$, contributing $\int_{T_1}^{T_2}(T_2-t)/\Delta_{12}\,dt=\Delta_{12}/2$; on $(T_2,T_3]$, $g_{12}=0$. So $c=T_1+\Delta_{12}/2$.
+
+As a check, expand both sides with $T_2=T_1+\Delta_{12}$. The left side is $\Delta_{13}^2T_1+\Delta_{13}^3/3$. On the right, the terms in $T_1$ are $(\Delta_{12}^2+\Delta_{23}^2+2\Delta_{12}\Delta_{23})T_1=\Delta_{13}^2T_1$; the remaining terms are $\Delta_{12}^3/3+\Delta_{23}^2\Delta_{12}+\Delta_{23}^3/3+\Delta_{12}^2\Delta_{23}$, which is $(\Delta_{12}+\Delta_{23})^3/3=\Delta_{13}^3/3$.
+\end{proof}
+
+\begin{remark}[Why linear profiles compose, and when they do not]\label{rem:appA-hjm}
+Proposition~\ref{prop:prelim-flat} shows that the linear profile is the run-off of the HJM diffusion coefficient of $F$ when the forward-rate volatility is flat in maturity: the coefficient of $\log Y^{ij}$ is then $\sigma\,\varphi_{ij}(t)$ with $\varphi_{ij}(t):=\sigma_P(t,T_j)-\sigma_P(t,T_i)\ind{t\le T_i}$ divided by $\sigma$, which equals $\min(\Delta_{ij},T_j-t)=\Delta_{ij}g_{ij}(t)$. Since $\log Y^{13}=\log Y^{12}+\log Y^{23}$ exactly in every HJM model, the coefficient functions add, $\varphi_{12}+\varphi_{23}=\varphi_{13}$, and \eqref{eq:appA-profiles} is that additivity in the flat case. For a mean-reverting forward-rate volatility $\sigma e^{-\kappa(u-t)}$ the un-normalised coefficients $\varphi_{ij}(t)=\kappa^{-1}\big(e^{-\kappa(T_i-t)^+}-e^{-\kappa(T_j-t)}\big)$ still add exactly, but they are not constant before the window starts, so the normalised profiles $g_\kappa$ of \eqref{eq:prelim-g-hw}, which set the pre-window value to $1$, do not compose with any constant weights. For a single window the pre-window shape is immaterial once the total variance is fixed, which is why Remark~\ref{rem:prelim-linear-status} could call the normalisation a harmless idealisation; for two windows it is material, because it changes the overlap $\int\varphi_{12}\varphi_{23}$ and with it the cross term. The composition results of this appendix therefore hold within the HJM family in terms of the $\varphi_{ij}$, and Algorithm~\ref{alg:appA-diagnostic} tests the profile assumption by replacing $\Delta_{ij}g_{ij}$ with $\varphi_{ij}$, not by moving $c_g$ alone. The specific values $\tau_{ij}=T_i+\Delta_{ij}/3$ and $c=T_1+\Delta_{12}/2$ are the flat case.
+\end{remark}
+
+\section{Part (a): the exact case}\label{sec:appA-exact}
+
+\subsection{The common-driver normal family}
+
+The single-window model of Section~\ref{sec:prelim-tcsabr} has to be extended to three windows at once, and the extension has to say which measure the equations are written under and what ``common $(W,Z)$'' means. We write everything under $\Q^{T_3}$, the forward measure of the payment date shared by $F^{23}$ and $F^{13}$.
+
+\begin{definition}[Common-driver normal family $\mathcal M(h)$]\label{def:appA-family}
+Let $(W,Z)$ be a $\rho$-correlated pair of $\Q^{T_3}$-Brownian motions, $\nu\ge0$, and $h:[0,T_3]\to(0,1]$ a deterministic measurable vol-of-vol profile. Set
+\[
+\mathcal E_t:=\exp\Big(\nu\int_0^th(u)\,dZ_u-\frac{\nu^2}{2}\int_0^th(u)^2du\Big),\qquad \sigma^{ij}_t:=a_{ij}\,g_{ij}(t)\,\mathcal E_t,
+\]
+with constants $a_{12},a_{23}>0$ and the linear profiles $g_{ij}$. The family $\mathcal M(h)$ consists of the processes
+\begin{equation}\label{eq:appA-family}
+dF^{23}_t=\sigma^{23}_t\,dW_t,\qquad dF^{12}_t=\sigma^{12}_t\,dW_t+\mu^{12}_t\,dt,\qquad 0\le t\le T_3,
+\end{equation}
+with $F^{13}$ defined from $(F^{12},F^{23})$ by the identity \eqref{eq:appA-identity}, where $\mu^{12}$ is the drift of Lemma~\ref{lem:appA-drift} below. A process $X$ on $[0,T_3]$ is said to be \emph{normal decaying SABR for the window $[T_1,T_3]$ within $\mathcal M(h)$} if its $\Q^{T_3}$ diffusion coefficient is $a\,g_{13}(t)\,\mathcal E_t$ for some constant $a>0$.
+\end{definition}
+
+The rate equations are those of \eqref{eq:prelim-sabr-decay} with $\beta=0$: normal SABR with the linear run-off. The volatility $a_{ij}\mathcal E_t$ is a single stochastic exponential shared by the windows, scaled by a window-specific constant; this is what ``common $(W,Z)$'' is taken to mean. Its vol-of-vol profile $h$ is also shared. With $h\equiv1$ each window is the non-decaying vol-of-vol variant of Proposition~\ref{prop:prelim-novol}; the same-$g$ variant of Lemma~\ref{lem:prelim-tc} would need $h=g_{ij}$, which differs between windows and so is not a member of any $\mathcal M(h)$. The gap box at the end of this section returns to this point. In either variant, the rate equation of each window is time-changed by its own clock exactly as in the first equation of \eqref{eq:prelim-novol-clock}, so every member of $\mathcal M(h)$ is a time-changed normal SABR model in the sense of Section~\ref{sec:prelim-tcsabr}.
+
+\begin{lemma}[Induced drift and diffusion of the compounded forward]\label{lem:appA-drift}
+In \eqref{eq:appA-family}, $F^{13}$ is a $\Q^{T_3}$-local martingale if and only if
+\begin{equation}\label{eq:appA-mu}
+\mu^{12}_t=-\,\frac{\Delta_{23}\,\sigma^{12}_t\,\sigma^{23}_t}{1+\Delta_{23}F^{23}_t},
+\end{equation}
+and then
+\begin{equation}\label{eq:appA-dF13}
+dF^{13}_t=\frac{1}{\Delta_{13}}\Big[\Delta_{12}\,\sigma^{12}_t\,\big(1+\Delta_{23}F^{23}_t\big)+\Delta_{23}\,\sigma^{23}_t\,\big(1+\Delta_{12}F^{12}_t\big)\Big]dW_t .
+\end{equation}
+\end{lemma}
+
+\begin{proof}
+By the product rule \cite[Thm.~3.3.6]{karatzas1991} applied to $Y^{13}=Y^{12}Y^{23}$ with $dY^{12}=\Delta_{12}(\sigma^{12}dW+\mu^{12}dt)$ and $dY^{23}=\Delta_{23}\sigma^{23}dW$,
+\[
+dY^{13}=Y^{23}\Delta_{12}\big(\sigma^{12}dW+\mu^{12}dt\big)+Y^{12}\Delta_{23}\sigma^{23}dW+\Delta_{12}\Delta_{23}\sigma^{12}\sigma^{23}dt .
+\]
+The drift vanishes if and only if $Y^{23}\Delta_{12}\mu^{12}+\Delta_{12}\Delta_{23}\sigma^{12}\sigma^{23}=0$, which is \eqref{eq:appA-mu}; the diffusion term divided by $\Delta_{13}$ is \eqref{eq:appA-dF13}.
+\end{proof}
+
+The drift \eqref{eq:appA-mu} is the change-of-measure drift between $\Q^{T_2}$ and $\Q^{T_3}$: by Theorem~\ref{thm:prelim-numeraire}, $Y^{12}$ is a $\Q^{T_2}$-martingale exactly when $Y^{12}Y^{23}=Y^{13}$ is a $\Q^{T_3}$-martingale, and $\mu^{12}$ is what that requires. Under $\Q^{T_2}$ the process $F^{12}$ is driftless normal SABR driven by $W^{T_2}_t=W_t+\int_0^t\Delta_{23}\sigma^{23}_u/(1+\Delta_{23}F^{23}_u)\,du$. The drift is of order $\Delta_{23}\sigma^2$ per unit time, which is about $10^{-5}$ per year for a three-month window at $60$ basis points of normal volatility. Because normal forwards are unbounded below, $1+\Delta_{23}F^{23}$ can vanish with positive probability; for realistic parameters this probability is negligible and we ignore it, as one does with negative rates in every normal model.
+
+\subsection{The statement and its proof}
+
+\begin{proposition}[Tenor consistency, exact case; ground-truth Proposition~5(a)]\label{prop:appA-exact}
+Let $(F^{12},F^{23})\in\mathcal M(h)$ with $\beta=0$, linear profiles and common $(W,Z)$, and let $\bar F^{13}$ be the arithmetic six-month forward of Corollary~\ref{cor:appA-function}(ii).
+\begin{enumerate}[nosep,label=(\roman*)]
+\item The $\Q^{T_3}$ diffusion coefficient of $\bar F^{13}$ is $\bar a\,\bar g(t)\,\mathcal E_t$ with
+\[
+\bar a:=\frac{a_{12}\Delta_{12}+a_{23}\Delta_{23}}{\Delta_{13}},\qquad \bar g(t):=\frac{a_{12}\Delta_{12}g_{12}(t)+a_{23}\Delta_{23}g_{23}(t)}{a_{12}\Delta_{12}+a_{23}\Delta_{23}},
+\]
+and $\bar g$ is a decay profile for $[T_1,T_3]$ in the sense of Definition~\ref{def:prelim-decay}.
+\item $\bar F^{13}$ is normal decaying SABR for $[T_1,T_3]$ within $\mathcal M(h)$ if and only if $a_{12}=a_{23}$. In that case $\bar a=a_{12}$, so $a_{13}=a_{12}$, the pair $(\rho,\nu)$ and the profile $h$ are inherited, and the clocks compose by \eqref{eq:appA-clocks}.
+\item If $a_{12}\ne a_{23}$, then $\bar g$ is piecewise linear on $[T_1,T_3]$ with slopes $-a_{12}/(\bar a\Delta_{13})$ on $(T_1,T_2)$ and $-a_{23}/(\bar a\Delta_{13})$ on $(T_2,T_3)$, a kink at $T_2$, and terminal clock $\bar\tau:=\int_0^{T_3}\bar g^2$ given by
+\begin{equation}\label{eq:appA-taubar}
+\bar a^2\Delta_{13}^2\,\bar\tau=a_{12}^2\Delta_{12}^2\tau_{12}+a_{23}^2\Delta_{23}^2\tau_{23}+2a_{12}a_{23}\Delta_{12}\Delta_{23}\,c .
+\end{equation}
+\end{enumerate}
+\end{proposition}
+
+\begin{proof}
+(i) From \eqref{eq:appA-family}, $d(\Delta_{12}F^{12}+\Delta_{23}F^{23})=(\Delta_{12}\sigma^{12}+\Delta_{23}\sigma^{23})dW+\Delta_{12}\mu^{12}dt$, and $\Delta_{12}\sigma^{12}_t+\Delta_{23}\sigma^{23}_t=\mathcal E_t\big(a_{12}\Delta_{12}g_{12}(t)+a_{23}\Delta_{23}g_{23}(t)\big)=\mathcal E_t\,\bar a\Delta_{13}\,\bar g(t)$ by the definitions of $\bar a$ and $\bar g$. Dividing by $\Delta_{13}$ gives the diffusion coefficient. That $\bar g$ is a decay profile: it equals $1$ on $[0,T_1]$ because both $g_{ij}$ do; it is non-increasing and continuous on $(T_1,T_3]$ as a positive combination of such functions; $\bar g(T_3)=0$ because $g_{12}(T_3)=g_{23}(T_3)=0$; and $\bar g>0$ on $[0,T_3)$ because $g_{23}>0$ there.
+
+(ii) Suppose $a_{12}=a_{23}=:a$. Then $\bar a=a$ and $\bar g=(\Delta_{12}g_{12}+\Delta_{23}g_{23})/\Delta_{13}=g_{13}$ by Lemma~\ref{lem:appA-profiles}, so the diffusion coefficient is $a\,g_{13}(t)\mathcal E_t$, which is the defining property. The volatility multiplier $\mathcal E$, hence $\rho$, $\nu$ and $h$, is the one shared by the three-month windows. The clock identity is Proposition~\ref{prop:appA-clocks}. Conversely, suppose the diffusion coefficient equals $a'g_{13}(t)\mathcal E_t$ for some $a'>0$. Since $\mathcal E_t>0$, this forces $\bar a\,\bar g(t)=a'g_{13}(t)$ for all $t$, that is $a_{12}\Delta_{12}g_{12}(t)+a_{23}\Delta_{23}g_{23}(t)=a'\Delta_{13}g_{13}(t)$. On $(T_2,T_3]$ this reads $a_{23}(T_3-t)=a'(T_3-t)$, so $a'=a_{23}$; on $(T_1,T_2]$ it then reads $a_{12}(T_2-t)+a_{23}\Delta_{23}=a_{23}(T_3-t)=a_{23}(T_2-t)+a_{23}\Delta_{23}$, so $a_{12}=a_{23}$.
+
+(iii) On $(T_1,T_2)$, $\bar a\Delta_{13}\bar g(t)=a_{12}(T_2-t)+a_{23}\Delta_{23}$ has slope $-a_{12}$; on $(T_2,T_3)$, $\bar a\Delta_{13}\bar g(t)=a_{23}(T_3-t)$ has slope $-a_{23}$. The slopes differ exactly when $a_{12}\ne a_{23}$, which is the kink. Squaring $\bar a\Delta_{13}\bar g=a_{12}\Delta_{12}g_{12}+a_{23}\Delta_{23}g_{23}$ and integrating gives \eqref{eq:appA-taubar} by the same computation as in Proposition~\ref{prop:appA-clocks}, with the cross term $2a_{12}a_{23}\Delta_{12}\Delta_{23}\int g_{12}g_{23}=2a_{12}a_{23}\Delta_{12}\Delta_{23}c$.
+\end{proof}
+
+\begin{remark}[What ``exact'' covers]\label{rem:appA-remainders}
+Proposition~\ref{prop:appA-exact} is exact for the arithmetic forward $\bar F^{13}$. The compounded forward $F^{13}$, which is what the six-month caplet is written on, differs from it by two terms, both identified exactly above. First, $F^{13}-\bar F^{13}=\Delta_{12}\Delta_{23}F^{12}F^{23}/\Delta_{13}$ by \eqref{eq:appA-product}; in the diffusion coefficient \eqref{eq:appA-dF13} this appears as the factors $1+\Delta_{23}F^{23}_t$ and $1+\Delta_{12}F^{12}_t$ multiplying the two three-month contributions, so the coefficient of $F^{13}$ is not $a\,g_{13}\mathcal E_t$ even when $a_{12}=a_{23}$, but that expression with the weights $\Delta_{12},\Delta_{23}$ replaced by $\Delta_{12}Y^{23}_t,\Delta_{23}Y^{12}_t$. The effect is a level change of relative order $\Delta F$, about $1.75\%$ at $7\%$ rates, that is about $1$ basis point at $60$ basis points of normal volatility. Second, $F^{12}$ carries the $\Q^{T_3}$ drift \eqref{eq:appA-mu}, of order $\Delta_{23}\sigma^2$ per unit time. Both remainders vanish identically if the class is changed from normal on $F$ to lognormal on $Y=1+\Delta F$, the HJM form of Proposition~\ref{prop:prelim-vanish}(ii): then $\log Y^{13}=\log Y^{12}+\log Y^{23}$ pathwise, the diffusion coefficients of the logarithms add by Lemma~\ref{lem:appA-profiles}, and the drifts add automatically because $Y^{13}$ and $Y^{23}$ are both $\Q^{T_3}$-martingales. The thesis uses the normal class because rate options are quoted in normal volatility and the fallback strike shift is a translation; the price of that choice is the $O(\Delta F)$ remainder, which Section~\ref{sec:appA-projection} absorbs by freezing the rates.
+\end{remark}
+
+\gap{Ground-truth Proposition~5(a) states that ``the induced $R_{13}$ is time-changed normal SABR with linear decay if and only if $\alpha_{12}=\alpha_{23}$ \ldots\ exactly''. What is proved here is exact for the arithmetic six-month rate $\bar R_{13}$ in the family $\mathcal M(h)$, and the clock identity is exact without qualification. Three points need a council decision. (1) For the compounded $R_{13}$ itself the product term of Remark~\ref{rem:appA-remainders} is a level effect of relative order $\Delta F_0$, about $1$ bp in the worked example, which is the same order as the tolerance a desk would set in Algorithm~\ref{alg:appA-diagnostic}; the proposition is stated for $\bar F^{13}$ so that the word ``exact'' is true. (2) A common volatility process needs a common vol-of-vol profile $h$. The same-$g$ variant of Lemma~\ref{lem:prelim-tc}, which is the pricing model of Chapter~\ref{ch:identifiability}, has $h=g_{ij}$, different for each window; under it the three volatility processes coincide on $[0,T_1]$ but diverge afterwards, with $\Var\log(\alpha^{12}_{T_2}/\alpha^{13}_{T_2})=\nu^2\Delta_{12}(\Delta_{23}/\Delta_{13})^2/3$, equal to $0.0033$ (a $5.8\%$ standard deviation of the ratio) for $\nu=0.4$ and two three-month windows. Under that variant part~(a) holds to leading order in $\nu^2\Delta$, not exactly, while the non-decaying variant of Proposition~\ref{prop:prelim-novol} ($h\equiv1$) makes it exact. (3) The alternative is to restate the class as lognormal on $1+\Delta F$, where the composition is exact for $F^{13}$ with no remainder. The ground-truth wording is kept in the heading of Proposition~\ref{prop:appA-exact}; the qualifications live in this box. A lesson has been appended.}
+
+\section{Part (b): the variance-matched projection}\label{sec:appA-projection}
+
+When $a_{12}\ne a_{23}$ the arithmetic forward has the kinked profile $\bar g$ of Proposition~\ref{prop:appA-exact}(iii), and no member of $\mathcal M(h)$ with the linear profile reproduces its law. The market, however, quotes the six-month smile as a single normal SABR triple at the single clock $\tau_{13}$. The question is which triple comes closest, and the answer at leading order is the one that matches the first three cumulants of the terminal rate.
+
+\begin{proposition}[Variance-matched level; ground-truth Proposition~5(b)]\label{prop:appA-level}
+Define $a_{13}^*$ by
+\begin{equation}\label{eq:appA-level}
+a_{13}^{*2}\,\Delta_{13}^2\,\tau_{13}=a_{12}^2\Delta_{12}^2\tau_{12}+a_{23}^2\Delta_{23}^2\tau_{23}+2a_{12}a_{23}\Delta_{12}\Delta_{23}\,c ,
+\end{equation}
+that is, $a_{13}^{*2}\tau_{13}=\bar a^2\bar\tau$. Then the normal decaying SABR model for $[T_1,T_3]$ with parameters $(a_{13}^*,\rho,\nu)$, linear profile and vol-of-vol profile $h$ has the same total frozen-volatility variance $\int_0^{T_3}(\text{diffusion coefficient}/\mathcal E_t)^2dt$ as $\bar F^{13}$. Its at-the-money Bachelier price agrees with that of $\bar R_{13}$ exactly when $\nu=0$, and to leading order in the Hagan expansion parameters $\alpha^2\tau$ and $\nu^2\tau$ when $\nu>0$. When $a_{12}=a_{23}$, $a_{13}^*=a_{12}$.
+\end{proposition}
+
+\begin{proof}
+The total frozen-volatility variance of $\bar F^{13}$ is $\bar a^2\Delta_{13}^2\bar\tau/\Delta_{13}^2=\bar a^2\bar\tau$ by \eqref{eq:appA-taubar}, and that of the linear-profile model is $a_{13}^{*2}\tau_{13}$; \eqref{eq:appA-level} equates them. When $\nu=0$, $\mathcal E\equiv1$, both terminal rates are Gaussian with variance equal to the total variance (ignoring the drift, which is zero at $\nu=0$ only if $\sigma^{12}\sigma^{23}$ is zero; otherwise it is the $O(\Delta\sigma^2)$ term of Remark~\ref{rem:appA-remainders}), and equal variances give equal Bachelier prices at every strike. When $\nu>0$ the terminal law depends on the volatility path through $\int_0^{T_3}\phi(t)^2\mathcal E_t^2dt$ with $\phi$ the deterministic profile; two profiles with the same $\int\phi^2$ give the same mean of this integral and differ in its variance at order $\nu^2\tau$, which is the order of the correction bracket in \eqref{eq:prelim-hagan-N0}. The last assertion is Proposition~\ref{prop:appA-exact}(ii).
+\end{proof}
+
+Equation \eqref{eq:appA-level} is the displayed relation of ground-truth Proposition~5 read as a definition of $a_{13}^*$ rather than as an identity; that is what ``variance-matched projection'' means.
+
+\begin{proposition}[Skew and curvature constraints at leading order]\label{prop:appA-skewcurv}
+Extend $\mathcal M(h)$ by allowing window-specific vol-of-vol constants $\nu_{12},\nu_{23}$ with the common driver $Z$ and profile $h$, so that $\sigma^{ij}_t=a_{ij}g_{ij}(t)\exp(\nu_{ij}\int_0^th\,dZ-\tfrac12\nu_{ij}^2\int_0^th^2)$. Write
+\[
+\sigma(t):=a_{12}\Delta_{12}g_{12}(t)+a_{23}\Delta_{23}g_{23}(t),\qquad \sigma_\nu(t):=a_{12}\Delta_{12}g_{12}(t)\,\nu_{12}+a_{23}\Delta_{23}g_{23}(t)\,\nu_{23},
+\]
+and, for the linear-profile target, $\sigma_{13}(t):=a_{13}^*\Delta_{13}g_{13}(t)$. Then, to first order in the vol-of-vol constants and neglecting the drift \eqref{eq:appA-mu}, the third cumulant of $\Delta_{13}(\bar R_{13}-\bar F^{13}_0)$ and the variance of its realised variance are
+\begin{equation}\label{eq:appA-cumulants}
+\kappa_3=6\rho\int_0^{T_3}\sigma(s)\,\sigma_\nu(s)\Big(\int_0^s\sigma(u)h(u)\,du\Big)ds,\qquad
+\Var(V)=4\int_0^{T_3}h(u)^2\Big(\int_u^{T_3}\sigma(s)\sigma_\nu(s)\,ds\Big)^2du ,
+\end{equation}
+and the six-month triple $(a_{13}^*,\rho_{13}^*,\nu_{13}^*)$ that reproduces them with the linear profile is
+\begin{equation}\label{eq:appA-constraints}
+\rho_{13}^*\nu_{13}^*=\frac{\kappa_3}{6\,I_3},\qquad \nu_{13}^{*2}=\frac{\Var(V)}{4\,I_4},\qquad
+I_3:=\int_0^{T_3}\sigma_{13}(s)^2\Big(\int_0^s\sigma_{13}h\Big)ds,\quad I_4:=\int_0^{T_3}h(u)^2\Big(\int_u^{T_3}\sigma_{13}^2\Big)^2du .
+\end{equation}
+If $a_{12}=a_{23}$ and $\nu_{12}=\nu_{23}=\nu$, then $\rho_{13}^*\nu_{13}^*=\rho\nu$ and $\nu_{13}^{*2}=\nu^2$ exactly.
+\end{proposition}
+
+\begin{proof}[Derivation]
+This is the computation of Proposition~\ref{prop:prelim-nueff} with time-dependent weights. Write $J_t:=\int_0^th\,dZ$. To first order in the $\nu_{ij}$, $\sigma^{ij}_t=a_{ij}g_{ij}(t)(1+\nu_{ij}J_t)$, so $d(\Delta_{12}F^{12}+\Delta_{23}F^{23})=[\sigma(t)+\sigma_\nu(t)J_t]\,dW_t$ up to the drift and to $O(\nu^2)$. Let $A_t:=\int_0^t\sigma\,dW$ and $B:=\int_0^{T_3}\sigma_\nu J\,dW$. The third cumulant of $A_{T_3}+B$ is $3\E[A_{T_3}^2B]+O(\nu^2)$, since $\E[A^3]=0$ and $\E[B]=0$. By It\^o's formula $A_{T_3}^2=2\int_0^{T_3}A_s\sigma(s)\,dW_s+\int_0^{T_3}\sigma^2$, and by the isometry for two integrals against the same Brownian motion, $\E[A_{T_3}^2B]=2\int_0^{T_3}\sigma(s)\sigma_\nu(s)\E[A_sJ_s]\,ds$, with $\E[A_sJ_s]=\rho\int_0^s\sigma(u)h(u)\,du$. This gives $\kappa_3$. For the realised variance $V=\int_0^{T_3}[\sigma+\sigma_\nu J_s]^2ds$, to first order $V-\E V=2\int_0^{T_3}\sigma(s)\sigma_\nu(s)J_s\,ds=2\int_0^{T_3}h(u)\big(\int_u^{T_3}\sigma\sigma_\nu\,ds\big)dZ_u$ by the stochastic Fubini theorem, and the isometry gives $\Var(V)$. For the target model, $\sigma$ becomes $\sigma_{13}$, $\sigma_\nu$ becomes $\nu_{13}^*\sigma_{13}$ and $\rho$ becomes $\rho_{13}^*$, so its cumulants are $6\rho_{13}^*\nu_{13}^*I_3$ and $4\nu_{13}^{*2}I_4$; equating gives \eqref{eq:appA-constraints}. In the equal case $\sigma=a\Delta_{13}g_{13}=\sigma_{13}$ by Lemma~\ref{lem:appA-profiles} and $\sigma_\nu=\nu\sigma$, so both ratios reduce to the inherited values. The skew and curvature of the normal smile are, at this order, the third cumulant and the variance of realised variance respectively (Propositions~\ref{prop:prelim-lsc} and~\ref{prop:prelim-nueff}), which is why matching them fixes $\rho_{13}^*\nu_{13}^*$ and $\nu_{13}^{*2}$.
+\end{proof}
+
+The constraints \eqref{eq:appA-constraints} are approximate in three ways, each of which is visible in the derivation: they are first order in $\nu\sqrt\tau$; they drop the drift \eqref{eq:appA-mu} and the product term \eqref{eq:appA-product}; and the passage from cumulants to Hagan parameters is itself the leading order of the expansion. This is the content of the phrase ``the constraints tying $(\rho,\nu)$ across tenors are approximate'' in the ground truth.
+
+\begin{remark}[Frozen-rate weights]\label{rem:appA-frozen}
+The product term is absorbed at leading order by freezing the rates in \eqref{eq:appA-dF13} at their time-zero values: replace $\Delta_{12}$ by $w_{12}:=\Delta_{12}(1+\Delta_{23}F^{23}_0)$ and $\Delta_{23}$ by $w_{23}:=\Delta_{23}(1+\Delta_{12}F^{12}_0)$ in $\sigma$, $\sigma_\nu$ and \eqref{eq:appA-level}, keeping $\Delta_{13}$ on the left. With this substitution the projection targets the compounded $R_{13}$ rather than $\bar R_{13}$, at the cost of a frozen-coefficient approximation of relative accuracy $O(\Delta\,\sigma\sqrt\tau)$, which is smaller than the term it corrects. Algorithm~\ref{alg:appA-diagnostic} uses the frozen weights.
+\end{remark}
+
+\section{Part (c): violation is model inconsistency}\label{sec:appA-inconsistency}
+
+Suppose three smiles are given, two three-month and one six-month, each fitted by a normal SABR triple at its own clock, and suppose the six-month triple is not the projection \eqref{eq:appA-level}, \eqref{eq:appA-constraints} of the three-month pair within tolerance. The conclusion is that no member of $\mathcal M(h)$, for any $h$, calibrates to all three smiles at once. The following proposition says why nothing stronger follows.
+
+\begin{proposition}[The six-month caplet is not spanned by three-month instruments; ground-truth Proposition~5(c)]\label{prop:appA-span}
+Let $\mathcal H$ be the set of $T_3$-payoffs of the form
+\[
+\phi_1(R_{12})\,(1+\Delta_{23}R_{23})+\phi_2(R_{23}),\qquad \phi_1,\phi_2:\R\to\R\ \text{arbitrary}.
+\]
+\begin{enumerate}[nosep,label=(\roman*)]
+\item The $T_3$-value of every static portfolio of the following instruments lies in $\mathcal H$: zero-coupon bonds maturing at $T_1$, $T_2$ or $T_3$, with proceeds rolled in the ZARONIA account to $T_3$; caplets and floorlets on $[T_1,T_2]$ of any strikes, paid at $T_2$ and rolled to $T_3$; caplets and floorlets on $[T_2,T_3]$ of any strikes; and forward contracts on either three-month compounded rate.
+\item For every $K>-1/\Delta_{13}$, the six-month caplet payoff $(R_{13}-K)^+$ is not in $\mathcal H$.
+\item Consequently no static portfolio of three-month instruments replicates the six-month caplet, and a violation of the constraints of Sections~\ref{sec:appA-exact}--\ref{sec:appA-projection} is a statement about the model class, not a static arbitrage.
+\end{enumerate}
+\end{proposition}
+
+\begin{proof}
+(i) One unit paid at $T_2$ and rolled in the account is worth $\beta_{T_3}/\beta_{T_2}=1+\Delta_{23}R_{23}$ at $T_3$ by \eqref{eq:prelim-R-cont}; one unit paid at $T_1$ and rolled is worth $\beta_{T_3}/\beta_{T_1}=(1+\Delta_{12}R_{12})(1+\Delta_{23}R_{23})$. So the three bonds have $T_3$-values $(1+\Delta_{12}R_{12})(1+\Delta_{23}R_{23})$, $1+\Delta_{23}R_{23}$ and $1$, which are in $\mathcal H$ with $(\phi_1,\phi_2)=(1+\Delta_{12}x,\,0)$, $(1,0)$ and $(0,1)$. A caplet on $[T_1,T_2]$ with strike $K$ pays $(R_{12}-K)^+$ at $T_2$ per unit accrual, worth $(R_{12}-K)^+(1+\Delta_{23}R_{23})$ at $T_3$: $\phi_1=(x-K)^+$, $\phi_2=0$. A caplet on $[T_2,T_3]$ pays $(R_{23}-K)^+$ at $T_3$: $\phi_1=0$, $\phi_2=(y-K)^+$. Floorlets and forward contracts are the same with $(K-x)^+$ and $x-K$. The set $\mathcal H$ is closed under linear combinations, since $(\phi_1,\phi_2)$ may be combined linearly, so every static portfolio has its $T_3$-value in $\mathcal H$.
+
+(ii) Write $u:=1+\Delta_{12}R_{12}>0$, $v:=1+\Delta_{23}R_{23}>0$ and $k:=1+\Delta_{13}K>0$. By Proposition~\ref{prop:appA-identity}, $\Delta_{13}(R_{13}-K)^+=(uv-k)^+$. Suppose $(uv-k)^+=\Delta_{13}[\tilde\phi_1(u)\,v+\tilde\phi_2(v)]$ for all $u,v>0$, where $\tilde\phi_i$ are $\phi_i$ rewritten in the variables $u,v$. Then for any $u,u',v>0$,
+\[
+\frac{(uv-k)^+-(u'v-k)^+}{v}=\Delta_{13}\big[\tilde\phi_1(u)-\tilde\phi_1(u')\big],
+\]
+which does not depend on $v$. Choose $v_1>v_2>0$, then $u\in(k/v_1,\,k/v_2)$ and $u'\in(0,k/v_1)$. Then $uv_1>k$, $uv_2<k$, $u'v_1<k$ and $u'v_2<k$, so the left side equals $(uv_1-k)/v_1>0$ at $v=v_1$ and $0$ at $v=v_2$. This contradicts independence of $v$.
+
+(iii) If a static portfolio replicated $(R_{13}-K)^+$, its $T_3$-value would be in $\mathcal H$ by (i), contradicting (ii). A static arbitrage between the six-month caplet and the three-month market would require a portfolio of three-month instruments whose $T_3$-value dominates, or is dominated by, $(R_{13}-K)^+$ at a price that makes the position riskless; the failure of the model constraints supplies no such portfolio, only the statement that the three smiles are not jointly attainable within $\mathcal M(h)$.
+\end{proof}
+
+Part (i) claims only that the span is contained in $\mathcal H$, which is all that (iii) needs; the reverse inclusion, that every $\phi_1,\phi_2$ of suitable regularity is attainable from bonds and options at all strikes, is the classical spanning result and is not used. The roll-up factor $1+\Delta_{23}R_{23}$ in $\mathcal H$ is what a practitioner's objection that the $T_2$ payoff can be reinvested amounts to; the proof of (ii) shows that reinvestment does not help, because the reinvested payoff is linear in $v$ and the caplet is not.
+
+\begin{remark}[What a model-free bound would require]\label{rem:appA-modelfree}
+Model-free statements about the six-month caplet given the three-month markets do exist in principle, but they are bounds, not constraints. Three-month caplets on $[T_2,T_3]$ at all strikes determine the $\Q^{T_3}$-law of $v$; three-month caplets on $[T_1,T_2]$ at all strikes determine $\E^{\Q^{T_3}}[\phi(u)\,v]$ for all $\phi$, that is the $\Q^{T_2}$-law of $u$, which is the $\Q^{T_3}$-law of $u$ reweighted by $v$. The joint law of $(u,v)$ under $\Q^{T_3}$ is otherwise free. The model-free price interval for $\E^{\Q^{T_3}}[(uv-k)^+]$ is then the range of that expectation over all joint laws consistent with these two one-dimensional constraints, an optimal-transport problem of the kind solved for basket options on sums with given marginals by Hobson, Laurence and Wang; the product form, and the fact that one marginal is given under a tilted measure, make it a different problem, and no bound of this kind is claimed in the thesis. Such an interval would be wide, because a perfectly correlated joint law and an anti-correlated one give very different product distributions, and a market pair violating \eqref{eq:appA-constraints} by a few basis points would sit comfortably inside it.
+\gap{Citation needed: Hobson, Laurence and Wang, static-arbitrage upper bounds for basket options with given marginals (Quantitative Finance, 2005). The reference is not in the bibliography and is cited by name only until the librarian verifies the full details.}
+\end{remark}
+
+\section{A diagnostic for transported pairs}\label{sec:appA-diagnostic}
+
+The following procedure applies Propositions~\ref{prop:appA-level} and~\ref{prop:appA-skewcurv} to a transported 3M/6M pair and reports its verdict in the language of Proposition~\ref{prop:appA-span}(iii). Smile features are converted to basis points through the sensitivities of Proposition~\ref{prop:prelim-lsc}, so that tolerances can be set at the bid--offer width of the caplet market.
+
+\begin{algorithmenv}[Tenor-consistency diagnostic]\label{alg:appA-diagnostic}
+\emph{Input.} Dates $T_1<T_2<T_3$; time-zero compounded forwards $F^{12}_0,F^{23}_0,F^{13}_0$; normal SABR triples $(\hat a_{12},\hat\rho_{12},\hat\nu_{12})$ and $(\hat a_{23},\hat\rho_{23},\hat\nu_{23})$ for the three-month smiles at clocks $\tau_{12},\tau_{23}$, and $(\hat a_{13},\hat\rho_{13},\hat\nu_{13})$ for the six-month smile at clock $\tau_{13}$, all quoted at the clock (Corollary~\ref{cor:prelim-quoted} converts from calendar-time quotes); a vol-of-vol profile $h$ (default $h\equiv1$); tolerances $\epsilon_\ell,\epsilon_s,\epsilon_c$ in basis points and $\epsilon_\rho$ dimensionless.
+\begin{enumerate}[nosep,label=\arabic*.]
+\item \emph{Forward check.} Verify $1+\Delta_{13}F^{13}_0=(1+\Delta_{12}F^{12}_0)(1+\Delta_{23}F^{23}_0)$ to rounding. If it fails, stop and report a curve-construction inconsistency; the forwards are bond ratios and the smile test presupposes them.
+\item \emph{Common driver.} Set $\rho:=(\Delta_{12}\hat\rho_{12}+\Delta_{23}\hat\rho_{23})/\Delta_{13}$. If $|\hat\rho_{12}-\hat\rho_{23}|>\epsilon_\rho$, record that the three-month pair itself is outside the single-driver family $\mathcal M(h)$ and continue with $\rho$.
+\item \emph{Projection.} With the frozen weights $w_{12}=\Delta_{12}(1+\Delta_{23}F^{23}_0)$, $w_{23}=\Delta_{23}(1+\Delta_{12}F^{12}_0)$ of Remark~\ref{rem:appA-frozen}, compute $a_{13}^*$ from \eqref{eq:appA-level} and $\rho_{13}^*\nu_{13}^*$, $\nu_{13}^{*2}$ from \eqref{eq:appA-constraints} by numerical quadrature of the integrals in \eqref{eq:appA-cumulants} and \eqref{eq:appA-constraints}; the integrands are piecewise polynomial and Simpson quadrature on a grid containing $T_1,T_2$ is exact enough.
+\item \emph{Features.} With $c_\tau:=1+\frac{2-3\rho^2}{24}\nu^2\tau_{13}$ evaluated at each triple, compute for the projected and for the fitted six-month triple the level $\ell=a\,c_\tau$, the skew per $100$ basis points of strike $\mathsf s\times0.01=\tfrac12\rho\nu\,c_\tau\times0.01$, and the curvature lift at $\pm50$ basis points $\tfrac12\mathsf c\times(0.005)^2=\frac{(2-3\rho^2)\nu^2}{12a}c_\tau\times(0.005)^2$, all from \eqref{eq:prelim-lsc}. Let $d_\ell,d_s,d_c$ be the differences, fitted minus projected, in basis points.
+\item \emph{Verdict.} If $|d_\ell|>\epsilon_\ell$ or $|d_s|>\epsilon_s$ or $|d_c|>\epsilon_c$, report \textsc{inconsistent}: no model in $\mathcal M(h)$ calibrates jointly to the three-month pair and the six-month smile; name the offending feature and its excess. Otherwise report \textsc{consistent within tolerance}. The report never uses the word arbitrage.
+\item \emph{Profile sensitivity.} For one or two mean-reversion speeds $\kappa$, replace $\Delta_{ij}g_{ij}(t)$ by the HJM coefficient functions $\varphi_{ij}(t)$ of Remark~\ref{rem:appA-hjm}, rescaled per window so that each three-month window keeps its fitted total variance $\hat a_{ij}^2w_{ij}^2\tau_{ij}$, and recompute the six-month total variance and hence $a_{13}^*$ relative to the clock $\tau_{13}$ at which the six-month smile is quoted; repeat steps 4--5. Report whether the verdict survives the profile assumption.
+\end{enumerate}
+\end{algorithmenv}
+
+Step 2 deserves a comment. A common driver $Z$ forces a common $\rho$, so two three-month smiles with visibly different $\hat\rho$ already lie outside $\mathcal M(h)$; the algorithm records this rather than stopping, because the six-month test is still informative with an averaged $\rho$, but the record is part of the verdict. Step 6 enforces the rule that the linear profile is an assumption, and Section~\ref{sec:appA-worked} shows that it bites: the projected six-month level moves by more than a basis point between the flat and the $\kappa=1$ profiles, so a flag of that size is a statement about the profile, not about the smiles.
+
+\section{Worked example}\label{sec:appA-worked}
+
+Take $T_1=1$ year and two three-month windows, $\Delta_{12}=\Delta_{23}=0.25$, so $T_2=1.25$, $T_3=1.5$ and $\Delta_{13}=0.5$. The clocks are $\tau_{12}=1.0833$, $\tau_{23}=1.3333$, $\tau_{13}=1.1667$, and the cross term is $c=T_1+\Delta_{12}/2=1.125$. The clock identity \eqref{eq:appA-clocks} reads $0.25\times1.1667=0.29167$ on the left and $0.0625\times1.0833+0.0625\times1.3333+2\times0.0625\times1.125=0.067708+0.083333+0.140625=0.29167$ on the right. Both forwards are $F^{12}_0=F^{23}_0=7.00\%$, so $Y^{12}_0=Y^{23}_0=1.0175$ and, by \eqref{eq:appA-identity}, $F^{13}_0=(1.0175^2-1)/0.5=7.0613\%$; the arithmetic forward is $7.00\%$, and the difference of $6.1$ basis points is the product term.
+
+\emph{The exact case.} Let both three-month smiles carry the triple of the worked example of Section~\ref{subsec:prelim-worked}, $(a,\rho,\nu)=(0.0060,-0.2,0.4)$. By Proposition~\ref{prop:appA-exact}(ii) the arithmetic six-month forward is normal decaying SABR with the same triple and the linear profile, and \eqref{eq:appA-level} returns $a_{13}^*=0.0060$ exactly. With the frozen weights of Remark~\ref{rem:appA-frozen}, $w_{12}=w_{23}=0.25\times1.0175$, the projection for the compounded rate is $a_{13}^*=0.0060\times1.0175=0.0061050$, that is $61.05$ basis points: the product term lifts the six-month level by $1.05$ basis points relative to the three-month level. The $\Q^{T_3}$ drift of $F^{12}$ at time zero is $\mu^{12}_0=-\Delta_{23}a^2/Y^{23}_0=-0.25\times0.0060^2/1.0175=-8.8\times10^{-6}$ per year, below $0.1$ basis point per year.
+
+\emph{Unequal levels.} Now let the second window be more volatile, $a_{23}=0.0065$, with $a_{12}=0.0060$ and $(\rho,\nu)$ unchanged. The kinked profile of Proposition~\ref{prop:appA-exact}(iii) has $\bar a=0.00625$, slopes $-1.92$ and $-2.08$ per year on the two sub-windows against $-2.00$ for the linear profile, and terminal clock $\bar\tau=1.1717$ against $\tau_{13}=1.1667$. The variance-matched level \eqref{eq:appA-level} is
+\[
+a_{13}^{*2}=\frac{36\times1.0833+42.25\times1.3333+2\times39\times1.125}{4\times1.1667}\ \text{bp}^2\text{yr}\,/\,\text{yr}=\frac{39.000+56.333+87.750}{4.6667}=39.232\ \text{bp}^2,
+\]
+so $a_{13}^*=62.64$ basis points at the clock; the naive average of $60$ and $65$ is $62.50$. With frozen weights the projection is $63.73$ basis points. The skew and curvature constraints \eqref{eq:appA-constraints} with $h\equiv1$ give $\rho_{13}^*\nu_{13}^*=-0.08018$ against the inherited $\rho\nu=-0.0800$, and $\nu_{13}^{*2}=0.16070$ against $\nu^2=0.1600$, so $\nu_{13}^*=0.4009$: with equal $(\rho,\nu)$ on the two windows, unequal levels move the six-month skew and curvature by well under one percent. In basis points, the skew per $100$ basis points of strike is $-4.06$ inherited against $-4.07$ projected, and the curvature lift at $\pm50$ basis points is $1.015$ against $1.020$.
+
+\emph{A transported six-month smile.} Suppose the six-month JIBAR smile, transported by the map of Chapter~\ref{ch:identifiability}, arrives as $(\hat a_{13},\hat\rho_{13},\hat\nu_{13})=(0.0066,-0.2,0.4)$ at clock $\tau_{13}$. Step 4 of Algorithm~\ref{alg:appA-diagnostic} gives $d_\ell=66-63.73=2.27$ basis points against the frozen-weight projection ($3.36$ against the unfrozen one), $d_s=0.01$ and $d_c=0.00$ basis points. Quoted against calendar time $T_3=1.5$ the level gap is $2.27\times\sqrt{1.1667/1.5}=2.00$ basis points. With a level tolerance $\epsilon_\ell=1$ basis point the verdict is \textsc{inconsistent} on the level: no model in $\mathcal M(h)$ calibrates to a $60$/$65$ three-month pair and a $66$ six-month smile at once. Step 6 with the mean-reverting coefficient functions of Remark~\ref{rem:appA-hjm} gives projected levels of $63.60$, $63.00$ and $62.10$ basis points for $\kappa=0.1$, $0.5$ and $1$, against $63.73$ for the flat profile, so the gap to $66$ widens to $2.40$, $3.00$ and $3.90$ basis points and the verdict survives. The projection itself, however, moves by $1.6$ basis points between the flat and the $\kappa=1$ profile, more than the tolerance, whereas Example~\ref{ex:prelim-cg} found the single-window clock insensitive to $\kappa\le1$; the difference is the pre-window shape, which is immaterial for one window and enters the cross term for two. A pair whose gap is within about $2$ basis points of the tolerance should therefore be reported as profile-dependent rather than flagged. Nothing in this verdict says the $66$ can be traded against the pair: by Proposition~\ref{prop:appA-span} the six-month caplet is not replicable from the three-month market, and a model-free interval of the kind described in Remark~\ref{rem:appA-modelfree} would contain all three quotes.
+
+\datanote{Every figure in this section was computed in double precision from \eqref{eq:appA-clocks}, \eqref{eq:appA-level}, \eqref{eq:appA-cumulants} and \eqref{eq:appA-constraints} on a grid of $600{,}001$ points with the trapezoidal rule; the profile identity \eqref{eq:appA-profiles} holds to machine precision on the grid and the equal-parameter case returns $\rho\nu$ and $\nu^2$ to eleven digits. The parameter values are illustrative, taken from Section~\ref{subsec:prelim-worked} with one level changed, and are not calibrated to any market. The script belongs in the reproducibility package of Appendix~\ref{app:data}.}
+
+\figplan{Decay profiles $\Delta_{ij}g_{ij}(t)$ for the three windows of the worked example on $[0,1.5]$, showing $\Delta_{12}g_{12}+\Delta_{23}g_{23}$ coinciding with $\Delta_{13}g_{13}$ (Lemma~\ref{lem:appA-profiles}); a second panel with the kinked profile $\bar a\Delta_{13}\bar g$ for $a_{12}=60$, $a_{23}=65$ bp against $a_{13}^*\Delta_{13}g_{13}$, the two having equal integrated squares.}{Composition of linear decay profiles. Left: the remaining-length functions $\min(\Delta_{ij},T_j-t)$ of the two three-month windows add exactly to that of the six-month window. Right: with unequal three-month levels the sum acquires a kink at $T_2$; the variance-matched linear profile has the same area under its square but a different shape, which is the source of the leading-order error in Proposition~\ref{prop:appA-level}.}
+
+\section{Discussion}\label{sec:appA-discussion}
+
+The appendix has established three things. The compounding identity between nested windows is an exact pathwise identity between bond ratios, and it makes the six-month realised rate a fixed increasing function of the two three-month realised rates. Linear decay profiles compose exactly, with the consequence that the clocks of the three windows satisfy $\Delta_{13}^2\tau_{13}=\Delta_{12}^2\tau_{12}+\Delta_{23}^2\tau_{23}+2\Delta_{12}\Delta_{23}c$ with $c=T_1+\Delta_{12}/2$; within the normal decaying-SABR class with one volatility driver this makes the arithmetic six-month forward a member of the same class with the linear profile exactly when the three-month levels agree, and otherwise a member with a kinked profile whose variance-matched projection and leading-order $(\rho,\nu)$ constraints are explicit. And a failure of those constraints means that no model in the class fits the three smiles together; it does not produce a static arbitrage, because the six-month caplet is not spanned by three-month instruments even after reinvestment.
+
+The limitations are these. The exact statement is for the arithmetic rate; for the compounded rate the product term is a level effect of about one basis point in the example, absorbed by frozen weights at leading order, and the cleanest exact statement would be in the lognormal-on-$(1+\Delta F)$ class. The class has one volatility driver; two three-month smiles with different $\rho$ are outside it before any six-month smile is examined. The vol-of-vol profile is common to the windows, which the same-$g$ variant of Lemma~\ref{lem:prelim-tc} does not satisfy, so under that variant part~(a) is a leading-order statement. The constraints of Proposition~\ref{prop:appA-skewcurv} are first order in $\nu$, and the diagnostic's tolerances must be set with the bid--offer width of the compounded caplet market in mind, a market for which no screen quotes were found as of September 2026. And the linear profile is an assumption whose influence is larger here than in single-window pricing: the total variance of one window fixes its price whatever the pre-window shape of the coefficient, but the cross term between two windows depends on that shape, and in the example it moves the projected six-month level by $1.6$ basis points between the flat and the $\kappa=1$ profile. Step 6 of the algorithm makes this visible rather than removing it.
+
+For the converted South African book the diagnostic has one further input. The fallback strike shifts differ by tenor, $16.19$ basis points for three-month and $43.23$ basis points for six-month JIBAR \cite{bisl2025}, so the transported smiles arrive at different strike translations. Normal SABR is translation-invariant in the strike, so the shifts do not enter the consistency test of the triples, but the forwards in step 1 must be the compounded forwards, not the JIBAR forwards plus their spreads, and the two basis processes of the two tenors are not the subject of this appendix. The test is therefore a check on the output of Chapter~\ref{ch:identifiability} applied tenor by tenor, and a pair flagged by it tells the desk that the two transports cannot both be right within the model class, which is exactly the kind of statement the identifiability analysis says the JIBAR market alone cannot resolve.

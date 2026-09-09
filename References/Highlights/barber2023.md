@@ -1,0 +1,17 @@
+# barber2023 — Barber, Candès, Ramdas, Tibshirani (2023), Conformal prediction beyond exchangeability
+
+**Record.** Barber, R. F., Candès, E. J., Ramdas, A., Tibshirani, R. J. (2023). Conformal prediction beyond exchangeability. *Annals of Statistics* 51(2), 816–845. DOI 10.1214/23-AOS2276.
+**File.** `References/PDF/barber2023.pdf` = arXiv:2202.13415v5 (17 Mar 2023), 63 pp. Downloaded 2026-09-09 from https://arxiv.org/pdf/2202.13415 (arXiv licence: author-posted preprint). Page numbers below are **arXiv v5 pages**, not the Annals pagination; theorem and equation numbers are those printed in v5. Verify against the journal copy before final submission.
+**Highlighted copy.** `References/PDF/barber2023.highlighted.pdf`.
+
+| arXiv p. | As printed | Excerpt (verbatim) | Why it matters here | Locator for `\citep[...]{barber2023}` |
+|---|---|---|---|---|
+| 4 | eq. (3), Sec. 1 | "We will see that the coverage gap can be bounded as [(3)] ... Notably, we do not make any assumption on the joint distribution of the n + 1 points." | The reference total-variation bound on the coverage gap; ch3 Thm 6(iii) uses the weaker Kolmogorov distance on a fixed half-line and must be positioned against this. | `[eq.~(3)]` |
+| 5 | Lemma 1 | "If Z_1,...,Z_{n+1} are independent, then d_TV(Z, Z^i) ≤ 2 d_TV(Z_i, Z_{n+1}) − d_TV(Z_i,Z_{n+1})^2 ≤ 2 d_TV(Z_i, Z_{n+1})." | Reduces the swap-TV to per-point TV under independence; ch2 preliminaries on conformal prediction. | `[Lemma~1]` |
+| 5 | Sec. 1, after Lemma 1 | "For example, under distribution drift, we might have d_TV(Z_i, Z_{n+1}) decreasing with i; we can achieve a low coverage gap by using, say, weights w_i = ρ^{n+1−i} for some ρ < 1." | Their answer to drift is down-weighting; the thesis instead certifies with an explicit d_K penalty. Contrast in ch3 discussion and ch6 comparison design. | `[Sec.~1]` |
+| 11 | eq. (11), Sec. 3.1 | "Nonexchangeable split conformal with a symmetric algorithm. The prediction interval is given by [(11)] where R_i = |Y_i − μ̂(X_i)| for the pre-trained model μ̂, as before." | Definition of weighted split conformal (weighted quantile with mass w̃_{n+1} at +∞); ch2 definition, ch6 comparator. | `[eq.~(11)]` |
+| 15–16 | Theorem 2 | "Theorem 2 (Nonexchangeable full conformal prediction). ... P{Y_{n+1} ∈ Ĉ_n(X_{n+1})} ≥ 1 − α − Σ_i w̃_i · d_TV(R(Z), R(Z^i)). The same result holds true for nonexchangeable split conformal." | The coverage-gap theorem; GROUND-TRUTH correction 4 (Kolmogorov penalty after coupling) is the thesis' alternative route. | `[Thm.~2]` |
+| 16 | Sec. 4.1 | "we consider it an important point that the coverage gap depends on the total variation between swapped residual vectors, and not the swapped raw data vectors." | Scores, not raw data, carry the penalty — same object as the thesis' score laws P, Q. | `[Sec.~4.1]` |
+| 16 | Theorem 3 | "P{Y_{n+1} ∈ Ĉ_n(X_{n+1})} < 1 − α + w̃_{n+1} + Σ_i w̃_i · d_TV(R(Z), R(Z^i))." then "mild violations of exchangeability can only lead to mild undercoverage (as in Theorem 2) or to mild overcoverage." | Two-sided (over-coverage) bound; ch4 Thm 9 defines a two-sided conditional coverage error and should cite this precedent for the two-sided view. | `[Thm.~3]` |
+
+**Notes.** The reading plan (months 1–4) lists this paper "line by line". No β-mixing or blocking appears in it; the dependent-data treatment is via the swap-TV terms. The Beta(k, n+1−k) law of conformal coverage is not stated here (cite Vovk 2012 for that).
