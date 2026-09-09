@@ -1,6 +1,6 @@
 # GROUND TRUTH for all mathematical claims
 
-Source of record: `~/PhD-Topic-Council/13-mathematics-3yr.tex` (compiled: `13-mathematics-3yr.pdf`). It contains the council-corrected statements. Chapters must match it exactly in hypotheses and conclusions. If a writer believes a statement there is wrong, they do NOT silently change it; they add a `\gap{}` describing the doubt and append a lesson.
+Source of record: `"~/Desktop/PhD Thesis/Council" Workspace/13-mathematics-3yr.tex` (compiled: `13-mathematics-3yr.pdf`). It contains the council-corrected statements. Chapters must match it exactly in hypotheses and conclusions. If a writer believes a statement there is wrong, they do NOT silently change it; they add a `\gap{}` describing the doubt and append a lesson.
 
 ## Status of each result
 | Result (ground-truth numbering) | Status | Chapter |

@@ -24,3 +24,6 @@ __pycache__/
 !Offer/*.pdf
 !Research Proposal/*.pdf
 !Thesis/Cover Page/src/*.pdf
+
+# transient council working directory (drafts are synced into Thesis/ and Reviews/)
+Council Workspace/

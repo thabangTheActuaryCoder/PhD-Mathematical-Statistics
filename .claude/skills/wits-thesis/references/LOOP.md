@@ -15,7 +15,7 @@ Per chapter:
 - WRITE: `thesis-writer` agent. Inputs: STANDARD, LESSONS, GROUND-TRUTH, the chapter brief. Output: the .tex file. Must end by appending a short "writer's open questions" list to LESSONS.md under the chapter heading.
 - REVIEW-DOMAIN: `thesis-statistician` for ch3, ch4, ch6 statistics parts, appB; `thesis-finance-theorist` for ch2 finance parts, ch5, ch6 finance parts, ch7, appA. Edits the file directly. Appends lessons.
 - REVIEW-EXAMINER: `thesis-examiner`. Structure, honesty, length vs budget, Wits compliance. Edits directly. Appends lessons.
-- COMPILE: orchestrator runs `cd ~/PhD-Topic-Council/thesis && tectonic main.tex`; fixes errors; records pages in PROGRESS.md.
+- COMPILE: orchestrator runs `cd "~/Desktop/PhD Thesis/Council" Workspace/thesis" && tectonic main.tex`; fixes errors; records pages in PROGRESS.md.
 
 Relearning: LESSONS.md is read at the start of EVERY agent run. A lesson has the form
 `- [YYYY-MM-DD][reviewer][chapter] LESSON: <one sentence rule>. WHY: <one sentence>. APPLIES TO: <chapters>.`

@@ -132,9 +132,9 @@ Sources (all read in full or in the cited sections):
 - Rule number for the declaration: style guide cites G.28, first-submission form cites G9.7; the 2026 Rules place the formal-declaration content at G9.8 (applied to PhD via G10.3). Cite "General Rules G9.8 and G10.3 (2026)" and confirm with the Faculty Office.
 
 ## Repository (added 2026-09-09)
-The thesis lives in the GitHub repository `thabangTheActuaryCoder/PhD-Mathematical-Statistics`, cloned at `~/PhD-Mathematical-Statistics`, laid out exactly like the candidate's MSc repository:
+The thesis lives in the GitHub repository `thabangTheActuaryCoder/PhD-Mathematical-Statistics`, cloned at `"~/Desktop/PhD Thesis"`, laid out exactly like the candidate's MSc repository:
 `main.tex` (report class, natbib author-year, glossaries), `References.bib`, `Thesis/Chapter N/src/chapterN_slug.tex` + `Thesis/Chapter N/Figures/`, `Thesis/{Cover Page,Declarations,Abstract,Acknowledgments,Acronym Definitions,List of Equations,Annexures}`, `Thesis/macros.tex`, `Code/`, `Research Proposal/`, `CHANGES_REVIEW.md` (loop log), `README.md` (overview, structure table, citation, keywords).
-During round one, agents write in the working directory `~/PhD-Topic-Council/thesis/`; `sync_from_workdir.sh` copies into the repository layout. From round two the repository is the working directory and the old path is retired. Commit messages are plain and describe the change; no tool attribution of any kind appears in git history.
+During round one, agents write in the working directory `"~/Desktop/PhD Thesis/Council" Workspace/thesis/`; `sync_from_workdir.sh` copies into the repository layout. From round two the repository is the working directory and the old path is retired. Commit messages are plain and describe the change; no tool attribution of any kind appears in git history.
 Acronyms: define in `Thesis/Acronym Definitions/acronyms.tex` and use `\gls{}` on first use in each chapter, as the MSc did.
 
 ## Zero-hallucination citation rule (added 2026-09-09, binding)

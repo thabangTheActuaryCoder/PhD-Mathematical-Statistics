@@ -3,8 +3,8 @@
 # working directory into this repository's MSc-style layout.
 set -u
 cpif(){ if [ -f "$1" ]; then cp "$1" "$2"; else echo "skip (not yet written): $1"; [ -f "$2" ] || printf '\\chapter{%s}\\label{%s}\n\\gap{Chapter not yet drafted; scheduled in the loop order of LOOP.md.}\n' "$3" "$(basename "$1" .tex)" > "$2"; fi; }
-W=~/PhD-Topic-Council/thesis
-R=~/PhD-Mathematical-Statistics
+W="$HOME/Desktop/PhD Thesis/Council Workspace/thesis"
+R="$HOME/Desktop/PhD Thesis"
 cpif "$W/chapters/ch1-introduction.tex" "$R/Thesis/Chapter 1/src/chapter1_introduction.tex" "Introduction"
 cpif "$W/chapters/ch2-preliminaries.tex" "$R/Thesis/Chapter 2/src/chapter2_preliminaries.tex" "Preliminaries"
 cpif "$W/chapters/ch3-certification.tex" "$R/Thesis/Chapter 3/src/chapter3_certification.tex" "Finite-Sample Certification of Hedging Error"

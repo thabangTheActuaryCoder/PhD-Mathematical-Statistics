@@ -1,16 +1,16 @@
 ---
 name: wits-thesis
-description: "Write, review and assemble the PhD thesis 'Pricing and Hedging Through a Benchmark Transition Without an Options Market' (Wits Mathematical Statistics) as a LaTeX book in ~/PhD-Topic-Council/thesis. Use whenever the user asks to write, extend, review, revise or compile any thesis chapter, appendix or front matter, or mentions the thesis loop, the lessons file, or the chapter writers/reviewers."
+description: "Write, review and assemble the PhD thesis 'Pricing and Hedging Through a Benchmark Transition Without an Options Market' (Wits Mathematical Statistics) as a LaTeX book in "~/Desktop/PhD Thesis/Council" Workspace/thesis". Use whenever the user asks to write, extend, review, revise or compile any thesis chapter, appendix or front matter, or mentions the thesis loop, the lessons file, or the chapter writers/reviewers."
 ---
 
 # /wits-thesis
 
-One thesis, one standard, one loop. Everything below is binding for every agent that touches `~/PhD-Topic-Council/thesis/`.
+One thesis, one standard, one loop. Everything below is binding for every agent that touches `"~/Desktop/PhD Thesis/Council" Workspace/thesis/`.
 
 ## Files
 - `references/STANDARD.md` — format, notation, writing rules, chapter template, page budget. Read fully before writing.
 - `references/LESSONS.md` — the relearning file. Every reviewer APPENDS dated lessons; every writer READS it first and applies every lesson. Never delete entries; mark superseded ones.
-- `references/GROUND-TRUTH.md` — pointer to the corrected mathematics (`~/PhD-Topic-Council/13-mathematics-3yr.tex`) and the rules for what may be claimed as proved vs target.
+- `references/GROUND-TRUTH.md` — pointer to the corrected mathematics (`"~/Desktop/PhD Thesis/Council" Workspace/13-mathematics-3yr.tex`) and the rules for what may be claimed as proved vs target.
 - `references/LOOP.md` — the write → review → revise → compile protocol and the order of chapters.
 
 ## The loop (short form)
