@@ -35,7 +35,7 @@
 ## Page budget (target 310–360 typeset pages)
 | Part | Pages |
 |---|---|
-| Front matter | 12 |
+| Front matter | 18 (reset 2026-09-09 after audit: Wits three-level TOC) |
 | Ch1 Introduction and the South African transition | 24 |
 | Ch2 Preliminaries: rates, SABR, forward measures, conformal prediction, mixing | 48 |
 | Ch3 Finite-sample certification of hedging error | 44 |

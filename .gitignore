@@ -27,3 +27,6 @@ __pycache__/
 
 # transient council working directory (drafts are synced into Thesis/ and Reviews/)
 Council Workspace/
+main.ist
+main.glo
+main.acn

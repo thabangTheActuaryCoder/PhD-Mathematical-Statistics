@@ -61,7 +61,7 @@ Z^{N}_t:=\E^{\Q}\Big[\frac{d\Q^{N}}{d\Q}\,\Big|\,\mathcal F_t\Big]=\frac{N_t}{N_
 \end{equation}
 again by the martingale property of $N/\beta$.
 
-\begin{lemma}[Abstract Bayes formula; \cite[Lemma~3.5.3]{karatzas1991}]\label{lem:prelim-bayes}
+\begin{lemma}[Abstract Bayes formula; {\cite[Lemma~3.5.3]{karatzas1991}}]\label{lem:prelim-bayes}
 Let $\Q'\ll\Q$ on $\mathcal F_{T}$ with density $Z_T=d\Q'/d\Q$ and density process $Z_t=\E^{\Q}[Z_T\mid\mathcal F_t]$, assumed strictly positive. For every $\mathcal F_T$-measurable $Y$ with $\E^{\Q'}|Y|<\infty$ and every $t\le T$,
 \[
 \E^{\Q'}[Y\mid\mathcal F_t]\;=\;\frac{\E^{\Q}[Y Z_T\mid\mathcal F_t]}{Z_t}\qquad\Q'\text{-a.s.}
@@ -123,7 +123,7 @@ Theorem~\ref{thm:prelim-numeraire} is the Geman--El Karoui--Rochet theorem; the 
 
 \subsection{Forward measures and forward rates}
 
-\begin{definition}[Forward measure; \cite[Ch.~7]{filipovic2009}]\label{def:prelim-forward-measure}
+\begin{definition}[Forward measure; {\cite[Ch.~7]{filipovic2009}}]\label{def:prelim-forward-measure}
 For $U\le T^*$, the $U$-forward measure $\Q^{U}$ is the martingale measure of the num\'eraire $P(\cdot,U)$, restricted to $\mathcal F_U$:
 \[
 \frac{d\Q^{U}}{d\Q}\Big|_{\mathcal F_U}=\frac{P(U,U)}{P(0,U)\,\beta_U}=\frac{1}{P(0,U)\,\beta_U}.
@@ -152,7 +152,7 @@ F(t;T,U):=\frac{1}{U-T}\Big(\frac{P(t,T)}{P(t,U)}-1\Big).
 
 The forward rate is the fixed rate that makes a forward rate agreement over $[T,U]$ costless at $t$: paying $(U-T)F$ at $U$ against receiving $P(T,U)^{-1}-1$ has zero value if and only if $F=F(t;T,U)$, because the floating leg is replicated by holding one $T$-bond and shorting one $U$-bond.
 
-\begin{proposition}[Forward rates are forward-measure martingales; \cite[\S7.1]{filipovic2009}]\label{prop:prelim-forward-mart}
+\begin{proposition}[Forward rates are forward-measure martingales; {\cite[\S7.1]{filipovic2009}}]\label{prop:prelim-forward-mart}
 For fixed $T<U$, the process $t\mapsto F(t;T,U)$, $t\in[0,T]$, is a $\Q^{U}$-martingale.
 \end{proposition}
 
