@@ -24,3 +24,9 @@ Running record of the write, review, revise, compile loop. One entry per round. 
 - All 50 references processed: 58 PDFs with highlighted copies, 50 highlight notes carrying exact locators, paywalled items recorded with DOIs. Three attribution errors and three bibliographic errors corrected.
 - Reference code corrected: one AR(1) mixing constant, block counting fixed, exact optimal block length, Table 3.1 regenerated and reproduced by tests.
 - Review reports written for Chapter 2 (22 must-items) and Appendix C (10 must-items).
+
+## 2026-09-09 - Round one closed for Chapter 2, Appendix B and Appendix C
+- Chapter 2: all 22 must-items closed. The withdrawn curvature claim removed from the abstract, introduction, worked example and figure; about twenty references to the writing process deleted; citation locators taken from the reference notes; the Beta law with atoms and the side-condition-free autoregressive mixing bound adopted so Chapter 3 can delete its duplicates.
+- Appendix B created: ten sections, each proving one standard result and referencing its statement by number. Nine proofs moved out of Chapter 2, plus the derivation sketch of the Hagan approximation.
+- Appendix C: 19 items closed. The reference implementation is now described from its source rather than its readme; twelve leaks of the writing process removed from note boxes; the fallback spread values marked as resting on no obtained primary source until the final rule is retrieved.
+- Page budget reallocated between the appendices: the moved proofs run shorter than budgeted, and the citation apparatus costs more than the prose it certifies.

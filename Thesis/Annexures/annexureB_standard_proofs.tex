@@ -152,3 +152,23 @@ using $|\E Z|\le\E|Z|$ pointwise in $x$. Hence $\Wone(P,Q)\ge\int|F_P-F_Q|$.
 
 \emph{The quantile form.} $\E|F_P^{-1}(U)-F_Q^{-1}(U)|=\int_0^1|F_P^{-1}(u)-F_Q^{-1}(u)|\,du$ is the same expectation written out, which gives the second equality. Finiteness of all three quantities follows from the finite first moments: $\int|F_P-F_Q|\le\int(1-F_P)+\int(1-F_Q)$ over $[0,\infty)$ plus the analogous integrals of $F_P,F_Q$ over $(-\infty,0]$, each equal to a partial first absolute moment.
 \end{proof}
+
+\section{Structure of the derivation of the Hagan approximation}\label{appB:hagan}
+
+This section sets out the derivation of the implied-volatility formulas of Theorem~\ref{thm:prelim-hagan} in Chapter~\ref{ch:prelim}, following \cite{hagan2002}. It is a sketch: the formulas are taken as the market's quoting convention, and the full singular-perturbation computation is not the thesis's concern.
+
+We indicate the structure of the derivation in \cite{hagan2002} at the level needed to understand where each factor of \eqref{eq:prelim-hagan-N0} comes from; the full computation is not reproduced. The steps are these.
+
+\emph{Step 1: the problem as a backward equation.} Write the SABR dynamics with the scaling $\alpha\mapsto\epsilon\alpha$, $\nu\mapsto\epsilon\nu$, and let $C(F,\alpha,t)$ be the undiscounted call price as a function of the current state and the time to expiry. It satisfies the backward Kolmogorov equation
+\[
+\partial_tC=\tfrac12\epsilon^2\alpha^2\big[F^{2\beta}\partial_{FF}C+2\rho\nu F^{\beta}\partial_{F\alpha}C+\nu^2\partial_{\alpha\alpha}C\big],\qquad C(F,\alpha,0)=(F-K)^+ .
+\]
+Because the payoff is not smooth at $K$ and the diffusion is small, the problem is a singular perturbation problem in $\epsilon$, and a regular expansion of $C$ fails near the strike.
+
+\emph{Step 2: the near-strike scaling and the geodesic distance.} Introduce the variable $y=\int_K^F\frac{dF'}{\alpha F'^{\beta}}$, the distance from $F$ to the strike measured in units of the local volatility, so that the rate diffusion becomes a unit-speed motion in $y$. In the $(y,\alpha)$ variables the generator becomes, to leading order, that of a Brownian motion on a two-dimensional space of constant negative curvature, and the option price to leading order depends on the state only through the hyperbolic distance from the current point $(F,\alpha)$ to the strike line $\{F=K\}$. For the model \eqref{eq:prelim-sabr-const} this distance is computed in closed form and equals $x(z)/\nu$ with $z$ as in Theorem~\ref{thm:prelim-hagan}: $x(z)$ is the integral of the hyperbolic line element along the geodesic. The ratio $z/x(z)$ compares this distance with the distance $z/\nu$ that a model with frozen volatility $\alpha_0$ would assign; it is therefore the leading-order ratio of the effective volatility to $\alpha_0$, and it equals $1$ at the money.
+
+\emph{Step 3: matching to a normal model.} The leading-order price obtained in Step 2 has the form of a Bachelier price with an effective variance; identifying the two gives the leading factor of \eqref{eq:prelim-hagan-N}: the local-volatility average $\alpha_0(1-\beta)(f-K)/(f^{1-\beta}-K^{1-\beta})$, which is the harmonic-type mean of $\alpha_0F^{\beta}$ between $K$ and $f$ that a small-noise expansion of the local-volatility model $dF=\alpha_0F^{\beta}dW$ produces, multiplied by $\zeta/x(\zeta)$.
+
+\emph{Step 4: the first correction.} Carrying the expansion to the next order in $\epsilon^2$ produces three corrections, each linear in $t$: a local-volatility curvature term proportional to $\alpha_0^2$, which is $-\beta(2-\beta)\alpha_0^2/(24(fK)^{1-\beta})$ in normal units and $(1-\beta)^2\alpha_0^2/(24(fK)^{1-\beta})$ in lognormal units; a cross term $\rho\beta\nu\alpha_0/(4(fK)^{(1-\beta)/2})$ from the covariation of rate and volatility interacting with the backbone; and the term $(2-3\rho^2)\nu^2/24$ from the second moment of the volatility process itself, which is the only correction that survives at $\beta=0$. The lognormal formula is obtained by matching the same leading-order price to a Black price instead, which introduces the $\log(f/K)$ bracket in the denominator of \eqref{eq:prelim-hagan-B}.
+
+The derivation is asymptotic, not convergent; for $\nu^2t$ of order one or for strikes several standard deviations from the forward the formulas lose accuracy, and for $\beta<1$ the lognormal form can produce negative densities in the low-strike wing. The thesis uses expiries of at most a few years, $\nu^2t$ below one, and strikes within two standard deviations, and it treats the Hagan formula as the market's pricing convention rather than as an approximation to the exact SABR density: what is calibrated and quoted in practice is \eqref{eq:prelim-hagan-N0}.
