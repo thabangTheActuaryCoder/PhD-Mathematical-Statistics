@@ -183,7 +183,7 @@ The value of the auxiliary variable is that the coupling can be built on an enla
 The blocking lemma applies Berbee's lemma once per block, in time order. The statement below is the coupling form of Lemma~4.1 of \cite{yu1994}, whose statement bounds $|\E h(\Xi)-\E h(\Xi^*)|$ by $\|h\|_\infty(m-1)\beta(b)$ for bounded measurable $h$; the coupling form implies it, since $|\E h(\Xi)-\E h(\Xi^*)|\le\|h\|_\infty\Prob(\Xi\ne\Xi^*)$.
 
 \begin{lemma}[Sequential coupling of separated blocks]\label{lem:blocks}
-Let $(X_t)$ have $\beta$-coefficients $\beta(\cdot)$, and let $G_1,\dots,G_m$ be index sets of the form $G_i=\{s_i,\dots,t_i\}$ with $t_i<s_{i+1}$, pairwise separated by at least $b$ indices in the sense that $s_{i+1}\ge t_i+b+1$. Write $\xi_i:=X_{G_i}$. On a probability space enlarged by independent uniforms $U_2,\dots,U_m$ independent of $X$, there exist random elements $\xi^*_1,\dots,\xi^*_m$ such that
+Let $(X_t)$ have $\beta$-coefficients $\beta(\cdot)$, and let $G_1,\dots,G_m$ be index sets of the form $G_i=\{s_i,\dots,t_i\}$ with $t_i<s_{i+1}$, consecutive sets separated by a gap of $b$ in the sense of Definition~\ref{def:beta}, that is $s_{i+1}\ge t_i+b$ (at least $b-1$ indices strictly between). Write $\xi_i:=X_{G_i}$. On a probability space enlarged by independent uniforms $U_2,\dots,U_m$ independent of $X$, there exist random elements $\xi^*_1,\dots,\xi^*_m$ such that
 \begin{enumerate}[nosep,label=(\alph*)]
 \item $\xi^*_1=\xi_1$ and $\xi^*_i$ has the law of $\xi_i$ for every $i$;
 \item $\xi^*_1,\dots,\xi^*_m$ are mutually independent;
@@ -199,9 +199,9 @@ Y:=(\xi_1,\dots,\xi_{i-1},U_2,\dots,U_{i-1}),\qquad Z:=\xi_i,\qquad U:=U_i .
 \]
 The variable $U_i$ is uniform and independent of $(Y,Z)$ because the uniforms are independent of each other and of $X$. The lemma returns $\xi^*_i$ with the law of $\xi_i$, independent of $Y$, and with $\Prob(\xi^*_i\ne\xi_i)=\beta(Y,Z)$.
 
-We bound $\beta(Y,Z)$. Write $Y=(A,V)$ with $A:=(\xi_1,\dots,\xi_{i-1})$ and $V:=(U_2,\dots,U_{i-1})$, where $V$ is independent of $(A,Z)$. The joint law of $((A,V),Z)$ is $\mu_{AZ}\otimes\mu_V$ up to the order of coordinates and the product of marginals is $\mu_A\otimes\mu_V\otimes\mu_Z$; total variation is unchanged by tensoring both measures with a common factor, so $\beta(Y,Z)=\beta(A,Z)$. Next, $A$ is a measurable function of $X_{1:t_{i-1}}$ and $Z$ of $X_{s_i:\infty}$ with $s_i\ge t_{i-1}+b+1$, so by monotonicity of the coefficient under measurable maps and in the gap,
+We bound $\beta(Y,Z)$. Write $Y=(A,V)$ with $A:=(\xi_1,\dots,\xi_{i-1})$ and $V:=(U_2,\dots,U_{i-1})$, where $V$ is independent of $(A,Z)$. The joint law of $((A,V),Z)$ is $\mu_{AZ}\otimes\mu_V$ up to the order of coordinates and the product of marginals is $\mu_A\otimes\mu_V\otimes\mu_Z$; total variation is unchanged by tensoring both measures with a common factor, so $\beta(Y,Z)=\beta(A,Z)$. Next, $A$ is a measurable function of $X_{1:t_{i-1}}$ and $Z$ of $X_{s_i:\infty}$ with $s_i\ge t_{i-1}+b$, so by monotonicity of the coefficient under measurable maps and in the gap,
 \[
-\beta(A,Z)\le\beta\big(X_{1:t_{i-1}},X_{t_{i-1}+b+1:\infty}\big)\le\beta(b+1)\le\beta(b).
+\beta(A,Z)\le\beta\big(X_{1:t_{i-1}},X_{t_{i-1}+b:\infty}\big)\le\sup_{t}\beta\big(X_{1:t},X_{t+b:\infty}\big)=\beta(b).
 \]
 Hence $\Prob(\xi^*_i\ne\xi_i)\le\beta(b)$ for each $i\ge2$, and a union bound gives (c).
 
@@ -211,7 +211,7 @@ For (b): each $\xi^*_j$ with $j<i$ is measurable with respect to $\sigma(\xi_{1:
 The proof is written so that the first block is untouched. In the application the first block is the fitting sample, and this is what allows the policy to be carried through the coupling unchanged.
 
 \begin{corollary}[Coupled scores]\label{cor:coupled}
-Under Assumption~\ref{ass:mix}, apply Lemma~\ref{lem:blocks} to the $m=n+2$ blocks $\Dfit,X_{H_1},\dots,X_{H_n},X_{H_0}$, in this time order, and define
+Under Assumption~\ref{ass:mix}, apply Lemma~\ref{lem:blocks} to the $m=n+2$ blocks $\Dfit,X_{H_1},\dots,X_{H_n},X_{H_0}$, in this time order (with the left endpoint absorbed, $X_{H_j}$ occupies indices $N_0+b+(j-1)2b$ to $N_0+2jb$, so consecutive blocks satisfy $s_{i+1}=t_i+b$ exactly and $X_{H_0}$ begins at index $N_0+b+N\ge t_{n+1}+b$), and define
 \[
 S^*_j:=\psi\big(\pi(\Dfit),\,X^*_{H_j}\big),\quad j=0,1,\dots,n,\qquad \hat q^*:=S^*_{(k)} .
 \]
@@ -234,7 +234,7 @@ Let $T_1,\dots,T_n$ be i.i.d.\ with distribution function $F$, let $1\le k\le n$
 with equality for every $u$ when $F$ is continuous. In particular $\E\,F(T_{(k)})\ge k/(n+1)$, with equality when $F$ is continuous.
 \end{lemma}
 
-The lemma is classical; its use for conformal prediction is due to \cite{vovk2012}. The proof is included because the conditional form of the certificate rests on it.
+The lemma is classical; its use for conformal prediction is due to \cite{vovk2012}, and Theorem~\ref{thm:prelim-beta} of Chapter~\ref{ch:prelim} states and proves the continuous case. The proof is repeated here in the general form, with atoms, because the conditional form of the certificate rests on it and the score law of a hedging record need not be continuous.
 
 \begin{proof}
 Let $V_1,\dots,V_n$ be i.i.d.\ uniform on $(0,1)$ and independent of the $T_i$, and define the randomised probability integral transforms
@@ -272,13 +272,13 @@ Given $\Dfit$, the $S^*_j$, $j\le n$, are i.i.d.\ with distribution function $F_
 The threshold is the $k$-th of $n$ scores but the guarantee is $k/(n+1)$. The extra one in the denominator is the deployment score itself: among the $n+1$ exchangeable values $S^*_0,S^*_1,\dots,S^*_n$, the event $S^*_0>S^*_{(k)}$ is the event that $S^*_0$ ranks above at least $k$ of the others, which by exchangeability has probability at most $(n+1-k)/(n+1)$. The Beta law is the refinement of this counting argument that carries the whole conditional distribution.
 \end{remark}
 
-\paragraph{The DKW form as a corollary.} The bound $b_{n,k}(\delta)\ge1-\alpha-\sqrt{\log(1/\delta)/(2n)}$ in Theorem~\ref{thm:cov}(ii) is the one-sided Dvoretzky--Kiefer--Wolfowitz inequality \cite{dkw1956} with the constant of \cite{massart1990}, evaluated at the single point $\hat q^*$. It follows from the Beta law and Hoeffding's inequality without any uniform empirical-process bound, which is the sense in which DKW is a corollary here rather than the tool.
+\paragraph{The DKW form as a corollary.} The bound $b_{n,k}(\delta)\ge1-\alpha-\sqrt{\log(1/\delta)/(2n)}$ in Theorem~\ref{thm:cov}(ii) is what the one-sided Dvoretzky--Kiefer--Wolfowitz inequality (\cite{dkw1956}, with the sharp constant of \cite{massart1990}; the two-sided statement is Theorem~\ref{thm:prelim-dkw} of Chapter~\ref{ch:prelim}) would give when evaluated at the single point $\hat q^*$. It is proved below from the Beta law and Hoeffding's inequality without any uniform empirical-process bound, which is the sense in which DKW is a corollary here rather than the tool; the uniform DKW inequality itself is not used anywhere in the thesis.
 
 \begin{lemma}[Hoeffding's inequality for a binomial proportion]\label{lem:hoeffding}
 Let $B_1,\dots,B_n$ be i.i.d.\ Bernoulli with mean $u$ and let $\bar B:=n^{-1}\sum_iB_i$. For every $t>0$, $\Prob(\bar B-u\ge t)\le e^{-2nt^2}$.
 \end{lemma}
 
-\begin{proof}[Proof \textup{(\cite{hoeffding1963})}]
+\begin{proof}[Proof \textup{(\cite[Thm.~2]{hoeffding1963})}]
 For $\lambda\ge0$ let $\Lambda(\lambda):=\log\E e^{\lambda(B_1-u)}=\log(1-u+ue^\lambda)-\lambda u$. Then $\Lambda(0)=0$, $\Lambda'(0)=0$ and
 \[
 \Lambda''(\lambda)=\frac{ue^\lambda(1-u)}{(1-u+ue^\lambda)^2}=\theta(1-\theta)\le\tfrac14,\qquad\theta:=\frac{ue^\lambda}{1-u+ue^\lambda}\in(0,1),
@@ -301,7 +301,7 @@ b_{n,k}(\delta)\;\ge\;1-\alpha-\sqrt{\frac{\log(1/\delta)}{2n}} .
 Put $t:=\sqrt{\log(1/\delta)/(2n)}$ and $u:=1-\alpha-t$; if $u\le0$ there is nothing to prove. Otherwise, by Lemma~\ref{lem:beta}, $\Prob(\Beta(k,n+1-k)\le u)$ is the probability that a $\mathrm{Bin}(n,u)$ variable is at least $k$, that is $\Prob(\bar B\ge k/n)$ with $\bar B$ a proportion of $n$ Bernoulli$(u)$ trials. Since $k/n\ge(1-\alpha)(n+1)/n>1-\alpha=u+t$, Lemma~\ref{lem:hoeffding} gives $\Prob(\bar B\ge k/n)\le\Prob(\bar B-u\ge t)\le e^{-2nt^2}=\delta$. Hence the $\delta$-quantile of $\Beta(k,n+1-k)$ is at least $u$.
 \end{proof}
 
-\paragraph{The normal approximation.} The $\Beta(k,n+1-k)$ law has mean $k/(n+1)$ and variance $k(n+1-k)/\big((n+1)^2(n+2)\big)$, which for $k\approx(1-\alpha)(n+1)$ is approximately $\alpha(1-\alpha)/n$. Replacing the Beta law by a normal law with these moments and the normal $\delta$-quantile $z_\delta$ by the tail approximation $-\sqrt{2\log(1/\delta)}$ gives $b_{n,k}(\delta)\approx1-\alpha-\sqrt{2\alpha(1-\alpha)\log(1/\delta)/n}$. The ratio of the DKW-form deficit to this one is $\sqrt{1/2}\big/\sqrt{2\alpha(1-\alpha)}=1/\big(2\sqrt{\alpha(1-\alpha)}\big)$, which equals $2.29$ at $\alpha=0.05$ and $1.67$ at $\alpha=0.10$. The approximation is a large-$n$ statement about a skewed law and is not used in any proof; the certificate always uses the exact quantile $b_{n,k}(\delta)$, which is computed from the binomial sum. Section~\ref{sec:cert-example} shows that at $n=25$ the approximation is poor while the exact quantile is available at no cost.
+\paragraph{The Gaussian-tail approximation (Remark~\ref{rem:betaapprox}).} The $\Beta(k,n+1-k)$ law has mean $k/(n+1)$ and variance $k(n+1-k)/\big((n+1)^2(n+2)\big)$, which for $k\approx(1-\alpha)(n+1)$ and large $n$ are approximately $1-\alpha$ and $\alpha(1-\alpha)/n$. Replacing the Beta law by a normal law with these limiting moments, and the normal $\delta$-quantile $z_\delta$ by the Gaussian tail bound $z_\delta\le\sqrt{2\log(1/\delta)}$, gives $b_{n,k}(\delta)\approx1-\alpha-\sqrt{2\alpha(1-\alpha)\log(1/\delta)/n}$. The ratio of the DKW-form deviation to this one is $\sqrt{1/2}\big/\sqrt{2\alpha(1-\alpha)}=1/\big(2\sqrt{\alpha(1-\alpha)}\big)$, which equals $2.29$ at $\alpha=0.05$ and $1.67$ at $\alpha=0.10$. Three things about this approximation are to be kept in mind. It is a large-$n$ statement about a skewed law and is not an inequality in either direction: at $n=25$, $\alpha=0.1$, $\delta=0.05$ it gives $0.7531$ against the exact $0.8239$, while a normal law with the exact Beta mean $0.9231$ and standard deviation $0.0513$ gives $0.8387$, above the exact value (Section~\ref{sec:cert-example}). It is not used in any proof; the certificate always uses the exact quantile $b_{n,k}(\delta)$, computed from the binomial sum at the cost of one bisection. And the practice of reporting the exact Beta quantile as the operational calibration-conditional level is not new: it is in \cite{vovk2012} and, as a small-sample correction, in \cite{zwart2025}; what this chapter adds is only that the same quantile survives $\beta$-mixing calibration data and drift at the cost of the terms in Theorem~\ref{thm:cov}(ii).
 
 \figplan{Density of $\Beta(k,n+1-k)$ for $n=25,k=24$ and for $n=100,k=91$, with the exact $5\%$ quantile $b_{n,k}(0.05)$, the DKW-form bound $1-\alpha-\sqrt{\log 20/(2n)}$ and the normal approximation marked as vertical lines on each panel.}{The conditional coverage $F_P(\hat q^*)$ of the split-conformal threshold on an i.i.d.\ sample has the $\Beta(k,n+1-k)$ law (Lemma~\ref{lem:beta}). The DKW-form bound sits far to the left of the exact quantile at both sample sizes; the normal approximation is close at $n=100$ and poor at $n=25$. The figure requires no data.\label{fig:beta}}
 
@@ -324,6 +324,8 @@ the distribution function of $Q=Q_\pi$ evaluated at the number $\hat q^*$. Lemma
 \subsection{Assembly of the two forms}\label{sec:assemble}
 
 \begin{proof}[Proof of Theorem~\ref{thm:cov}]
+If $k>n$ then $\hat q=+\infty$ by convention and both statements hold trivially, since every term subtracted is non-negative; assume $k\le n$.
+
 \emph{Part (i).} Let $E$ be the coupling event of Corollary~\ref{cor:coupled}, $\Prob(E)\ge1-(n+1)\beta(b)$. On $E$, $S_0=S^*_0$ and $\hat q=\hat q^*$, so
 \[
 \Prob(S_0\le\hat q)\ge\Prob\big(\{S^*_0\le\hat q^*\}\cap E\big)\ge\Prob(S^*_0\le\hat q^*)-\Prob(E^c)\ge\Prob(S^*_0\le\hat q^*)-(n+1)\beta(b).
@@ -342,7 +344,7 @@ Taking the expectation over $\Dfit$ and combining with the first display gives (
 \begin{equation}\label{eq:calside}
 F_{P_\pi}(\hat q)=F_{P_\pi}(\hat q^*)\ge b_{n,k}(\delta).
 \end{equation}
-The event $E_n\cap A$ is determined by $(\Dfit,S_{1:n})$ and the auxiliary uniforms, which is the sense of ``with probability at least $1-\delta-n\beta(b)$ over $(\Dfit,S_{1:n})$''.
+The event $A':=\{F_{P_\pi}(\hat q)\ge b_{n,k}(\delta)\}$ is $\sigma(\Dfit,S_{1:n})$-measurable and contains $E_n\cap A$, so $\Prob(A')\ge1-\delta-n\beta(b)$; this is the sense of ``with probability at least $1-\delta-n\beta(b)$ over $(\Dfit,S_{1:n})$''. The auxiliary uniforms enter the proof only through $E_n$ and do not appear in the event on which the conclusion is stated.
 
 \emph{Part (ii): the deployment side.} Let $t$ be the last index of $H_n$, let $\mathcal G:=\sigma(\Dfit,S_{1:n})\subset\sigma(X_{1:t})$, and let $\kappa(X_{1:t},\cdot)$ be a regular conditional distribution of $X_{H_0}$ given $X_{1:t}$; write $\mu_0$ for the marginal law of $X_{H_0}$. Both $\pi$ and $\hat q$ are $\sigma(X_{1:t})$-measurable, and $S_0=\psi(\pi,X_{H_0})$, so by the freezing property of regular conditional distributions
 \[
@@ -356,9 +358,9 @@ and conditioning down to $\mathcal G$, since $F_{Q_\pi}(\hat q)$ is $\mathcal G$
 \begin{equation}\label{eq:depside}
 \Prob\big(S_0\le\hat q\mid\mathcal G\big)\ge F_{Q_\pi}(\hat q)-\E[D\mid\mathcal G].
 \end{equation}
-By Lemma~\ref{lem:disint} and Definition~\ref{def:beta}, and because $H_0$ begins at least $b+1$ indices after $t$,
+By Lemma~\ref{lem:disint} and Definition~\ref{def:beta}, and because $X_{H_0}$ (left endpoint included) is a function of $X_{t+b:\infty}$, the deployment block beginning at least $b+1$ periods after $t$,
 \[
-\E D=\beta\big(X_{1:t},X_{H_0}\big)\le\beta\big(X_{1:t},X_{t+b+1:\infty}\big)\le\beta(b).
+\E D=\beta\big(X_{1:t},X_{H_0}\big)\le\beta\big(X_{1:t},X_{t+b:\infty}\big)\le\beta(b).
 \]
 The variable $\E[D\mid\mathcal G]$ is non-negative with mean $\E D\le\beta(b)$, so Markov's inequality gives
 \[
@@ -370,7 +372,7 @@ On the complementary event $E'$, of probability at least $1-\delta'$, \eqref{eq:
 \[
 \Prob\big(S_0\le\hat q\mid\Dfit,S_{1:n}\big)\ge b_{n,k}(\delta)-\dK(P_\pi,Q_\pi)-\beta(b)/\delta',
 \]
-which is the conditional statement, with $\dK(P,Q)=\dK(P_\pi,Q_\pi)$ the fixed-policy distance, a function of $\Dfit$. The explicit lower bound on $b_{n,k}(\delta)$ is Corollary~\ref{cor:dkw}, and the approximation and the factor $2.3$ are the computation following it. The final sentence of the theorem holds because no step used any property of $\pi$ other than measurability.
+which is the conditional statement, with $\dK(P,Q)=\dK(P_\pi,Q_\pi)$ the fixed-policy distance, a function of $\Dfit$. The explicit lower bound on $b_{n,k}(\delta)$ is Corollary~\ref{cor:dkw}. The final sentence of the theorem holds because no step used any property of $\pi$ other than measurability.
 \end{proof}
 
 \begin{remark}[Why a joint total-variation bound does not give conditional statements]\label{rem:jointtv}

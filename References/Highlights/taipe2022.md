@@ -1,0 +1,7 @@
+# taipe2022 — Taipe-Silvestre, M. (2022). Tuning the FMM-SABR for RFR caplets. SSRN 4046344.
+
+**Record (primary document on SSRN, not downloaded):** Crossref record for DOI 10.2139/ssrn.4046344: title "Tuning the FMM-SABR for RFR caplets"; author given as **"Marcelo Taipe"** (family name "Taipe", given name "Marcelo"); posted **29 March 2022**; publisher Elsevier BV (SSRN). **Discrepancies with References.bib:** the bib author is "Taipe-Silvestre, M." and the month is "feb". The Crossref record does not show "Silvestre"; the SSRN abstract page (which would show the full author name and the "written" date) returns HTTP 403 / CAPTCHA to all fetchers (direct curl, WebFetch and a text proxy, 2026-09-09). Resolve the author form and date on the SSRN page from a browser before the bibliography is frozen.
+**Access:** SSRN abstract https://ssrn.com/abstract=4046344 (DOI https://doi.org/10.2139/ssrn.4046344). SSRN PDFs are free after login; the librarian did not download (blocked). Status: **primary document, obtain via SSRN login**.
+
+## Relevance
+Not cited in any chapter as of 2026-09-09 (grep of Thesis/ and the working directory). It is literature for ch2 chapter notes / ch5 literature paragraph: an FMM-SABR (Lyashenko–Mercurio forward market model with SABR volatility) calibration to RFR caplets — the same model family as willems2020 (see willems2020.md, Remark 3.2). No excerpts or locators are recorded because the text was not read. Any citation must be `\citep{taipe2022}` without a locator, or carry `\gap{Citation needed: read SSRN 4046344}`.
