@@ -1,6 +1,6 @@
 # barber2023 — Barber, Candès, Ramdas, Tibshirani (2023), Conformal prediction beyond exchangeability
 
-**Record.** Barber, R. F., Candès, E. J., Ramdas, A., Tibshirani, R. J. (2023). Conformal prediction beyond exchangeability. *Annals of Statistics* 51(2), 816–845. DOI 10.1214/23-AOS2276.
+**Record.** Barber, R. F., Candès, E. J., Ramdas, A., Tibshirani, R. J. (2023). Conformal prediction beyond exchangeability. *Annals of Statistics* 51(2), 816–845. DOI 10.1214/23-AOS2276 (not verified here; confirm on Project Euclid).
 **File.** `References/PDF/barber2023.pdf` = arXiv:2202.13415v5 (17 Mar 2023), 63 pp. Downloaded 2026-09-09 from https://arxiv.org/pdf/2202.13415 (arXiv licence: author-posted preprint). Page numbers below are **arXiv v5 pages**, not the Annals pagination; theorem and equation numbers are those printed in v5. Verify against the journal copy before final submission.
 **Highlighted copy.** `References/PDF/barber2023.highlighted.pdf`.
 

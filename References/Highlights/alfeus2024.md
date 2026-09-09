@@ -1,0 +1,17 @@
+# alfeus2024 — Alfeus (2024), Navigating the JIBAR transition: progress, impacts, readiness, and analytical insights
+
+**Record.** Alfeus, M. (2024). Navigating the JIBAR transition: Progress, impacts, readiness, and analytical insights. *South African Journal of Science* 120(3/4), Art. #17841, 6 pp. DOI 10.17159/sajs.2024/17841. Published 27 March 2024. Article type: **Commentary** (not a peer-reviewed research article — the "Peer review" box on p. 1 is unticked). Licence: CC BY 4.0 ("© 2024. The Author(s). Published under a Creative Commons Attribution Licence.").
+**File.** `References/PDF/alfeus2024.pdf`, 6 pp. sajs.co.za refused connections on 2026-09-09; the file is the Internet Archive capture (5 Sep 2025) of the publisher's own PDF, https://web.archive.org/web/20250905122942id_/https://sajs.co.za/article/download/17841/21173 (original: https://sajs.co.za/article/download/17841/21173). Printed page = PDF page.
+**Highlighted copy.** `References/PDF/alfeus2024.highlighted.pdf`.
+
+| p. | As printed | Excerpt (verbatim) | Why it matters here | Locator |
+|---|---|---|---|---|
+| 1 | "JIBAR" | "JIBAR's calculation process involves the collaboration of five contributing banks, namely Standard Bank, Nedbank, FirstRand Bank, Absa, and Investec." | Panel structure of the legacy benchmark; ch1 factual record. | `[p.~1]` |
+| 2 | col. 1 | "Notably, JIBAR fails to conform to the sufficiency guidelines delineated by the IOSCO, prompting the SARB to embark on a reformative trajectory akin to the transformations undertaken by other central banks in relation to IBORs." | Why JIBAR is being retired (IOSCO sufficiency); ch1. | `[p.~2]` |
+| 2 | col. 1 | "a notable shift from the previous obligation of ZA100 million per point on the NCD curve to the current threshold of ZAR500 million per point." | Interim JIBAR enhancement (obligation size); ch1 background. | `[p.~2]` |
+| 2 | col. 1 | "ZARONIA (South African Overnight Index Average), derived from the repo market, has been embraced as the alternative reference rate of choice" | Successor rate identification; ch1, ch7. (Repo-market basis of ZARONIA — cross-check with the SARB methodology statement, which is the primary source.) | `[p.~2]` |
+| 2 | Table 1 | "3-month JIBAR and ZARONIA, 28 July 2022 to 19 September 2023 ... Mean 7.3980 7.0158 0.3821" (spot spread s.d. 0.0760 %) | Early spot-spread level ≈ 38 bp and its dispersion; comparator for alfeus2026 (44 bp mean) and for the ±η interval in ch5's worked example. | `[Table~1]` |
+| 2 | col. 2 | "One major concern is not knowing if there will be a way to hedge existing loans and debt linked to the 3-month JIBAR after the transition." | Practitioner framing of the hedging problem the thesis certifies (ch1 motivation). | `[p.~2]` |
+| 4 | Table 2 and text | "As observed, as documented in previous research, forward-looking caplets consistently exhibit lower valuations in comparison to their backward-looking counterparts." | The only SA-market caplet comparison (Wishart short-rate model, Monte Carlo, S = 0.003821): backward-looking (compounded) caplets price above forward-looking ones. Relevant to ch2 (compounded caplet at clock T + Δ/3 has more variance than a forward-looking caplet at clock T) and ch7; the model is not SABR and carries no smile calibration. | `[Table~2]` |
+
+**Notes.** The article contains no SABR, no fallback-spread numbers beyond the sample spread, and no ZARONIA-cessation dates; it predates the 3 Dec 2025 cessation announcement. Cite for background and for the backward/forward caplet ordering only.

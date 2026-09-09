@@ -159,3 +159,6 @@ ch:intro, ch:prelim, ch:certification, ch:sharpness, ch:identifiability, ch:usd,
 
 ## Citation command (settled 2026-09-09)
 Both builds load natbib (author-year, round). Use `\citep[locator]{key}` for parenthetical and `\citet[locator]{key}` for textual citations; `\cite[locator]{key}` is accepted and behaves as `\citet`. Never wrap a `\cite` inside a theorem's optional title without braces.
+
+## Invisible apparatus (added 2026-09-09, binding)
+The thesis text never mentions the council, reviewers, the ground-truth document, the lessons file, drafts, rounds or "the first version". Disagreements with earlier versions are resolved in the text, not narrated. A \gap{} box states only what remains to be established, in mathematical terms. Section titles never refer to the writing process.

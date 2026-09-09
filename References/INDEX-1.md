@@ -1,0 +1,17 @@
+# References index (part 1) — thesis-reference-librarian, 2026-09-09
+
+key | title | status | file | highlights note
+---|---|---|---|---
+adams2010 | Uniform convergence of Vapnik–Chervonenkis classes under ergodic sampling (Ann. Probab. 38(4), 2010) | downloaded (arXiv 1010.3162v1 reprint; Euclid copy also open) | PDF/adams2010.pdf; PDF/adams2010.highlighted.pdf | Highlights/adams2010.md
+alfeus2024 | Navigating the JIBAR transition: progress, impacts, readiness, and analytical insights (S. Afr. J. Sci. 120(3/4), 2024, Commentary, CC BY) | downloaded (publisher PDF via Internet Archive capture 2025-09-05; sajs.co.za unreachable 2026-09-09) | PDF/alfeus2024.pdf; PDF/alfeus2024.highlighted.pdf | Highlights/alfeus2024.md
+alfeus2026 | Event-aware jump-diffusion for the JIBAR–ZARONIA spread (SARB WP/26/06, dated 19 Feb 2026 — bib says jun) | primary document (SARB) | PDF/alfeus2026.pdf; PDF/alfeus2026.highlighted.pdf | Highlights/alfeus2026.md
+allohibi2026 | Conformal prediction intervals for semi-functional partial linear regression under β-mixing dependence (Mathematics 14(17):3201, 2026, CC BY) | downloaded (MDPI OA) | PDF/allohibi2026.pdf; PDF/allohibi2026.highlighted.pdf | Highlights/allohibi2026.md
+barber2026 | Predictive inference for time series: why is split conformal effective despite temporal dependence? (ALT 2026, PMLR 313) | downloaded (arXiv 2510.02471v2; PMLR PDF not fetchable, pages 1–24 unverified) | PDF/barber2026.pdf; PDF/barber2026.highlighted.pdf | Highlights/barber2026.md
+barber2023 | Conformal prediction beyond exchangeability (Ann. Statist. 51(2), 2023) | downloaded (arXiv 2202.13415v5; journal pagination not on file) | PDF/barber2023.pdf; PDF/barber2023.highlighted.pdf | Highlights/barber2023.md
+berbee1979 | Random Walks with Stationary Increments and Renewal Theory (Math. Centre Tracts 112, 1979) | book — no open copy found (CWI repository scanned, not located); library | — | Highlights/berbee1979.md (record only; no verified locator)
+bisl2025 | IBOR Fallbacks: Spread Fixing Event for ZAR JIBAR (BISL Technical Note, 22 Dec 2025) | primary document (Bloomberg) | PDF/bisl2025.pdf; PDF/bisl2025.highlighted.pdf | Highlights/bisl2025.md
+bobkov2019 | One-dimensional empirical measures, order statistics, and Kantorovich transport distances (Mem. AMS 261(1259), 2019) | paywalled: obtain via institutional library (DOI 10.1090/memo/1259; Ledoux preprint link dead) | — | Highlights/bobkov2019.md (record only)
+brace2024 | SOFR term structure dynamics: discontinuous short rates and stochastic volatility forward rates (J. Futures Markets 44(6), 2024) | paywalled: obtain via institutional library (DOI 10.1002/fut.22499; SSRN 4270811 blocked to scripts) | — | Highlights/brace2024.md (record only)
+brigo2006 | Interest Rate Models: Theory and Practice, 2nd ed. (Springer, 2006) | book — ISBN 978-3-540-22149-4; no file | — | Highlights/brigo2006.md (record only)
+christoffersen1998 | Evaluating interval forecasts (Int. Econ. Rev. 39(4), 1998) | paywalled: obtain via institutional library (DOI 10.2307/2527341; no open working paper located) | — | Highlights/christoffersen1998.md (record only)
+dedecker2017 | Behavior of the Wasserstein distance between the empirical and the marginal distributions of stationary α-dependent sequences (Bernoulli 23(3), 2017) | downloaded (arXiv 1503.00113v1; DOI 10.3150/16-BEJ805; Euclid copy also open) | PDF/dedecker2017.pdf; PDF/dedecker2017.highlighted.pdf | Highlights/dedecker2017.md

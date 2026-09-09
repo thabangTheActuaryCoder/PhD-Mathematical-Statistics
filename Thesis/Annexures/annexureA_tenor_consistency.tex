@@ -189,13 +189,17 @@ Extend $\mathcal M(h)$ by allowing window-specific vol-of-vol constants $\nu_{12
 \]
 and, for the linear-profile target, $\sigma_{13}(t):=a_{13}^*\Delta_{13}g_{13}(t)$. Then, to first order in the vol-of-vol constants and neglecting the drift \eqref{eq:appA-mu}, the third cumulant of $\Delta_{13}(\bar R_{13}-\bar F^{13}_0)$ and the variance of its realised variance are
 \begin{equation}\label{eq:appA-cumulants}
-\kappa_3=6\rho\int_0^{T_3}\sigma(s)\,\sigma_\nu(s)\Big(\int_0^s\sigma(u)h(u)\,du\Big)ds,\qquad
-\Var(V)=4\int_0^{T_3}h(u)^2\Big(\int_u^{T_3}\sigma(s)\sigma_\nu(s)\,ds\Big)^2du ,
+\begin{aligned}
+\kappa_3&=6\rho\int_0^{T_3}\sigma(s)\,\sigma_\nu(s)\Big(\int_0^s\sigma(u)h(u)\,du\Big)ds,\\
+\Var(V)&=4\int_0^{T_3}h(u)^2\Big(\int_u^{T_3}\sigma(s)\sigma_\nu(s)\,ds\Big)^2du ,
+\end{aligned}
 \end{equation}
 and the six-month triple $(a_{13}^*,\rho_{13}^*,\nu_{13}^*)$ that reproduces them with the linear profile is
 \begin{equation}\label{eq:appA-constraints}
-\rho_{13}^*\nu_{13}^*=\frac{\kappa_3}{6\,I_3},\qquad \nu_{13}^{*2}=\frac{\Var(V)}{4\,I_4},\qquad
-I_3:=\int_0^{T_3}\sigma_{13}(s)^2\Big(\int_0^s\sigma_{13}h\Big)ds,\quad I_4:=\int_0^{T_3}h(u)^2\Big(\int_u^{T_3}\sigma_{13}^2\Big)^2du .
+\begin{aligned}
+\rho_{13}^*\nu_{13}^*&=\frac{\kappa_3}{6\,I_3},&\qquad I_3&:=\int_0^{T_3}\sigma_{13}(s)^2\Big(\int_0^s\sigma_{13}(u)h(u)\,du\Big)ds,\\
+\nu_{13}^{*2}&=\frac{\Var(V)}{4\,I_4},&\qquad I_4&:=\int_0^{T_3}h(u)^2\Big(\int_u^{T_3}\sigma_{13}(s)^2\,ds\Big)^2du .
+\end{aligned}
 \end{equation}
 If $a_{12}=a_{23}$ and $\nu_{12}=\nu_{23}=\nu$, then $\rho_{13}^*\nu_{13}^*=\rho\nu$ and $\nu_{13}^{*2}=\nu^2$ exactly.
 \end{proposition}
@@ -270,9 +274,10 @@ Take $T_1=1$ year and two three-month windows, $\Delta_{12}=\Delta_{23}=0.25$, s
 \emph{The exact case.} Let both three-month smiles carry the triple of the worked example of Section~\ref{subsec:prelim-worked}, $(a,\rho,\nu)=(0.0060,-0.2,0.4)$. By Proposition~\ref{prop:appA-exact}(ii) the arithmetic six-month forward is normal decaying SABR with the same triple and the linear profile, and \eqref{eq:appA-level} returns $a_{13}^*=0.0060$ exactly. With the frozen weights of Remark~\ref{rem:appA-frozen}, $w_{12}=w_{23}=0.25\times1.0175$, the projection for the compounded rate is $a_{13}^*=0.0060\times1.0175=0.0061050$, that is $61.05$ basis points: the product term lifts the six-month level by $1.05$ basis points relative to the three-month level. The $\Q^{T_3}$ drift of $F^{12}$ at time zero is $\mu^{12}_0=-\Delta_{23}a^2/Y^{23}_0=-0.25\times0.0060^2/1.0175=-8.8\times10^{-6}$ per year, below $0.1$ basis point per year.
 
 \emph{Unequal levels.} Now let the second window be more volatile, $a_{23}=0.0065$, with $a_{12}=0.0060$ and $(\rho,\nu)$ unchanged. The kinked profile of Proposition~\ref{prop:appA-exact}(iii) has $\bar a=0.00625$, slopes $-1.92$ and $-2.08$ per year on the two sub-windows against $-2.00$ for the linear profile, and terminal clock $\bar\tau=1.1717$ against $\tau_{13}=1.1667$. The variance-matched level \eqref{eq:appA-level} is
-\[
-a_{13}^{*2}=\frac{36\times1.0833+42.25\times1.3333+2\times39\times1.125}{4\times1.1667}\ \text{bp}^2\text{yr}\,/\,\text{yr}=\frac{39.000+56.333+87.750}{4.6667}=39.232\ \text{bp}^2,
-\]
+\begin{align*}
+a_{13}^{*2}&=\frac{36\times1.0833+42.25\times1.3333+2\times39\times1.125}{4\times1.1667}\ \text{bp}^2\\
+&=\frac{39.000+56.333+87.750}{4.6667}\ \text{bp}^2=39.232\ \text{bp}^2,
+\end{align*}
 so $a_{13}^*=62.64$ basis points at the clock; the naive average of $60$ and $65$ is $62.50$. With frozen weights the projection is $63.73$ basis points. The skew and curvature constraints \eqref{eq:appA-constraints} with $h\equiv1$ give $\rho_{13}^*\nu_{13}^*=-0.08018$ against the inherited $\rho\nu=-0.0800$, and $\nu_{13}^{*2}=0.16070$ against $\nu^2=0.1600$, so $\nu_{13}^*=0.4009$: with equal $(\rho,\nu)$ on the two windows, unequal levels move the six-month skew and curvature by well under one percent. In basis points, the skew per $100$ basis points of strike is $-4.06$ inherited against $-4.07$ projected, and the curvature lift at $\pm50$ basis points is $1.015$ against $1.020$.
 
 \emph{A transported six-month smile.} Suppose the six-month JIBAR smile, transported by the map of Chapter~\ref{ch:identifiability}, arrives as $(\hat a_{13},\hat\rho_{13},\hat\nu_{13})=(0.0066,-0.2,0.4)$ at clock $\tau_{13}$. Step 4 of Algorithm~\ref{alg:appA-diagnostic} gives $d_\ell=66-63.73=2.27$ basis points against the frozen-weight projection ($3.36$ against the unfrozen one), $d_s=0.01$ and $d_c=0.00$ basis points. Quoted against calendar time $T_3=1.5$ the level gap is $2.27\times\sqrt{1.1667/1.5}=2.00$ basis points. With a level tolerance $\epsilon_\ell=1$ basis point the verdict is \textsc{inconsistent} on the level: no model in $\mathcal M(h)$ calibrates to a $60$/$65$ three-month pair and a $66$ six-month smile at once. Step 6 with the mean-reverting coefficient functions of Remark~\ref{rem:appA-hjm} gives projected levels of $63.60$, $63.00$ and $62.10$ basis points for $\kappa=0.1$, $0.5$ and $1$, against $63.73$ for the flat profile, so the gap to $66$ widens to $2.40$, $3.00$ and $3.90$ basis points and the verdict survives. The projection itself, however, moves by $1.6$ basis points between the flat and the $\kappa=1$ profile, more than the tolerance, whereas Example~\ref{ex:prelim-cg} found the single-window clock insensitive to $\kappa\le1$; the difference is the pre-window shape, which is immaterial for one window and enters the cross term for two. A pair whose gap is within about $2$ basis points of the tolerance should therefore be reported as profile-dependent rather than flagged. Nothing in this verdict says the $66$ can be traded against the pair: by Proposition~\ref{prop:appA-span} the six-month caplet is not replicable from the three-month market, and a model-free interval of the kind described in Remark~\ref{rem:appA-modelfree} would contain all three quotes.
