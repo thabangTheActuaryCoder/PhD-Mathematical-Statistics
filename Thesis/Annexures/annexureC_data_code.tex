@@ -128,53 +128,51 @@ Chapter~\ref{ch:usd} can be written on three terminal exports and two public dow
 \datanote{Everything in this section is a specification written on 9~September 2026 from public documents. No terminal has been queried. Every TBC is to be resolved in the single terminal session of Section~\ref{subsec:appC-checklist} and this section updated before Chapter~\ref{ch:usd} is drafted.}
 \section{ZAR data}
 % appC-zar-data.tex --- \input under \section{ZAR data} in appC-data-code.tex
-% Written by thesis-data-engineer-zar, 2026-09-09. Every URL was opened on that date
-% unless the surrounding \datanote says otherwise.
-\makeatletter\g@addto@macro\UrlBreaks{\do\-\do\_\do\%}\makeatother % allow URL line breaks at - _ %
+% Written by thesis-data-engineer-zar, 2026-09-09; revised by thesis-revision-writer
+% (round 1, 2026-09-09). Every URL was opened on that date unless the surrounding
+% \datanote says otherwise. Access classes F/T/S/C are defined in the appendix introduction.
 
-This section lists every South African dataset that Chapter~\ref{ch7-zar-coda} consumes, classifies each as \emph{free} (public download), \emph{terminal} (a Bloomberg or LSEG licence held by the university or a sponsor) or \emph{sponsor-only} (dealer-confidential, obtainable only under a data agreement), and records the access route, the format and the coverage. Access dates are 9~September 2026. Table~\ref{tab:appC-zar} summarises; the closing paragraph states what the chapter does if no sponsor signs.
+This section lists every South African dataset that Chapter~\ref{ch:zar} consumes, with its access class, route, format and coverage. Access dates are 9~September 2026. Table~\ref{tab:appC-zar} summarises; Chapter~\ref{ch:zar} states which data regime (sponsor or public) it was written under.
 
 \subsection{ZARONIA daily fixings}\label{sec:appC-zaronia}
 
-\emph{Free.} The South African Reserve Bank (SARB) administers ZARONIA and publishes the fixing for each South African business day at 10:00, with a republication window to 12:00 for corrections. Publication began on 2~November 2022. Rates for 1~November 2022 to 3~November 2023 are labelled ``observation period rates'' and rates from 4~November 2023 ``official publication rates''; rates dated before 31~October 2022 are labelled ``pre-publication or proxy rates''. All three classes are served from the same page,
+\emph{Class~F.} The South African Reserve Bank (SARB) administers ZARONIA and publishes the fixing for each South African business day at 10:00, with a republication window to 12:00 for corrections. Rates for 1~November 2022 to 3~November 2023 are labelled ``observation period rates'', rates from 4~November 2023 ``official publication rates'', and rates dated before 31~October 2022 ``pre-publication or proxy rates''. All three classes are served from one page,
 \begin{quote}\footnotesize\raggedright\url{https://www.resbank.co.za/en/home/what-we-do/financial-markets/south-african-overnight-index-average}
 \end{quote}
-through a date-range selector that exports CSV, XML or PDF; there is no static file URL, so the reproducibility protocol records the selected date range and the download timestamp with the exported CSV. The SARB also publishes compounded ZARONIA period averages (1~week, 1, 3, 6, 9 and 12 months) and a compounded index with base $100$ on 1~November 2022, in the same three formats, at
+through a date-range selector that exports CSV, XML or PDF; there is no static file URL, so the protocol of Section~\ref{sec:appC-protocol} records the selected range, the earliest date returned and the download timestamp with every export. The SARB also publishes compounded ZARONIA period averages (1~week, 1, 3, 6, 9 and 12 months) and a compounded index with base $100$ on 1~November 2022, in the same formats, at
 \begin{quote}\footnotesize\raggedright\url{https://www.resbank.co.za/en/home/what-we-do/financial-markets/compounded-zaronia-period-averages-and-index}
 \end{quote}
-The thesis computes $R(T,T+\Delta)$ of Definition~\ref{def:prelim-R} directly from the daily fixings and uses the SARB period averages only as a check on day-count and business-day handling.
+The thesis computes $R(T,T+\Delta)$ of Definition~\ref{def:prelim-R} from the daily fixings and uses the period averages only as a check on day-count and business-day handling. Proxy data are available from 4~January 2016 \citep[\S5.1, p.~9]{sarb2025fallback}; the SAFEX overnight rate serves as the proxy for 2000 to 2015 \citep[\S2, p.~4]{sarb2025ois}.
 
-\datanote{The proxy history before November 2022 is what the MPG fallback methodology used from 4~January 2016 \cite{sarb2025fallback} and what the Derivatives Workstream used from the ``beginning of 2016'' \cite{sarb2025ois}. Whether the full proxy series from January 2016 is exportable from the SARB selector, or only the observation-period series from November 2022, was not verified on 9~September 2026: one commercial commentary states that part of the five-year window ``relies on proxy history that is not publicly available''. The reproducibility protocol must record the earliest date the selector returns. If proxy fixings before November 2022 are needed and are not exportable, request them from \texttt{sarb-benchmarks@resbank.co.za}; failing that, the thesis uses the 2016--2022 proxy only through the SARB synthetic curve of Section~\ref{sec:appC-synthetic}, which embeds it.}
+\gap{Citation needed: the SARB ZARONIA benchmark page and statement of methodology for the 10:00 publication time, the 12:00 republication window, the publication start date and the three history classes; the page was read on 9 September 2026 but has no bibliography key or Highlights note.}
+
+\datanote{Two publication start dates are in circulation and must be reconciled at download: the SARB page labels rates from 1~November 2022 as the observation period, while \citet[\S5.3.1, p.~11]{sarb2025fallback} write that ZARONIA ``has been published by the SARB since 1 August 2022''. Whether the full proxy series from January 2016 is exportable from the selector was not verified on 9~September 2026; the protocol records the earliest date the selector returns. If proxy fixings before November 2022 are needed and are not exportable, they are requested from \texttt{sarb-benchmarks@resbank.co.za}; failing that, the 2016--2022 proxy enters only through the synthetic curve of Section~\ref{sec:appC-synthetic}, which embeds it.}
 
 \subsection{SARB synthetic historical ZARONIA OIS curve}\label{sec:appC-synthetic}
 
-\emph{Free.} The SARB Market Practitioners Group's Derivatives Workstream published \emph{Historical estimation of the ZARONIA OIS curve} on the SARB site on 9~October 2025 (document dated 6~October 2025) \cite{sarb2025ois}, with five Excel binary workbooks (\texttt{.xlsb}): \texttt{Benchmark\_Rates}; \texttt{Forecast\_Curve\_Expiry\_Dates} and \texttt{Forecast\_Curve\_\allowbreak Discount\_Factors}; \texttt{Discount\_Curve\_Payment\_Dates} and \texttt{Discount\_Curve\_\allowbreak Discount\_Factors}. Landing page and paper:
+\emph{Class~F.} The SARB Market Practitioners Group's Derivatives Workstream published \emph{Historical estimation of the ZARONIA OIS curve} (document dated 6~October 2025, posted 9~October 2025) \citep[\S1, p.~4]{sarb2025ois} with five Excel binary workbooks (\texttt{.xlsb}): \texttt{Benchmark\_Rates}; \texttt{Forecast\_Curve\_Expiry\_Dates} and \texttt{Forecast\_Curve\_\allowbreak Discount\_Factors}; \texttt{Discount\_Curve\_Payment\_Dates} and \texttt{Discount\_Curve\_\allowbreak Discount\_Factors}. Landing page:
 \begin{quote}\footnotesize\raggedright\url{https://www.resbank.co.za/en/home/publications/publication-detail-pages/Financial-Markets/Committees/MPG/MPG-Related-pages/2025/historical-estimation-of-the-zaronia-ois-curve}
 \end{quote}
-Coverage and construction, as stated in the paper: the input is the JSE's daily bootstrapped nominal swap zero curve (deposits, FRAs and swaps on 3-month JIBAR), available from 3~January 2005 to 31~December 2024 with four missing dates (24~Dec~2007, 2~Jan~2009, 24~Nov~2011, 21~May~2013). Daily 3-month JIBAR forward rates are read off that curve and shifted by a tenor-dependent spread equal to the trailing median of the spot 3-month JIBAR minus ZARONIA spread over a window matching the forward's tenor; ZARONIA is the SARB series from 2016 and the SAFEX overnight rate from 2000 to 2015; the spread history therefore runs from 2000, the curves from 2005. The shifted forwards are compounded into discount factors and par rates are produced for spot-starting single-period OIS from 1 to 12 months in monthly steps and spot-starting multi-period OIS from 15 months to 30 years in 3-month steps. The Workstream describes the dataset as ``a convenient, but optional, risk management resource'' built for VaR and expected-shortfall scenarios.
-
-Two consequences for Chapter~\ref{ch7-zar-coda}. First, the synthetic curve is a deterministic function of the JIBAR curve and a median spread; its JIBAR--ZARONIA basis has, by construction, no daily volatility beyond that of the rolling median, so it must not be used to estimate $\eta$, $\rho_{BF}$ or $\rho_{B\alpha}$ of Chapter~\ref{ch5-identifiability}. Second, it is adequate, and is the only public source, for the pre-2025 discount factors $P(t,T+\Delta)$ and forwards $F_t$ that the converted-book P\&L of Section~\ref{sec:appC-pnl} needs before a live ZARONIA OIS market existed.
+Construction, as the paper states: the input is the JSE's daily bootstrapped nominal swap zero curve (deposits, FRAs and swaps on 3-month JIBAR), available from early 2005 to the end of 2024 \citep[\S2, p.~4]{sarb2025ois} with four missing dates, 24~Dec~2007, 2~Jan~2009, 24~Nov~2011 and 21~May~2013 \citep[\S2, fn.~2, p.~4]{sarb2025ois}. Daily 3-month JIBAR forwards are read off that curve and shifted by a tenor-dependent spread equal to the trailing median of the spot 3-month JIBAR minus ZARONIA spread over a window matching the forward's tenor \citep[\S3, p.~6]{sarb2025ois}; the shifted forwards are compounded into discount factors, and par rates are produced for spot-starting OIS from 1 to 12 months in monthly steps and from 15 months to 30 years in 3-month steps. The Workstream built the dataset for VaR and expected-shortfall scenario history \citep[\S1, p.~4]{sarb2025ois}. Because its JIBAR--ZARONIA basis is a deterministic rolling median, the curve must never be used to estimate $\eta$, $\rho_{BF}$ or $\rho_{B\alpha}$; Chapter~\ref{ch:zar} states what it is used for.
 
 \subsection{JIBAR fixings, 1M/3M/6M/12M}\label{sec:appC-jibar}
 
-\emph{Free.} SARB is the JIBAR administrator; its JIBAR page exports the fixing history as CSV, XML or PDF through the same selector mechanism as ZARONIA:
+\emph{Class~F.} SARB is the JIBAR administrator; its JIBAR page exports the fixing history as CSV, XML or PDF through the same selector mechanism as ZARONIA:
 \begin{quote}\footnotesize\raggedright\url{https://www.resbank.co.za/en/home/what-we-do/statistics/johannesburg-interbank-average-rate}
 \end{quote}
 The JSE client portal keeps the longer archive under \emph{Downloadable Files~$\to$ Safex~$\to$ mtmdata}: a current \texttt{jbarRates.xls}, one folder per year from 2010 to 2026, and a ``Jibar Archive'' folder:
 \begin{quote}\footnotesize\raggedright\url{https://clientportal.jse.co.za/downloadable-files?RequestNode=%2Fsafex%2Fmtmdata}
 \end{quote}
-JIBAR is published in 1-, 3-, 6- and 12-month tenors; a 9-month tenor also has a fixed fallback spread (Section~\ref{sec:appC-cas}). JIBAR ceases after its final publication on 31~December 2026 \cite{isda2025}, so the fixing series the thesis uses is closed at that date and the JSE archive is the source of record for the full 2000--2026 history that the five-year CAS window and the Workstream's spread history draw on.
+JIBAR is published in 1-, 3-, 6-, 9- and 12-month tenors; all five cease permanently immediately after their final publication on 31~December 2026 \citep[p.~1]{isda2025}, so the fixing series is closed at that date and the JSE archive is the source of record for the 2000--2026 history that the five-year spread window and the Workstream's spread history draw on.
 
-\datanote{The earliest date served by the SARB selector and the exact tenor columns in the JSE yearly files were not inspected on 9~September 2026 (the JSE portal was reached only through its search index). Record both when the files are downloaded.}
+\datanote{The earliest date served by the SARB selector and the exact tenor columns in the JSE yearly files were not inspected on 9~September 2026 (the JSE portal was reached only through its search index); both are recorded at download. Neither the SARB JIBAR page nor the JSE portal has a bibliography key or Highlights note.}
 
 \subsection{Fallback credit adjustment spreads}\label{sec:appC-cas}
 
-\emph{Free (values); terminal (daily fallback rates).} Bloomberg Index Services Limited (BISL) is the ISDA fallback calculation agent for JIBAR. Its technical note of 22~December 2025 records that SARB's cessation announcement of 3~December 2025 is the Spread Adjustment Fixing Date for all tenors and fixes the spreads in Table~\ref{tab:appC-cas}; the methodology is the five-year historical median of JIBAR minus compounded ZARONIA recommended by the MPG \cite{sarb2025fallback}.
-\begin{quote}\footnotesize\raggedright\url{https://assets.bbhub.io/professional/sites/27/IBOR-Fallbacks-ZAR-JIBAR_Cessation_Technical-Note_251222.pdf}
-\end{quote}
+\emph{Class~F for the values; T for the daily fallback series.} Bloomberg Index Services Limited (BISL) is the ISDA fallback calculation agent for JIBAR. The SARB announcement of 3~December 2025 is the Index Cessation Event and the Spread Adjustment Fixing Date for all tenors \citep[Sect.~1.1]{isda2025}; BISL's technical note of 22~December 2025 \citep{bisl2025} fixes the spreads in Table~\ref{tab:appC-cas}. The methodology is the five-year historical median of JIBAR minus compounded ZARONIA recommended by the MPG \citep[\S1, p.~3]{sarb2025fallback}, with the lookback window specified relative to the fixing date after subtracting the tenor and the two-banking-day payment delay \citep[\S4.1, p.~7]{sarb2025fallback}.
 
 \begin{table}[htbp]\centering\small
-\caption{Fixed JIBAR fallback spread adjustments, Spread Adjustment Fixing Date 3~December 2025 (BISL technical note, 22~December 2025).}\label{tab:appC-cas}
+\caption{Fixed JIBAR fallback spread adjustments, Spread Adjustment Fixing Date 3~December 2025, from the BISL technical note of 22~December 2025 \citep{bisl2025}.}\label{tab:appC-cas}
 \begin{tabular}{lllr}
 \toprule
 Tenor & Bloomberg ticker & Spread (\%) & Spread (bp)\\
@@ -188,64 +186,75 @@ Tenor & Bloomberg ticker & Spread (\%) & Spread (bp)\\
 \end{tabular}
 \end{table}
 
-The thesis needs only the constant $s$ of Definition~\ref{def:prelim-fallback}, which is the 3-month value $0.1619\%$; the other tenors enter only Appendix~\ref{appA-tenor}. The daily all-in fallback rate, adjusted ZARONIA and spread series that BISL publishes on the terminal (\texttt{FBAK <GO>}) are licensed data and are not required: the thesis recomputes compounded ZARONIA from the free fixings and adds the fixed spread.
+The thesis needs only the constant $s$ of Definition~\ref{def:prelim-fallback}, the 3-month value $0.1619\%$ \citep{bisl2025}; the other tenors enter only Appendix~\ref{appA-tenor}. The daily all-in fallback rate, adjusted ZARONIA and spread series that BISL publishes at the terminal (\texttt{FBAK <GO>}) are licensed and not required: the thesis recomputes compounded ZARONIA from the free fixings and adds the fixed spread. Quoting the five values is quotation of a public technical note, not use of Bloomberg's licensed series.
+
+\datanote{No Highlights note exists for \texttt{bisl2025} on 9~September 2026 (the PDF at \url{https://assets.bbhub.io/professional/sites/27/IBOR-Fallbacks-ZAR-JIBAR_Cessation_Technical-Note_251222.pdf} was read by the scout, LESSONS 2026-09-09); the citation therefore carries no page locator until the librarian records one.}
 
 \subsection{ZARONIA OIS and JIBAR swap curves}\label{sec:appC-curves}
 
-\emph{Free to end-2024; terminal from 2025.} For dates up to 31~December 2024 the JIBAR swap curve is the JSE nominal swap zero curve (daily, in the same \texttt{mtmdata} tree as the JIBAR files) and the ZARONIA OIS curve is the Workstream's synthetic curve of Section~\ref{sec:appC-synthetic}. From January 2025 the live ZARONIA OIS market (cleared at LCH since September 2024, listed on Bloomberg SEF from 13~March 2025) is quoted on the terminals, and the thesis needs end-of-day par OIS rates at the Workstream's pillars (1M--12M monthly, 15M--30Y quarterly) together with the JIBAR swap curve until JIBAR pricing screens close. The two curves give $F_t$ and $L_t$ for every accrual window and the discount factors for every payment date.
+\emph{Class~F to end-2024; T from 2025.} For dates up to 31~December 2024 the JIBAR swap curve is the JSE nominal swap zero curve (daily, in the same \texttt{mtmdata} tree as the JIBAR files) and the ZARONIA OIS curve is the Workstream's synthetic curve of Section~\ref{sec:appC-synthetic}. From January 2025 the live ZARONIA OIS market is quoted at the terminals, and the thesis needs end-of-day par OIS rates at the Workstream's pillars (1M--12M monthly, 15M--30Y quarterly) together with the JIBAR swap curve until JIBAR pricing screens close. The two curves give $F_t$ and $L_t$ for every accrual window and the discount factors for every payment date.
 
-\datanote{Bloomberg curve identifiers and LSEG RICs for the ZARONIA OIS and JIBAR swap curves were not found in any public document on 9~September 2026 and are to be confirmed at the terminal before download; the BISL fallback tickers in Table~\ref{tab:appC-cas} are the only ZAR identifiers verified from a primary source. The JSE nominal swap zero curve continues after 2024 and is free; whether the JSE will publish a ZARONIA-based zero curve, and from what date, was not verified. A commercial provider (BlueGamma) advertises a downloadable ZARONIA forward curve rebuilt from live quotes; it is not a primary source and the thesis does not rely on it.}
+\datanote{Unverified on 9~September 2026: that ZARONIA OIS have been cleared at LCH since September 2024 and listed on Bloomberg SEF from 13~March 2025 (no primary source on disk); Bloomberg curve identifiers and LSEG RICs for the ZARONIA OIS and JIBAR swap curves (not found in any public document; TBC at the terminal); whether the JSE will publish a ZARONIA-based zero curve, and from what date. The BISL tickers of Table~\ref{tab:appC-cas} are the only ZAR identifiers verified from a primary source. A commercial provider (BlueGamma) advertises a downloadable ZARONIA forward curve; it is not a primary source and the thesis does not rely on it.}
 
 \subsection{JIBAR cap/floor and swaption volatility surfaces}\label{sec:appC-vols}
 
-\emph{Sponsor-only.} No public or terminal source of ZAR cap, floor or swaption volatilities exists that the thesis can cite: the JIBAR cap market is quoted by dealers, not on a screen, and no evidence of quoted ZARONIA cap, floor or swaption screens was found as of 9~September 2026 (this is stated as absence of evidence, not proof of absence, and is re-checked before submission). The Market Practitioners Group's conventions paper for ZARONIA non-linear derivatives \cite{sarb2024conv} says these products ``will in future be quoted on screens''.
+\emph{Class~S.} No public or terminal source of ZAR cap, floor or swaption volatilities exists that the thesis can cite: the JIBAR cap market is quoted by dealers, not on a screen, and no evidence of quoted ZARONIA cap, floor or swaption screens was found as of 9~September 2026 (absence of evidence, not proof of absence; re-checked before submission). The MPG conventions paper says these products ``will in future be quoted on screens and/or via interbank broking agents'' \citep[\S3, p.~5]{sarb2024conv}.
 
 What a sponsoring dealer would provide, under a data agreement that restricts publication to aggregates:
 \begin{enumerate}[nosep]
-\item End-of-day JIBAR cap/floor implied volatilities, normal (basis-point) quotation, for each business day from a start date agreed with the sponsor to 31~December 2026: one CSV per date with columns \emph{expiry}, \emph{strike} (absolute rate or offset from the at-the-money forward), \emph{normal volatility}, \emph{quote type} (mid, or bid and ask), \emph{source} (desk mark or consensus).
-\item The same for ZARONIA caps and floors from the first date the desk marks them.
+\item End-of-day JIBAR cap/floor implied volatilities, normal (basis-point) quotation, for each business day from an agreed start date to 31~December 2026: one CSV per date with columns \emph{expiry}, \emph{strike} (absolute or offset from the at-the-money forward), \emph{normal volatility}, \emph{quote type} (mid, or bid and ask), \emph{source} (desk mark or consensus).
+\item The same for ZARONIA caps and floors from the first date the desk marks them; the MPG's recommended strike grid is ATM and ATM~$\pm25$, $\pm50$, $\pm75$, $\pm100$, $\pm150$, $\pm200$~bp \citep[\S7.6, p.~25]{sarb2024conv}.
 \item A swaption cube (expiry $\times$ tail $\times$ strike offset) in the same layout, JIBAR-referenced until cessation and ZARONIA-referenced thereafter.
 \item The desk's own strike and expiry grids and interpolation rule, so that the thesis reproduces the desk's surface rather than resampling it.
 \end{enumerate}
-The thesis publishes no raw quote. Chapter~\ref{ch7-zar-coda} reports (i) fitted SABR triples $(\alpha_0,\rho,\nu)$ per expiry, (ii) at-the-money volatility and skew differences between the JIBAR and ZARONIA surfaces in basis points, and (iii) monthly averages of these, none of which recovers a dealer's quote. The agreement should permit exactly these three aggregates and should be signed by month~12 of the programme (the ground-truth timetable places the sponsor decision at months 10--12).
+The thesis publishes no raw quote. Chapter~\ref{ch:zar} reports only (i) fitted SABR triples $(\alpha_0,\rho,\nu)$ per expiry, (ii) at-the-money volatility and skew differences between the JIBAR and ZARONIA surfaces in basis points, and (iii) monthly averages of these; none recovers a dealer's quote. The agreement should permit exactly these three aggregates and be signed by month~12 of the programme (the ground-truth timetable places the sponsor decision at months 10--12).
+
+\paragraph{Governance of sponsor data.} Raw sponsor files are held on university-managed encrypted storage under the candidate's account, with access limited to the candidate and the supervisors named in the agreement; no copy is placed in the reproducibility package or in any cloud service outside the university's. Retention is for the duration of the candidature plus the examination and revision period, after which the files are destroyed and the destruction recorded, unless the agreement fixes an earlier date. The agreement provides that the thesis examiners may inspect the raw quotes under the same confidentiality terms, so that a restriction on publication is not a restriction on examination. The data contain no personal information, so the Protection of Personal Information Act is not engaged. The three permitted aggregates above are the only outputs that leave the storage.
+
+\gap{The university research-data management and intellectual-property policies under which the sponsor agreement is signed are to be named here with their current version and date; not yet identified on 9~September 2026.}
 
 \subsection{Converted-book hedging P\&L from public fixings}\label{sec:appC-pnl}
 
-\emph{Free.} The score $S$ of Chapter~3 is the hedging error of a fixed policy $\pi$ over a block of rebalancing periods. For the South African coda the policy is the market convention, fixed before cessation: a JIBAR caplet with strike $K$ becomes a compounded caplet with strike $K'=K-s$, and its volatility is the pre-cessation JIBAR volatility rescaled through the clock of Assumption~\ref{ass:prelim-linear}. Everything needed to compute the realised P\&L of a delta-hedged position under that policy is public:
+\emph{Class~F, except one input.} The block score $S$ of Definition~\ref{def:score} for the South African book is the realised hedging error of a fixed policy $\pi$ over a block of monthly rebalancing periods; Chapter~\ref{ch:zar} defines the policy, the block length and the fallback when no sponsor signs. The inputs are:
 \begin{enumerate}[nosep]
 \item the realised compounded rate $R(T,T+\Delta)$ from the daily ZARONIA fixings (Section~\ref{sec:appC-zaronia});
 \item the JIBAR fixing $J_T$ for windows that fixed before cessation (Section~\ref{sec:appC-jibar});
 \item the constant $s=0.1619\%$ (Section~\ref{sec:appC-cas});
 \item the forwards $F_t$, $L_t$ and discount factors $P(t,T+\Delta)$ from the curves of Section~\ref{sec:appC-curves} at each monthly rebalancing date;
-\item one volatility level per expiry, frozen at the last date a JIBAR surface is available.
+\item one volatility level per expiry, frozen at the last date a JIBAR surface is available (Section~\ref{sec:appC-vols}; the only input of class~S).
 \end{enumerate}
-Item~5 is the only input that is not free. Without a sponsor the frozen level is replaced by the realised volatility of the compounded forward over the calibration window, and the policy is then a historical-volatility policy rather than the market-convention policy. The coverage certificate of Chapter~3 (ground-truth Theorem~6) is indifferent to which policy is used, since it requires only that $\pi$ be fixed on $\Dfit$; the finance interpretation of the reserve decomposition in Chapter~\ref{ch7-zar-coda} is what changes. The rebalancing period is one month, the block length $b$ is chosen by the rule of Chapter~\ref{ch4-sharpness-blocking}, and the record runs from the first monthly date after the LCH discounting switch of 11~April 2026 to the last date before submission, giving at most about twenty-four monthly scores by month~30 as the ground truth anticipates.
+The record starts at the first monthly date after the LCH switch of ZAR discounting to ZARONIA on 11~April 2026 and runs to the last date before submission.
 
+\datanote{Record length and feasibility. The ground truth (programme principles) anticipates at most twenty-four monthly hedging-error observations by month~30; the count assumes month~0 is the proposal approval and a record starting in May 2026, and it is arithmetic, not data. With $N$ monthly periods and block length $b$ there are $n=\lfloor N/(2b)\rfloor$ calibration blocks, and the threshold of Definition~\ref{def:prelim-split} is finite only if $k=\lceil(1-\alpha)(n+1)\rceil\le n$, that is $n\ge(1-\alpha)/\alpha$, so $n\ge9$ at $\alpha=0.1$. Hence $N\ge18$ at $b=1$ and $N\ge36$ at $b=2$: on a record of about twenty-four months only $b=1$ yields a certificate, and the mixing class assumed in Chapter~\ref{ch:zar} must then justify a one-month gap. The LCH date has no bibliography key or Highlights note (LCH member updates of 17 December 2025 and 26 February 2026, URLs in LESSONS); it is cited in Chapter~\ref{ch:intro} once the key exists.}
 
-\subsection{Summary and public-data fallback}
+\subsection{Summary}\label{sec:appC-zar-summary}
+
+\figplan{ZAR data availability, horizontal axis January 2005 to June 2027. Horizontal bars: ZARONIA fixings in three shades (proxy to 31 October 2022, observation 1 November 2022 to 3 November 2023, official from 4 November 2023; proxy start marked TBC); JIBAR fixings to 31 December 2026; JSE nominal swap zero curve from 3 January 2005; SARB synthetic ZARONIA OIS curve 3 January 2005 to 31 December 2024; live ZARONIA OIS curve from 2025 (start TBC); sponsor volatility window (agreed start to 31 December 2026, dashed); monthly converted-book score record from May 2026 (dashed to submission). Vertical lines at 3 December 2025 (spread fixing), 11 April 2026 (LCH discounting switch), 31 December 2026 (JIBAR cessation).}{Availability of the ZAR datasets of Table~\ref{tab:appC-zar}. The figure tests the claim that the monthly score record of Section~\ref{sec:appC-pnl} lies entirely on official ZARONIA fixings and live or synthetic curves, and shows how short that record is relative to the feasibility arithmetic recorded there. Sources: the register table and the SARB, JSE, BISL and LCH documents cited in this section.\label{fig:appC-zar-timeline}}
 
 \begin{table}[htbp]\centering\small
-\caption{ZAR datasets for Chapter~\ref{ch7-zar-coda}: access class, source and coverage as verified on 9~September 2026. F~= free download, T~= Bloomberg/LSEG terminal, S~= sponsor-only.}\label{tab:appC-zar}
-\footnotesize
-\begin{tabular}{@{}p{3.0cm}cp{2.9cm}p{2.4cm}p{3.4cm}@{}}
+\caption{ZAR datasets for Chapter~\ref{ch:zar}: access class, source, coverage, licence and package status as recorded on 9~September 2026; rows marked TBC are unverified. Classes F, T, S, C as in Section~\ref{sec:appC-intro}.}\label{tab:appC-zar}
+\scriptsize
+\begin{tabular}{@{}p{2.5cm}cp{2.2cm}p{2.9cm}p{2.5cm}p{1.6cm}@{}}
 \toprule
-Dataset & Class & Source & Format & Coverage\\
+Dataset & Class & Source & Coverage & Licence & In package\\
 \midrule
-ZARONIA daily fixings & F & SARB benchmark page & CSV, XML or PDF via selector & Official from 4 Nov 2023; observation from 1 Nov 2022; proxy earlier (extent unverified)\\
-Compounded ZARONIA averages and index & F & SARB & CSV/XML/PDF & 1W--12M from 1 Nov 2022\\
-Synthetic ZARONIA OIS curve & F & SARB DWS, Oct 2025 & five \texttt{.xlsb} workbooks & Daily 3 Jan 2005 -- 31 Dec 2024, four dates missing; pillars 1M--12M, 15M--30Y\\
-JIBAR fixings 1M/3M/6M/12M & F & SARB page; JSE \texttt{mtmdata} archive & CSV/XML (SARB); \texttt{.xls} (JSE) & JSE yearly files 2010--2026 plus archive; ends 31 Dec 2026\\
-Fallback spreads by tenor & F & BISL technical note 22 Dec 2025 & PDF, five values & Fixed 3 Dec 2025\\
-Daily BISL fallback rates & T & Bloomberg \texttt{FBAK}, \texttt{YJIBA*} & terminal & Not required\\
-JIBAR swap zero curve & F & JSE \texttt{mtmdata} & daily files & 2005 -- present\\
-ZARONIA OIS par curve, live & T & Bloomberg/LSEG (IDs to confirm) & terminal export & 2025 -- present\\
-JIBAR and ZARONIA cap/floor and swaption vols & S & sponsoring dealer & per-date CSV, layout above & Agreed start to 31 Dec 2026 and beyond\\
-Converted-book hedging P\&L & F/S & computed from the rows above; S only for the frozen vol level & thesis code & Monthly from Apr 2026\\
+ZARONIA daily fixings & F & SARB benchmark page, selector (CSV/XML/PDF) & Official from 4 Nov 2023; observation from 1 Nov 2022; proxy earlier (extent TBC) & SARB website terms (redistribution TBC) & script + hash\\
+Compounded ZARONIA averages and index & F & SARB, selector & 1W--12M from 1 Nov 2022 & as above & script + hash\\
+Synthetic ZARONIA OIS curve & F & SARB DWS, Oct 2025, five \texttt{.xlsb} & Daily 3 Jan 2005 -- 31 Dec 2024, four dates missing; pillars 1M--12M, 15M--30Y & SARB copyright; link, not copy & hash-only\\
+JIBAR fixings 1M--12M & F & SARB selector; JSE \texttt{mtmdata} (\texttt{.xls}) & JSE yearly files 2010--2026 plus archive; ends 31 Dec 2026 & SARB terms; JSE market-data terms (TBC) & script + hash\\
+Fallback spreads by tenor & F & BISL technical note 22 Dec 2025 & Fixed 3 Dec 2025 & public note; five values quoted & yes\\
+Daily BISL fallback rates & T & Bloomberg \texttt{FBAK}, \texttt{YJIBA*} & not required & terminal agreement & no\\
+JIBAR swap zero curve & F & JSE \texttt{mtmdata}, daily files & 2005 -- present & JSE market-data terms (TBC) & hash-only\\
+ZARONIA OIS par curve, live & T & Bloomberg/LSEG (IDs TBC) & 2025 -- present & terminal agreement & hash-only\\
+JIBAR and ZARONIA cap/floor and swaption vols & S & sponsoring dealer, per-date CSV & agreed start to 31 Dec 2026 & data agreement; aggregates only & no\\
+Converted-book hedging P\&L & C & thesis code from the rows above & monthly from May 2026 & --- & yes\\
 \bottomrule
 \end{tabular}
 \end{table}
 
-\paragraph{Public-data fallback.} If no sponsor signs by month~12, Chapter~\ref{ch7-zar-coda} is written entirely from the free rows of Table~\ref{tab:appC-zar}. The coverage certificate of Chapter~3 is computed for the historical-volatility policy of Section~\ref{sec:appC-pnl} on the monthly converted-book scores, with the pre-2025 curve history drawn from the SARB synthetic OIS curve and the JSE JIBAR curve, and the 2025--2026 curves from the terminal. The identifiability results of Chapter~\ref{ch5-identifiability} are then illustrated on ZAR only through the curve-implied mean basis $B_0=L_0-F_0-s$, which is public; the unidentified quantities $\eta$, $\rho_{BF}$ and $\rho_{B\alpha}$ are estimated and the smile transport tested on USD data alone (Chapter~\ref{ch6-usd-validation}), where the successor smile became observable. The chapter states in its first paragraph which of the two data regimes it was written under, and its reserve decomposition is labelled ``historical-volatility policy'' in the public-data case so that no reader mistakes it for a market-convention reserve.
+\gap{Citation needed: the SARB website terms of use and the JSE client-portal market-data terms, to settle whether SARB exports and JSE files may be redistributed; until settled the package ships the download script, the selector settings and the SHA-256 hash for those rows, not the files.}
+
+If no sponsor signs by month~12, Chapter~\ref{ch:zar} is written from the class~F rows of Table~\ref{tab:appC-zar} and labels its reserve decomposition accordingly; the decision and its consequences are stated there, not here.
 \section{Code architecture}
 \subsection{The \texttt{rates} package}\label{subsec:appC-rates}
 

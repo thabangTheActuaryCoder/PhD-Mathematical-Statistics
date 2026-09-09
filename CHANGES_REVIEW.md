@@ -16,3 +16,11 @@ Running record of the write, review, revise, compile loop. One entry per round. 
 - Zero-hallucination pipeline added: References/PDF, References/Highlights, librarian and citation-enforcer agents; every borrowed result must carry a locator.
 - Literature scan found Barber and Pananjady (2026) and Halkiewicz (2026); the optimal-blocking theorem is being restated before Chapter 4 is written.
 - Canonical chapter labels introduced (ch:intro ... app:data).
+
+## 2026-09-09 - Round one continued
+- Chapter 3 (Certification) drafted and refereed: off-by-one in the gap lemma fixed, the normal approximation moved out of the theorem statement, positioning against Barber and Pananjady (2026) made explicit, every worked-example number verified by hand.
+- Chapter 2 refereed on the finance half: Proposition 2's claimed 17 per cent curvature understatement withdrawn (the effect on the smile is about 0.002 basis points) and corrected in the source of record.
+- Appendix A (Tenor consistency) drafted at about 5,700 words.
+- All 50 references processed: 58 PDFs with highlighted copies, 50 highlight notes carrying exact locators, paywalled items recorded with DOIs. Three attribution errors and three bibliographic errors corrected.
+- Reference code corrected: one AR(1) mixing constant, block counting fixed, exact optimal block length, Table 3.1 regenerated and reproduced by tests.
+- Review reports written for Chapter 2 (22 must-items) and Appendix C (10 must-items).
