@@ -16,11 +16,11 @@ cpif "$W/chapters/ch8-conclusions.tex" "$R/Thesis/Chapter 8/src/chapter8_conclus
 cpif "$W/appendices/appA-tenor.tex" "$R/Thesis/Annexures/annexureA_tenor_consistency.tex" "Tenor Consistency of Compounded-Rate Smiles"
 cpif "$W/appendices/appB-proofs-standard.tex" "$R/Thesis/Annexures/annexureB_standard_proofs.tex" "Proofs of Standard Results"
 # Appendix C is assembled from its parts
-{ echo '\chapter{Data, Code and Reproducibility}\label{appC-data-code}\label{app:data}';
-  echo '\section{USD data}'; cat "$W/appendices/appC-usd-data.tex" 2>/dev/null || true;
-  echo '\section{ZAR data}'; cat "$W/appendices/appC-zar-data.tex" 2>/dev/null || true;
-  echo '\section{Code architecture}'; cat "$W/appendices/appC-code.tex" 2>/dev/null || true;
-  echo '\section{Reproducibility protocol}'; echo '\gap{Written by thesis-writer-appC-data once code and data sections exist.}'; } > "$R/Thesis/Annexures/annexureC_data_code.tex"
+{ printf '%s\n' '\chapter{Data, Code and Reproducibility}\label{appC-data-code}\label{app:data}';
+  printf '%s\n' '\section{USD data}'; cat "$W/appendices/appC-usd-data.tex" 2>/dev/null || true;
+  printf '%s\n' '\section{ZAR data}'; cat "$W/appendices/appC-zar-data.tex" 2>/dev/null || true;
+  printf '%s\n' '\section{Code architecture}'; cat "$W/appendices/appC-code.tex" 2>/dev/null || true;
+  printf '%s\n' '\section{Reproducibility protocol}'; printf '%s\n' '\gap{Written by thesis-writer-appC-data once code and data sections exist.}'; } > "$R/Thesis/Annexures/annexureC_data_code.tex"
 [ -d "$W/code" ] && rsync -a --delete "$W/code/" "$R/Code/"
 echo synced
 [ -d "$W/reviews" ] && rsync -a "$W/reviews/" "$R/Reviews/" && echo "reviews synced"
