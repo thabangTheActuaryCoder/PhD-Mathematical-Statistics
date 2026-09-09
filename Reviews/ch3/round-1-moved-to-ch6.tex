@@ -1,0 +1,43 @@
+% Moved verbatim out of chapters/ch3-certification.tex at round 1 (review item 4).
+% Destination: chapters/ch6-usd-validation.tex, under \section{Methods compared}.
+% The reviser owns ch3 only; the ch6 writer pastes this in and deletes this file.
+% Two sentences of drafting narration were removed on the way (review item 7(e));
+% the honesty content they carried is retained in the paragraph that follows.
+
+\section{Methods compared}\label{sec:usd-methods}
+
+\gap{Section placed, not yet integrated: the three comparison methods are described here in the form in which Chapter~\ref{ch:certification} needs them named, but the design of the USD comparison, the verification of the Basel zone boundaries, and the choice of the replication count $R$ and the mean resampling length $1/p$ for the USD record are not yet written.}
+
+\subsection{Block bootstraps}
+
+The moving block bootstrap of \cite{kunsch1989} resamples the record $e_{1:N}$ in blocks of a fixed length $\ell$: draw $\lceil N/\ell\rceil$ starting indices uniformly from $\{1,\dots,N-\ell+1\}$ with replacement, concatenate the corresponding blocks, and truncate to length $N$. The stationary bootstrap of \cite{politis1994} replaces the fixed length by independent geometric lengths with mean $1/p$ and wraps the record circularly, so that the resampled series is stationary conditionally on the data. In either case a statistic of interest, here the $(1-\alpha)$-quantile of the block score, is recomputed on each pseudo-series and the bootstrap distribution of the statistic is used to form a percentile interval or to inflate the threshold.
+
+For definiteness, the stationary-bootstrap threshold used in Chapter~\ref{ch:usd} is computed as follows. Given block scores $S_1,\dots,S_{n'}$ from contiguous, unseparated blocks of the record ($n'=\lfloor N/b\rfloor$, twice the certificate's $n$), and a mean resampling length $1/p$: draw a start $I_1$ uniformly from $\{1,\dots,n'\}$ and a length $L_1\sim\mathrm{Geometric}(p)$; append $S_{I_1},S_{I_1+1},\dots,S_{I_1+L_1-1}$ with indices taken modulo $n'$; repeat with independent $(I_2,L_2),\dots$ until $n'$ values have been appended, and truncate. Compute the $(1-\alpha)$ empirical quantile $\hat q^{\,\flat}$ of the pseudo-sample. Repeat $R$ times and report the median of the $R$ values as the bootstrap threshold and their $[\alpha/2,1-\alpha/2]$ percentiles as its uncertainty. The choice $p\asymp n'^{-1/3}$ is the mean-optimal rate of \cite{politis1994} and is used for want of a quantile-optimal rule with known constants.
+
+The theory of these methods is asymptotic and is developed in \cite{lahiri2003}. For smooth functionals of means of a $\beta$-mixing sequence, the block bootstrap is consistent when $\ell\to\infty$ with $\ell/N\to0$, and with $\ell\asymp N^{1/3}$ it is second-order accurate, with a coverage error of order $N^{-1/2}$ or better. For a quantile of the block score, the relevant statistic is an order statistic of a dependent sequence. Its Edgeworth expansion involves the density of the score law at the quantile and the long-run variance of the indicator process $\ind{S\le q}$, both unknown, and the coefficients of the correction terms depend on the mixing rate through constants that are not available. A statement of the form ``the bootstrap threshold covers the next block with probability at least $1-\alpha-\eta_N$'' with an explicit $\eta_N$ and explicit constants is therefore not available under Assumption~\ref{ass:mix}, and none is claimed here or in Chapter~\ref{ch:certification}. No theorem ranks the two methods under that assumption: the comparison below is empirical.
+
+What can be said is this. The certificate's level is a proved finite-sample statement under stated assumptions. The bootstrap's level is an asymptotic statement whose finite-sample accuracy is unknown, but the bootstrap uses the whole record rather than half of it, does not require gaps, and adapts to the dependence structure through $\ell$ or $p$ without an assumed class. In a regime where $N$ is large and the mixing is fast, the bootstrap threshold may well be tighter than $\hat q$ with no worse realised coverage. Which regime the USD and ZAR records are in is an empirical question and is treated as one.
+
+\subsection{Breach-count tests}
+
+A threshold, however obtained, can be tested after the fact by counting breaches. Let $I_t:=\ind{S_t>q_t}$ be the breach indicator over $M$ deployment blocks with nominal breach probability $\alpha$, and $x:=\sum_tI_t$.
+
+The proportion-of-failures test of \cite{kupiec1995} is the likelihood-ratio test of $H_0:\Prob(I_t=1)=\alpha$ against the unrestricted Bernoulli alternative,
+\[
+\mathrm{LR}_{\mathrm{uc}}:=-2\log\frac{(1-\alpha)^{M-x}\alpha^{x}}{(1-\hat\alpha)^{M-x}\hat\alpha^{x}},\qquad\hat\alpha:=x/M ,
+\]
+asymptotically $\chi^2_1$ under $H_0$ when the $I_t$ are independent. The test of \cite{christoffersen1998} adds a test of independence: with $n_{ij}$ the number of transitions from $I_{t-1}=i$ to $I_t=j$, and $\hat\pi_i:=n_{i1}/(n_{i0}+n_{i1})$, $\hat\pi:=(n_{01}+n_{11})/M$,
+\[
+\mathrm{LR}_{\mathrm{ind}}:=-2\log\frac{(1-\hat\pi)^{n_{00}+n_{10}}\hat\pi^{n_{01}+n_{11}}}{(1-\hat\pi_0)^{n_{00}}\hat\pi_0^{n_{01}}(1-\hat\pi_1)^{n_{10}}\hat\pi_1^{n_{11}}}\ \sim\ \chi^2_1 ,
+\]
+and the conditional-coverage statistic $\mathrm{LR}_{\mathrm{cc}}:=\mathrm{LR}_{\mathrm{uc}}+\mathrm{LR}_{\mathrm{ind}}$ is asymptotically $\chi^2_2$. Both are asymptotic in $M$, both assume at most first-order Markov dependence in the breach sequence under the alternative, and both are diagnostics of a threshold already in use, not constructions of one. They will be applied in Chapter~\ref{ch:usd} to the certificate threshold and to the bootstrap threshold alike, on the same deployment blocks, so that the two can be compared on realised breaches.
+
+\subsection{Regulatory backtests}
+
+The Basel market-risk framework \cite{bcbs2019} contains two backtests relevant here. The first is the traffic-light count of value-at-risk exceptions over $250$ trading days at the $99\%$ level, with zones green (at most four exceptions), amber (five to nine) and red (ten or more), each carrying a capital multiplier. The second is the profit-and-loss attribution test of the internal-models approach, which compares the risk-theoretical P\&L produced by the desk's pricing model with the hypothetical P\&L produced by the front-office system, over the same days, by a Spearman rank correlation and a Kolmogorov--Smirnov distance between the two empirical distributions, with green, amber and red zones defined by thresholds on the two statistics. The attribution test is the regulatory analogue of the certificate's question, since a systematic hedging error is exactly a gap between model P\&L and realised P\&L, but it is a two-sample comparison at a fixed sample size with asymptotic critical values, and it says nothing about the next block.
+
+\datanote{The zone boundaries of the profit-and-loss attribution test (Spearman correlation above $0.80$ and Kolmogorov--Smirnov statistic below $0.09$ for green; Spearman below $0.70$ or Kolmogorov--Smirnov above $0.12$ for red; amber otherwise) and the paragraph numbers of \cite{bcbs2019} are to be verified against the January 2019 text and the 2024 consolidated framework before Chapter~\ref{ch:usd} uses them; the values quoted here are from the author's reading and are not yet cross-checked.}
+
+\subsection{What Chapter~\ref{ch:usd} will measure}
+
+On the USD LIBOR-to-SOFR record, where the successor smile became observable and the truth of the hedging error is known, Chapter~\ref{ch:usd} computes, for each of the certificate, the stationary bootstrap and the unblocked empirical quantile: the threshold $\hat q$ and its level as stated by the method; the realised breach frequency over the deployment blocks; the Kupiec and Christoffersen statistics on the breach sequence; the behaviour of each threshold through the transition window, where the drift term is active; and the sensitivity of the certificate to $b$ and to the assumed $(C,r)$. The comparison measures realised coverage against stated coverage. It does not, and cannot, establish that one method dominates another under Assumption~\ref{ass:mix}, for the reason given above.

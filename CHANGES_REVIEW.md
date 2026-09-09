@@ -30,3 +30,10 @@ Running record of the write, review, revise, compile loop. One entry per round. 
 - Appendix B created: ten sections, each proving one standard result and referencing its statement by number. Nine proofs moved out of Chapter 2, plus the derivation sketch of the Hagan approximation.
 - Appendix C: 19 items closed. The reference implementation is now described from its source rather than its readme; twelve leaks of the writing process removed from note boxes; the fallback spread values marked as resting on no obtained primary source until the final rule is retrieved.
 - Page budget reallocated between the appendices: the moved proofs run shorter than budgeted, and the citation apparatus costs more than the prose it certifies.
+
+## 2026-09-10 - Round one closed for Chapter 3
+- All 37 items applied, none declined. The chapter falls from 51 to 34 typeset pages against a 44-page budget, chiefly by deleting thirteen results that Chapter 2 and Appendix B now own.
+- The coupling lemma of Chapter 2 proved insufficient for the conditional certificate: it gives mutual independence of the coupled copies but neither preserves the first block nor gives independence of the actual fitting sample. Chapter 3 now carries a named strengthening, proved from Berbee's lemma, and Chapter 2 is asked to absorb it in round two.
+- The two-sided over-coverage counterpart of Chapter 4's minimax object is stated here, under a continuity hypothesis without which no such bound survives.
+- The bootstrap and backtest comparison is staged for Chapter 6 and the block-length sweep for Chapter 4.
+- The content map is rebuilt from the files themselves: 147 objects, each with one home.

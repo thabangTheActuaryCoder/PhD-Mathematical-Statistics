@@ -1,0 +1,39 @@
+% Moved out of chapters/ch3-certification.tex at round 1 (review item 34).
+% Destination: chapters/ch4-sharpness-blocking.tex, in the section that fixes the
+% mixing class and studies the block length. The reviser owns ch3 only; the ch4
+% writer pastes this in, adapts the cross-references, and deletes this file.
+% Reason for the move: a geometrically beta-mixing AR(1) lies in every class
+% B_r, so a sweep over b on this process illustrates nothing about b*, whose
+% minimiser depends on r. Chapter 4 fixes r and is where the sweep means something.
+% The b = 10 column, the drift-slack computation and the exact-versus-approximate
+% quantile comparison stay in Chapter 3 as the single-block-length worked example.
+
+\begin{table}[htbp]
+\centering\small
+\caption{The certificate for the synthetic AR(1) example of Chapter~\ref{ch:certification}, $N=500$, $\alpha=0.1$, $\varphi=\tfrac12$, $\mu=0.05$, $\delta=\delta'=0.05$, at three block lengths. The coupling bound is the first inequality of Proposition~\ref{prop:prelim-ar1}; $\dK$ is recomputed with $v_b$ at each $b$. At $b=5$ the coupling term dominates and the certificate is nearly vacuous; at $b=20$ it is negligible but $n$ has fallen to $12$ and the conformal term has grown.}\label{tab:example-sweep}
+\begin{tabular}{@{}lrrr@{}}
+\toprule
+ & $b=5$ & $b=10$ & $b=20$ \\
+\midrule
+$n=\lfloor N/(2b)\rfloor$ & 50 & 25 & 12 \\
+$k=\lceil0.9(n+1)\rceil$ & 46 & 24 & 12 \\
+$k/(n+1)$ & 0.9020 & 0.9231 & 0.9231 \\
+$\beta(b)$ bound & $1.563\times10^{-2}$ & $4.883\times10^{-4}$ & $4.768\times10^{-7}$ \\
+$(n+1)\beta(b)$ & 0.7971 & 0.0127 & $6.2\times10^{-6}$ \\
+$\dK(P,Q)$ & 0.0299 & 0.0391 & 0.0533 \\
+Marginal level & 0.0730 & 0.8482 & 0.8467 \\
+$b_{n,k}(0.05)$ & 0.8262 & 0.8239 & 0.7791 \\
+$\beta(b)/\delta'$ & 0.3126 & 0.0098 & $9.5\times10^{-6}$ \\
+Conditional level & 0.4837 & 0.7750 & 0.7258 \\
+Confidence $1-\delta-n\beta(b)$ & 0.1686 & 0.9378 & 0.9500 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\datanote{The $b=5$ and $b=20$ columns are computed by the same formulas as the $b=10$ column of Chapter~\ref{ch:certification}: $v_5=5+2\sum_{h=1}^4(5-h)2^{-h}=5+2(2+0.75+0.25+0.0625)=11.125$, $\dK=2\Phi(0.25/(2\sqrt{11.125}))-1=2\Phi(0.03748)-1=0.0299$; $v_{20}=20+2\sum_{h=1}^{19}(20-h)2^{-h}=56.0000$ to four decimals, $\dK=2\Phi(1/(2\sqrt{56}))-1=2\Phi(0.06682)-1=0.0533$; the Beta quantiles are the roots of $\Prob(\mathrm{Bin}(50,u)\ge46)=0.05$, namely $u=0.8262$, and of $\Prob(\mathrm{Bin}(12,u)\ge12)=u^{12}=0.05$, namely $u=0.05^{1/12}=0.7791$. At $b=5$ the conditional level $0.4837$ is stated with confidence only $0.1686$, because $n\beta(b)=0.78$; the row is reported to show the failure, not as a usable certificate. The AR(1) is normalised to stationary variance $v=1$, so the innovation standard deviation is $\sqrt{1-\varphi^2}$.}
+
+\emph{Reading the table.} With $\varphi=\tfrac12$ the process forgets quickly and $b=10$ is already enough for the coupling term to be small; the certified level is then dominated by the drift and by the conformal term. For a slowly mixing process the picture changes. With $\varphi=0.8$, Proposition~\ref{prop:prelim-ar1} gives $\beta(10)\le0.0538$ and $(n+1)\beta(10)\le1.40$: the certificate at $b=10$ is vacuous, and one must take $b=20$ ($n=12$, $\beta(20)\le0.00576$, $(n+1)\beta(20)\le0.0749$) or a longer record. The block length is not a nuisance parameter; it is the design variable of the method, and its choice requires a mixing class to be assumed. A geometrically $\beta$-mixing AR(1) lies in every class $\Bclass{r}$, so this sweep shows only that some $b$ kills the coupling term and that too large a $b$ starves the block count; it does not locate $b^*$, whose minimiser depends on $r$ and is the subject of the optimal-blocking theorem.
+
+\figplan{Two panels for the synthetic AR(1) example, $\varphi\in\{0.5,0.8\}$. Horizontal axis: block length $b$ from $2$ to $50$ at $N=500$. Series: the coupling term $(n+1)\beta(b)$ from Proposition~\ref{prop:prelim-ar1}; the conformal term $1-k/(n+1)$; the drift term $\dK(P,Q)$ at $\mu=0.05$; their sum; and the realised breach frequency of the certificate over $10^4$ Monte Carlo replications of the whole procedure, with the nominal $\alpha=0.1$ as a horizontal line.}{Deficit terms of the certificate as a function of block length for the synthetic hedging-error process. The coupling term falls geometrically in $b$, the conformal term rises as $n=\lfloor N/(2b)\rfloor$ falls, and the drift term rises with $b$ because the mean shift accumulates over the block. The Monte Carlo breach frequency tests the claim that the realised breach rate never exceeds $\alpha$ plus the sum of the three terms; the gap between the two curves measures the slack in the bound, most of it in the coupling term.\label{fig:example-sweep}}
+
+\datanote{The Monte Carlo series is produced by simulating $N_0+b+N+b$ periods of the AR(1), computing $\hat q$ from the blocked record, drawing the deployment block with the mean shift, and recording $\ind{S_0>\hat q}$; $10^4$ replications give a standard error of $0.003$ on a breach frequency near $0.1$. Code and seed are specified in Appendix~\ref{app:data}. No market data enter.}
