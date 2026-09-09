@@ -563,13 +563,7 @@ Let $(W,Z)$ be $(\mathcal F_t)$-Brownian motions with $d\langle W,Z\rangle_t=\rh
 Then $(\tilde W,\tilde Z)$ is a pair of $(\mathcal G_u)$-Brownian motions on $[0,\tau^*]$ with $d\langle\tilde W,\tilde Z\rangle_u=\rho\,du$.
 \end{lemma}
 
-\begin{proof}
-$(\mathcal G_u)$ is a filtration because $\tau^{-1}$ is increasing, and it satisfies the usual conditions because $(\mathcal F_t)$ does. $M$ and $N$ are continuous square-integrable $(\mathcal F_t)$-martingales, $g$ being bounded, with quadratic variations and covariation
-\[
-\langle M\rangle_t=\int_0^tg^2\,du=\tau(t),\qquad\langle N\rangle_t=\tau(t),\qquad\langle M,N\rangle_t=\rho\,\tau(t).
-\]
-For each $u$, $\tau^{-1}(u)$ is a deterministic time, so $\tilde W_u=M_{\tau^{-1}(u)}$ is $\mathcal G_u$-measurable, and for $u<v$, $\E[\tilde W_v\mid\mathcal G_u]=\E[M_{\tau^{-1}(v)}\mid\mathcal F_{\tau^{-1}(u)}]=M_{\tau^{-1}(u)}=\tilde W_u$: $\tilde W$ is a $(\mathcal G_u)$-martingale, continuous because $M$ and $\tau^{-1}$ are continuous. Its quadratic variation is $\langle\tilde W\rangle_u=\langle M\rangle_{\tau^{-1}(u)}=\tau(\tau^{-1}(u))=u$, because quadratic variation along a deterministic continuous strictly increasing reparametrisation of time is the reparametrised quadratic variation (the approximating sums over partitions of $[0,u]$ are the approximating sums of $\langle M\rangle$ over the image partitions of $[0,\tau^{-1}(u)]$, whose mesh tends to zero by uniform continuity of $\tau^{-1}$). By L\'evy's characterisation \cite[Thm.~3.3.16]{karatzas1991}, $\tilde W$ is a $(\mathcal G_u)$-Brownian motion. The same argument applies to $\tilde Z$, and $\langle\tilde W,\tilde Z\rangle_u=\langle M,N\rangle_{\tau^{-1}(u)}=\rho u$. Finally, $\tilde Z^\perp:=(\tilde Z-\rho\tilde W)/\sqrt{1-\rho^2}$ is a continuous $(\mathcal G_u)$-martingale with $\langle\tilde Z^\perp\rangle_u=u$ and $\langle\tilde W,\tilde Z^\perp\rangle_u=0$, so by the two-dimensional L\'evy characterisation $(\tilde W,\tilde Z^\perp)$ is a two-dimensional Brownian motion and $(\tilde W,\tilde Z)$ is a $\rho$-correlated pair.
-\end{proof}
+Proof in Appendix~\ref{app:proofs}, Section~\ref{appB:tcbm}.
 
 \begin{lemma}[Time change of the stochastic integral]\label{lem:prelim-tc-int}
 In the setting of Lemma~\ref{lem:prelim-tc-bm}, let $H$ be $(\mathcal F_t)$-progressively measurable with $\E\int_0^{T+\Delta}H_t^2g(t)^2\,dt<\infty$, and set $\tilde H_u:=H_{\tau^{-1}(u)}$. Then $\tilde H$ is $(\mathcal G_u)$-progressively measurable with $\E\int_0^{\tau^*}\tilde H_u^2\,du<\infty$, and for every $t\in[0,T+\Delta]$,
@@ -579,21 +573,7 @@ In the setting of Lemma~\ref{lem:prelim-tc-bm}, let $H$ be $(\mathcal F_t)$-prog
 The same holds with $Z,\tilde Z$ in place of $W,\tilde W$.
 \end{lemma}
 
-\begin{proof}
-Measurability: the map $(u,\omega)\mapsto(\tau^{-1}(u),\omega)$ is measurable from $[0,v]\times\Omega$ with the $\sigma$-field $\mathcal B([0,v])\otimes\mathcal G_v$ to $[0,\tau^{-1}(v)]\times\Omega$ with $\mathcal B\otimes\mathcal F_{\tau^{-1}(v)}$, and progressive measurability of $H$ is preserved under composition. Integrability: substituting $u=\tau(s)$, $du=g(s)^2ds$,
-\[
-\int_0^{\tau^*}\tilde H_u^2\,du=\int_0^{T+\Delta}H_s^2\,g(s)^2\,ds ,
-\]
-which is the change-of-variables formula for the Lebesgue--Stieltjes measure $d\tau$, valid because $\tau$ is absolutely continuous and increasing.
-
-Identity \eqref{eq:prelim-tc-int} for simple integrands: let $H_s=\sum_{i=0}^{m-1}\xi_i\ind{s\in(t_i,t_{i+1}]}$ with $0=t_0<\dots<t_m=T+\Delta$ and $\xi_i$ bounded $\mathcal F_{t_i}$-measurable. Then $\tilde H_u=\sum_i\xi_i\ind{u\in(\tau(t_i),\tau(t_{i+1})]}$ is simple for $(\mathcal G_u)$, since $\xi_i$ is $\mathcal G_{\tau(t_i)}=\mathcal F_{t_i}$-measurable, and for $t=t_j$,
-\[
-\int_0^{t_j}H_sg(s)\,dW_s=\sum_{i<j}\xi_i\big(M_{t_{i+1}}-M_{t_i}\big)=\sum_{i<j}\xi_i\big(\tilde W_{\tau(t_{i+1})}-\tilde W_{\tau(t_i)}\big)=\int_0^{\tau(t_j)}\tilde H_u\,d\tilde W_u ,
-\]
-where the first equality is the definition of the integral of a simple process against $M$, which for $M=\int g\,dW$ is the integral of $Hg$ against $W$, and the second is the definition $\tilde W_{\tau(t)}=M_t$. Times $t$ not in the partition are handled by refining the partition.
-
-Extension: both sides of \eqref{eq:prelim-tc-int} are isometries from the respective $L^2$ spaces of integrands into $L^2(\Omega)$, with norms $\E\int_0^tH^2g^2\,ds$ and $\E\int_0^{\tau(t)}\tilde H^2\,du$, which coincide by the change of variables above. Simple processes are dense in the space of progressively measurable $H$ with $\E\int H^2g^2<\infty$ \cite[Prop.~3.2.6]{karatzas1991}. If $H^{(k)}\to H$ in that norm then $\tilde H^{(k)}\to\tilde H$ in the other, both sides of \eqref{eq:prelim-tc-int} converge in $L^2(\Omega)$, and the identity passes to the limit.
-\end{proof}
+Proof in Appendix~\ref{app:proofs}, Section~\ref{appB:tcint}.
 
 \subsection{Ground-truth Lemma 1}
 
@@ -795,11 +775,7 @@ The proof uses only the symmetry of the joint law under permutations; it does no
 Let $S$ have a continuous distribution function $F$. Then $U:=F(S)$ is uniform on $(0,1)$. Conversely if $U$ is uniform on $(0,1)$ and $F^{-1}(u):=\inf\{x:F(x)\ge u\}$ is the quantile function of any distribution function $F$, then $F^{-1}(U)$ has distribution function $F$.
 \end{lemma}
 
-\begin{proof}
-For the converse, we first prove the Galois inequality $F^{-1}(u)\le x\iff u\le F(x)$ for $u\in(0,1)$. If $u\le F(x)$ then $x$ belongs to the set whose infimum defines $F^{-1}(u)$, so $F^{-1}(u)\le x$. If $F^{-1}(u)\le x$, take $x_m\downarrow F^{-1}(u)$ with $F(x_m)\ge u$ (the infimum is approached by points of the set, and by right-continuity of $F$ the infimum itself belongs to the set); then $F(x)\ge F(F^{-1}(u))\ge u$ by monotonicity. Hence $\Prob(F^{-1}(U)\le x)=\Prob(U\le F(x))=F(x)$.
-
-For the direct statement, fix $u\in(0,1)$. Since $F$ is continuous, the set $\{x:F(x)=u\}$ is a non-empty closed interval $[a_u,b_u]$ (possibly a point), and $\{F(S)\le u\}=\{S\le b_u\}$ up to a null set: if $S\le b_u$ then $F(S)\le F(b_u)=u$, and if $F(S)\le u$ then either $S\le b_u$ or $S>b_u$ with $F(S)\le u=F(b_u)$, which forces $F(S)=u$ and $S\in(b_u,\infty)\cap\{F=u\}=\emptyset$. Thus $\Prob(F(S)\le u)=\Prob(S\le b_u)=F(b_u)=u$.
-\end{proof}
+Proof in Appendix~\ref{app:proofs}, Section~\ref{appB:pit}.
 
 \begin{lemma}[Law of a uniform order statistic]\label{lem:prelim-order-stat}
 Let $U_1,\dots,U_n$ be i.i.d.\ uniform on $(0,1)$ with order statistics $U_{(1)}<\dots<U_{(n)}$. Then $U_{(k)}\sim\Beta(k,n+1-k)$, that is, $U_{(k)}$ has density
@@ -809,17 +785,7 @@ f_{k,n}(u)=\frac{n!}{(k-1)!\,(n-k)!}\,u^{k-1}(1-u)^{n-k},\qquad 0<u<1,
 with mean $\dfrac{k}{n+1}$ and variance $\dfrac{k(n+1-k)}{(n+1)^2(n+2)}$. Moreover $\Prob(U_{(k)}\le u)=\Prob(\mathrm{Bin}(n,u)\ge k)$.
 \end{lemma}
 
-\begin{proof}
-The event $\{U_{(k)}\le u\}$ is the event that at least $k$ of the $n$ uniforms fall in $[0,u]$, and the number that do is binomial with parameters $(n,u)$: this is the last assertion. Hence
-\[
-G(u):=\Prob(U_{(k)}\le u)=\sum_{j=k}^{n}\binom nj u^j(1-u)^{n-j}.
-\]
-Differentiate term by term:
-\[
-G'(u)=\sum_{j=k}^{n}\binom nj\big[ju^{j-1}(1-u)^{n-j}-(n-j)u^j(1-u)^{n-j-1}\big].
-\]
-Using $j\binom nj=n\binom{n-1}{j-1}$ and $(n-j)\binom nj=n\binom{n-1}{j}$, the sum telescopes: the positive term for index $j$ is $n\binom{n-1}{j-1}u^{j-1}(1-u)^{n-j}$ and the negative term for index $j-1$ is $n\binom{n-1}{j-1}u^{j-1}(1-u)^{n-j}$, so all terms cancel except the positive term for $j=k$ (the negative term for $j=n$ is zero). Therefore $G'(u)=n\binom{n-1}{k-1}u^{k-1}(1-u)^{n-k}=f_{k,n}(u)$, since $n\binom{n-1}{k-1}=n!/((k-1)!(n-k)!)$. The moments follow from $\int_0^1u^{a-1}(1-u)^{b-1}du=\Gamma(a)\Gamma(b)/\Gamma(a+b)$: $\E U_{(k)}=\frac{n!}{(k-1)!(n-k)!}\cdot\frac{k!(n-k)!}{(n+1)!}=\frac{k}{n+1}$, and $\E U_{(k)}^2=\frac{k(k+1)}{(n+1)(n+2)}$, whence the variance.
-\end{proof}
+Proof in Appendix~\ref{app:proofs}, Section~\ref{appB:orderstat}.
 
 \begin{theorem}[Conditional coverage of split conformal; \cite{vovk2012}]\label{thm:prelim-beta}
 Let $S_1,\dots,S_n$ be i.i.d.\ with continuous distribution function $F_P$, independent of $S_0\sim P$, and let $\hat q=S_{(k)}$ with $k\le n$. Then the conditional coverage
@@ -849,17 +815,7 @@ Let $X\sim\mathrm{Bin}(n,u)$ and $k/n>u$. Then
 where $\mathrm{kl}(p,q):=p\log\frac pq+(1-p)\log\frac{1-p}{1-q}$.
 \end{lemma}
 
-\begin{proof}
-For $\lambda>0$, Markov's inequality applied to $e^{\lambda X}$ gives $\Prob(X\ge k)\le e^{-\lambda k}\E e^{\lambda X}=e^{-\lambda k}(1-u+ue^{\lambda})^n$. With $p:=k/n$ the exponent per trial is $\phi(\lambda):=-\lambda p+\log(1-u+ue^{\lambda})$, minimised where $\phi'(\lambda)=0$, that is $ue^\lambda/(1-u+ue^\lambda)=p$, or $e^\lambda=p(1-u)/(u(1-p))$, which is $>1$ because $p>u$. Substituting, $1-u+ue^\lambda=(1-u)/(1-p)$ and
-\[
-\phi(\lambda^*)=-p\log\frac{p(1-u)}{u(1-p)}+\log\frac{1-u}{1-p}=-p\log\frac pu-(1-p)\log\frac{1-p}{1-u}=-\mathrm{kl}(p,u),
-\]
-which gives the first inequality. For the second, fix $p$ and set $h(q):=\mathrm{kl}(p,q)-2(p-q)^2$ for $q\in(0,p]$. Then $h(p)=0$ and
-\[
-h'(q)=-\frac pq+\frac{1-p}{1-q}+4(p-q)=\frac{q-p}{q(1-q)}+4(p-q)=(p-q)\Big(4-\frac1{q(1-q)}\Big)\le0,
-\]
-because $q(1-q)\le1/4$. So $h$ is non-increasing on $(0,p]$ and $h(q)\ge h(p)=0$ for $q\le p$; that is, $\mathrm{kl}(p,q)\ge2(p-q)^2$ (Pinsker's inequality for two Bernoulli laws).
-\end{proof}
+Proof in Appendix~\ref{app:proofs}, Section~\ref{appB:hoeffding}.
 
 \begin{corollary}[Explicit lower bound on the Beta quantile]\label{cor:prelim-beta-bound}
 For $k=\lceil(1-\alpha)(n+1)\rceil\le n$ and $\delta\in(0,1)$,
@@ -934,17 +890,7 @@ Let $X,Y$ be random elements of Polish spaces $E_X,E_Y$ with joint law $P_{XY}$ 
 where $\dTV(\mu,\nu):=\sup_C|\mu(C)-\nu(C)|$ over measurable $C$ and $P_{Y|X}$ is a regular conditional law of $Y$ given $X$. Moreover $\alpha(\mathcal A,\mathcal B)\le\beta(\mathcal A,\mathcal B)$.
 \end{lemma}
 
-\begin{proof}
-Write $\mu:=P_{XY}$ and $\pi:=P_X\otimes P_Y$ on $E_X\times E_Y$. For a finite partition $\{A_i\}$ of $E_X$ and $\{B_j\}$ of $E_Y$, the sum $\tfrac12\sum_{i,j}|\mu(A_i\times B_j)-\pi(A_i\times B_j)|$ is $\tfrac12$ of the $\ell^1$ distance between the two laws restricted to the finite algebra generated by the rectangles; its supremum over partitions equals $\tfrac12\|\mu-\pi\|$, the total variation norm of the signed measure $\mu-\pi$, because the rectangles generate the product $\sigma$-field and the total variation norm of a finite signed measure is the supremum of its $\ell^1$ norm over finite measurable partitions of any generating algebra (approximate the Hahn decomposition sets by sets in the algebra). And $\tfrac12\|\mu-\pi\|=\sup_C|\mu(C)-\pi(C)|=\dTV(\mu,\pi)$, the supremum attained at a Hahn set. This is the first equality.
-
-For the second, disintegrate: for measurable $C\subseteq E_X\times E_Y$ with sections $C_x:=\{y:(x,y)\in C\}$,
-\[
-\mu(C)-\pi(C)=\int_{E_X}\big[P_{Y|X=x}(C_x)-P_Y(C_x)\big]P_X(dx)\le\int_{E_X}\dTV\big(P_{Y|X=x},P_Y\big)P_X(dx),
-\]
-giving $\dTV(\mu,\pi)\le\E\,\dTV(P_{Y|X},P_Y)$. For the reverse inequality let $m_x:=\tfrac12(P_{Y|X=x}+P_Y)$, with densities $p_x:=dP_{Y|X=x}/dm_x$ and $\bar p_x:=dP_Y/dm_x$, chosen jointly measurable in $(x,y)$, and set $C:=\{(x,y):p_x(y)>\bar p_x(y)\}$. Then $P_{Y|X=x}(C_x)-P_Y(C_x)=\int(p_x-\bar p_x)^+dm_x=\dTV(P_{Y|X=x},P_Y)$ for every $x$, and integrating gives equality.
-
-Finally $\alpha\le\beta$: for $A\in\sigma(X)$, $B\in\sigma(Y)$, write $A=\{X\in A'\}$, $B=\{Y\in B'\}$; then $|\Prob(A\cap B)-\Prob(A)\Prob(B)|=|\mu(A'\times B')-\pi(A'\times B')|\le\dTV(\mu,\pi)$.
-\end{proof}
+Proof in Appendix~\ref{app:proofs}, Section~\ref{appB:betatv}.
 
 \begin{definition}[Mixing coefficients of a process]\label{def:prelim-mixing}
 For a process $(X_t)_{t\in\mathbb Z}$ (or $t\in\N$) let $\mathcal F_{-\infty}^{t}:=\sigma(X_s:s\le t)$ and $\mathcal F_{t}^{\infty}:=\sigma(X_s:s\ge t)$. The $\alpha$- and $\beta$-mixing coefficients at lag $k\ge1$ are
@@ -1019,28 +965,7 @@ Let $X$ and $Y$ be random elements of Polish spaces $E_X$ and $E_Y$ on $(\Omega,
 \end{enumerate}
 \end{lemma}
 
-\begin{proof}
-Let $P_{Y|X=x}$ be a regular conditional law of $Y$ given $X=x$, which exists because $E_Y$ is Polish, and let $P_Y$ be the law of $Y$. As in the proof of Lemma~\ref{lem:prelim-beta-tv} put $m_x:=\tfrac12(P_{Y|X=x}+P_Y)$, $p_x:=dP_{Y|X=x}/dm_x$, $\bar p_x:=dP_Y/dm_x$, jointly measurable in $(x,y)$ and bounded by $2$, and let $t(x):=\dTV(P_{Y|X=x},P_Y)=\int(\bar p_x-p_x)^+dm_x=\int(p_x-\bar p_x)^+dm_x$, the two integrals being equal because both densities integrate to $1$. Lemma~\ref{lem:prelim-beta-tv} gives $\E\,t(X)=\beta$.
-
-Define the acceptance probability $a(x,y):=\min\{1,\bar p_x(y)/p_x(y)\}$ on $\{p_x>0\}$, which is where $Y$ lives given $X=x$, and the excess law $\mathcal E_x(dy):=(\bar p_x(y)-p_x(y))^+m_x(dy)/t(x)$ when $t(x)>0$, an arbitrary fixed law otherwise. Write $U=(U_1,U_2)$ for two independent uniforms extracted from the binary digits of $U$, and let $\psi:[0,1]\times E_X\to E_Y$ be a measurable map with $\psi(U_2,x)\sim\mathcal E_x$ for each $x$, which exists by the Borel isomorphism theorem (a Polish space is Borel-isomorphic to a Borel subset of $[0,1]$, on which the quantile transform applies) together with measurability of $x\mapsto\mathcal E_x$. Set
-\[
-Y^*:=\begin{cases}Y,&U_1\le a(X,Y),\\ \psi(U_2,X),&U_1>a(X,Y).\end{cases}
-\]
-
-(i)--(ii) Condition on $X=x$. For measurable $A\subseteq E_Y$,
-\begin{align*}
-\Prob(Y^*\in A\mid X=x)&=\int_A a(x,y)\,p_x(y)\,m_x(dy)+\Prob(U_1>a(x,Y)\mid X=x)\,\mathcal E_x(A)\\
-&=\int_A\min\{p_x,\bar p_x\}\,dm_x+\Big(\int(p_x-\bar p_x)^+dm_x\Big)\frac{\int_A(\bar p_x-p_x)^+dm_x}{t(x)}\\
-&=\int_A\big[\min\{p_x,\bar p_x\}+(\bar p_x-p_x)^+\big]dm_x=\int_A\bar p_x\,dm_x=P_Y(A),
-\end{align*}
-where $\Prob(U_1>a(x,Y)\mid X=x)=\int(1-a(x,y))p_x(y)m_x(dy)=\int(p_x-\bar p_x)^+dm_x=t(x)$ was used. The conditional law of $Y^*$ given $X=x$ is $P_Y$ for every $x$: $Y^*$ has law $P_Y$ and is independent of $X$.
-
-(iii) $\{Y\ne Y^*\}\subseteq\{U_1>a(X,Y)\}$, so $\Prob(Y\ne Y^*)\le\E\,t(X)=\beta$. Conversely, for any random element $Y'$ independent of $X$ with law $P_Y$ and any measurable $C\subseteq E_X\times E_Y$,
-\[
-\big|\Prob((X,Y)\in C)-(P_X\otimes P_Y)(C)\big|=\big|\Prob((X,Y)\in C)-\Prob((X,Y')\in C)\big|\le\Prob(Y\ne Y'),
-\]
-so $\Prob(Y\ne Y')\ge\dTV(P_{XY},P_X\otimes P_Y)=\beta$ by Lemma~\ref{lem:prelim-beta-tv}. Hence $\Prob(Y\ne Y^*)=\beta$, and no coupling does better.
-\end{proof}
+Proof in Appendix~\ref{app:proofs}, Section~\ref{appB:berbee}.
 
 With $X$ constant the construction gives the maximal coupling of two laws: for laws $\mu,\nu$ on a Polish space there exist $V\sim\mu$ and $V^*\sim\nu$ on a common space with $\Prob(V\ne V^*)=\dTV(\mu,\nu)$. We use this form in the next lemma.
 
@@ -1056,17 +981,7 @@ and on an enlarged space there exist independent $X_1^*,\dots,X_m^*$ with $X_j^*
 If the $X_j$ are blocks of a $\beta$-mixing process separated pairwise by time gaps of at least $b$, then $\beta_j\le\beta(b)$ for every $j$ and the bounds read $(m-1)\beta(b)$.
 \end{lemma}
 
-\begin{proof}
-Write $\mu_j$ for the law of $(X_1,\dots,X_j)$ and $\lambda_j$ for the law of $X_j$. We prove \eqref{eq:prelim-yu-tv} by induction on $m$; for $m=1$ both sides are $0$. For the step, insert the intermediate law $\mu_{m-1}\otimes\lambda_m$ and use the triangle inequality:
-\[
-\dTV\Big(\mu_m,\bigotimes_{j\le m}\lambda_j\Big)\le\dTV\big(\mu_m,\mu_{m-1}\otimes\lambda_m\big)+\dTV\Big(\mu_{m-1}\otimes\lambda_m,\Big(\bigotimes_{j<m}\lambda_j\Big)\otimes\lambda_m\Big).
-\]
-The first term is $\beta(\sigma(X_1,\dots,X_{m-1}),\sigma(X_m))\le\beta_m$ by Lemma~\ref{lem:prelim-beta-tv}. For the second we use that total variation is unchanged by tensoring with a common factor: for laws $\mu,\nu$ on $E$ and $\lambda$ on $E'$, $\dTV(\mu\otimes\lambda,\nu\otimes\lambda)=\dTV(\mu,\nu)$. Indeed, for measurable $C\subseteq E\times E'$, $(\mu\otimes\lambda)(C)-(\nu\otimes\lambda)(C)=\int_{E'}[\mu(C^{z})-\nu(C^{z})]\lambda(dz)\le\dTV(\mu,\nu)$ with $C^z:=\{x:(x,z)\in C\}$, and taking $C=A\times E'$ gives the reverse inequality. So the second term is $\dTV(\mu_{m-1},\bigotimes_{j<m}\lambda_j)\le\sum_{j=2}^{m-1}\beta_j$ by the induction hypothesis, and \eqref{eq:prelim-yu-tv} follows.
-
-For \eqref{eq:prelim-yu-coupling}, apply the maximal coupling to the two laws in \eqref{eq:prelim-yu-tv} on the product space $E_1\times\dots\times E_m$: there is $(X_1^*,\dots,X_m^*)$ with law $\bigotimes_j\lambda_j$, so the $X_j^*$ are independent with the right marginals, and $\Prob((X_1,\dots,X_m)\ne(X_1^*,\dots,X_m^*))=\dTV\le\sum_{j\ge2}\beta_j$. The event that some coordinate differs is exactly the event that the vectors differ.
-
-For blocks of a $\beta$-mixing process, if the block $X_j$ occupies times in $[u_j,v_j]$ and the earlier blocks lie in $(-\infty,u_j-b-1]$, then $\sigma(X_1,\dots,X_{j-1})\subseteq\mathcal F_{-\infty}^{u_j-b-1}$ and $\sigma(X_j)\subseteq\mathcal F_{u_j}^{\infty}$, whose separation is $b+1$; Lemma~\ref{lem:prelim-inherit} and monotonicity of $\beta(\cdot)$ give $\beta_j\le\beta(b+1)\le\beta(b)$.
-\end{proof}
+Proof in Appendix~\ref{app:proofs}, Section~\ref{appB:yu}.
 
 \begin{remark}[The proof in \cite{yu1994}]\label{rem:prelim-yu-original}
 Yu's Lemma 4.1 states \eqref{eq:prelim-yu-tv} for blocks of a stationary $\beta$-mixing sequence and proves it by the same induction; the passage to the coupling statement \eqref{eq:prelim-yu-coupling} through the maximal coupling is standard and is how the lemma is used in \cite{oliveira2024}. An alternative proof constructs the $X_j^*$ one at a time with Lemma~\ref{lem:prelim-berbee}, coupling $X_j$ to a copy independent of $(X_1,\dots,X_{j-1})$ and hence of the previously constructed $(X_1^*,\dots,X_{j-1}^*)$, which are functions of the earlier $X$'s and of independent randomisation; the union bound over the $m-1$ coupling failures gives the same total. The cost is $(m-1)\beta(b)$, not $2(m-1)\beta(b)$ or $m\beta(b)$: the first block needs no coupling. In Chapter~\ref{ch:certification} the coupled objects are the fitting sample $\Dfit$, the $n$ calibration blocks and the deployment block, $m=n+2$ objects, so the cost is $(n+1)\beta(b)$. This is the number the ground-truth document records, and the lesson in the lessons file.
@@ -1170,17 +1085,7 @@ For laws $P,Q$ on $\R$ with finite first moments,
 and the infimum in Definition~\ref{def:prelim-W} is attained by the quantile coupling $(F_P^{-1}(U),F_Q^{-1}(U))$ with $U$ uniform on $(0,1)$.
 \end{theorem}
 
-\begin{proof}
-\emph{Lower bound for every coupling.} For real $a,b$, $|a-b|=\int_{\R}|\ind{a\le x}-\ind{b\le x}|\,dx$: the integrand is $1$ exactly when $x$ lies in $[\min(a,b),\max(a,b))$, an interval of length $|a-b|$. Let $(X,Y)$ be any coupling. By Tonelli's theorem, since the integrand is non-negative,
-\[
-\E|X-Y|=\int_{\R}\E\big|\ind{X\le x}-\ind{Y\le x}\big|\,dx\;\ge\;\int_{\R}\big|\E\ind{X\le x}-\E\ind{Y\le x}\big|\,dx=\int_{\R}|F_P(x)-F_Q(x)|\,dx,
-\]
-using $|\E Z|\le\E|Z|$ pointwise in $x$. Hence $\Wone(P,Q)\ge\int|F_P-F_Q|$.
-
-\emph{The quantile coupling attains it.} Let $X:=F_P^{-1}(U)$ and $Y:=F_Q^{-1}(U)$; by Lemma~\ref{lem:prelim-pit} this is a coupling of $P$ and $Q$. By the Galois inequality in the proof of that lemma, $\{X\le x\}=\{U\le F_P(x)\}$ and $\{Y\le x\}=\{U\le F_Q(x)\}$. For fixed $x$ these two events are nested: if $F_P(x)\le F_Q(x)$ then $\{U\le F_P(x)\}\subseteq\{U\le F_Q(x)\}$, and the other way round otherwise. For nested events the indicator difference has constant sign, so $\E|\ind{X\le x}-\ind{Y\le x}|=|\Prob(X\le x)-\Prob(Y\le x)|=|F_P(x)-F_Q(x)|$. Integrating over $x$ with Tonelli as before, $\E|X-Y|=\int|F_P-F_Q|\,dx$, so the lower bound is attained and the first equality of \eqref{eq:prelim-w1-identity} holds.
-
-\emph{The quantile form.} $\E|F_P^{-1}(U)-F_Q^{-1}(U)|=\int_0^1|F_P^{-1}(u)-F_Q^{-1}(u)|\,du$ is the same expectation written out, which gives the second equality. Finiteness of all three quantities follows from the finite first moments: $\int|F_P-F_Q|\le\int(1-F_P)+\int(1-F_Q)$ over $[0,\infty)$ plus the analogous integrals of $F_P,F_Q$ over $(-\infty,0]$, each equal to a partial first absolute moment.
-\end{proof}
+Proof in Appendix~\ref{app:proofs}, Section~\ref{appB:w1}.
 
 The identity converts every statement about $\Wone$ between one-dimensional laws into a statement about the $L^1$ distance between their distribution functions, and it is why one-dimensional Wasserstein theory is so much more explicit than the general case. Ground-truth Proposition~7, proved in Chapter~\ref{ch:certification}, is a two-line consequence: a Kolmogorov gap of size $d$ at a point forces, when $F_Q$ is $L$-Lipschitz, a triangle of area $d^2/(2L)$ under $|F_P-F_Q|$.
 
