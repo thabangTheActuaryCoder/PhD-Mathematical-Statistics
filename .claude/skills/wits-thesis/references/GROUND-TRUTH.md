@@ -6,7 +6,7 @@ Source of record: `"~/Desktop/PhD Thesis/Council" Workspace/13-mathematics-3yr.t
 | Result (ground-truth numbering) | Status | Chapter |
 |---|---|---|
 | Lemma 1 time-changed SABR | cited, proof written in full | 2 |
-| Prop 2 non-decaying vol-of-vol | derivation, write in full | 2 |
+| Prop 2 non-decaying vol-of-vol | derivation, write in full; CORRECTED 2026-09-09: no material curvature understatement (0.002 bp), the 17% figure referred to total variance only | 2 |
 | Thm 3 identified/unidentified components | TARGET, route only | 5 |
 | Thm 4 two models | corollary, proof can be written given Thm 3 | 5 |
 | Prop 5 tenor consistency | part (a) provable, (b) leading-order, (c) remark | App A |
@@ -29,3 +29,5 @@ Source of record: `"~/Desktop/PhD Thesis/Council" Workspace/13-mathematics-3yr.t
 10. The deficit sqrt(b/N) + N b^{-(r+1)} is the expected calibration-conditional shortfall from Theorem 6(ii); Theorem 6(i) has no sqrt(b/N) term. Quote the exact minimiser (2(r+1))^{2/(2r+3)} N^{3/(2r+3)}, never the bare balance N^{3/(2r+3)}.
 11. The minimax object of Theorem 9 is the TWO-SIDED calibration-conditional coverage error |F_P(T) - (1-alpha)| at confidence delta over B_r; one-sided deficit over all procedures is degenerate (T = +infinity). Marginal coverage is left to Barber and Pananjady (2026); their Theorem 2 is a lower bound for split conformal only.
 12. Cite Barber and Pananjady (2026) and Halkiewicz (2026) wherever Theorem 9 or Theorem 6(i) is discussed. Halkiewicz's lower bound is drift-driven; Theorem 9(iii) is mixing-driven. Never claim the first optimal-design result for conformal prediction under dependence.
+
+13. Proposition 2: the "17% curvature understatement" is withdrawn. Total vol-of-vol variance exceeds the time-changed value by (2/3) nu^2 Delta, but the smile-relevant effective parameters differ by 0.013% (nu_eff^2) and 0.12% (rho_eff nu_eff), about 0.002 bp on the smile. Never claim Lemma 1 understates curvature.

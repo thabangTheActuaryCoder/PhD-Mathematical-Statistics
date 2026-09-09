@@ -45,7 +45,7 @@
 \maketitle
 
 \begin{abstract}
-\noindent This document states every mathematical result the thesis promises, at proposal precision: hypotheses, statement, proof route, failure mode. It is the second version. The first version was put before three reviewers acting as a mathematical statistician, a mathematical finance theorist and a doctoral examiner; their corrections are incorporated and marked in the margin. Two corrections were structural. First, the direction of the identifiability argument in the finance half was reversed: the unidentified correlations contaminate the observed JIBAR smile, not the target compounded-rate smile. Second, the statistics half as first drafted assembled known results and would not carry a mathematical-statistics doctorate; a new theorem on optimal block length with a matching minimax lower bound (Theorem~\ref{thm:block}) is now the spine. The final section re-cuts the programme to thirty-six months.
+\noindent This document states every mathematical result the thesis promises, at proposal precision: hypotheses, statement, proof route, failure mode. It is the third version. The first version was put before three reviewers acting as a mathematical statistician, a mathematical finance theorist and a doctoral examiner; their corrections are incorporated and marked in the margin. Two corrections were structural. First, the direction of the identifiability argument in the finance half was reversed: the unidentified correlations contaminate the observed JIBAR smile, not the target compounded-rate smile. Second, the statistics half as first drafted assembled known results and would not carry a mathematical-statistics doctorate; a new theorem on the calibration-conditional coverage error over a mixing class, with the optimal block length of the blocked route as its first part (Theorem~\ref{thm:block}), is now the spine. The third version corrects Theorem~\ref{thm:block} after a literature scan: the blocked rate $N^{-r/(2r+3)}$ of the second version is not minimax in any coverage formulation (Barber and Pananjady 2026; part~(ii) below), and the theorem is restated for the calibration-conditional coverage error at confidence $\delta$, where mixing is provably the binding constraint. The final section re-cuts the programme to thirty-six months.
 \end{abstract}
 
 \section*{Summary of council corrections}
@@ -54,7 +54,7 @@
 \toprule
 Result & Change forced by review \\
 \midrule
-Lemma~\ref{lem:tc} & Same-$g$ scaling is valid without Dambis--Dubins--Schwarz; linear $g$ and the factor $\Delta/3$ are assumptions, not theorems. Non-decaying vol-of-vol added as Proposition~\ref{prop:novol}. \\
+Lemma~\ref{lem:tc} & Same-$g$ scaling is valid without Dambis--Dubins--Schwarz; linear $g$ and the factor $\Delta/3$ are assumptions, not theorems. Non-decaying vol-of-vol added as Proposition~\ref{prop:novol}; its claimed 17\% curvature understatement was wrong (total variance is not the smile) and is corrected to a $0.002$ bp effect. \\
 Theorem~\ref{thm:ident} & JIBAR caplet is priced under $\Q^{T+\Delta}$, not $\Q^{T}$; the in-advance/in-arrears convexity term does not exist and is deleted. Basis correlations enter the JIBAR smile, not the compounded caplet. Two unidentified correlations, not one. Expansion parameter redefined. \\
 Theorem~\ref{thm:two} & Becomes a corollary of Theorem~\ref{thm:ident}; difference is at the money, not wing-only; rank condition is trivial. Demoted from difficulty 4 to 2--3. \\
 Proposition~\ref{prop:tenor} & ``Static arbitrage'' replaced by ``model inconsistency''; exact only for normal SABR with equal volatilities; otherwise leading order in variance. Demoted to proposition, appendix in the three-year plan. \\
@@ -62,7 +62,7 @@ Theorem~\ref{thm:cov} & Coupling cost $(n+1)\beta(b)$, not $2n\beta(b)$; deploym
 Proposition~\ref{prop:w1} & The first version was false (counterexample: point mass versus narrow uniform). Correct bound is $\sqrt{2LW_1}$; plug-in rate $n^{-1/4}$; the dependent-data version of the empirical $W_1$ bound is currently missing. \\
 Theorem~\ref{thm:sharp} & $\delta_{+\infty}$ is not a measure on $\R$; construction replaced; the sharp constant is $1$, not $1-\alpha$; the argument is adversarial, not Le Cam. \\
 First-draft bootstrap theorem & Dropped as a theorem. Empirical comparison with block bootstrap retained. \\
-Theorem~\ref{thm:block} & \textbf{New.} Optimal block length and minimax rate over a mixing class. This is the doctoral theorem. \\
+Theorem~\ref{thm:block} & \textbf{New in the second version; corrected in the third.} The claimed minimax rate $N^{-r/(2r+3)}$ was false: Barber and Pananjady (2026) obtain the marginal deficit $N^{-r/(r+1)}$ over $\mathcal B_r$ without blocking, and the unblocked sample quantile has conditional coverage error $N^{-1/2}$ for every $r>1$. The deficit $\sqrt{b/N}+Nb^{-(r+1)}$ comes from Theorem~\ref{thm:cov}(ii), not (i). Exact minimiser $(2(r+1))^{2/(2r+3)}N^{3/(2r+3)}$ added. Restated as the minimax calibration-conditional coverage error at confidence $\delta$ over $\mathcal B_r$, with a mixing-driven lower bound; positioned against Halkiewicz (2026), whose lower bound is drift-driven. This is the doctoral theorem. \\
 \bottomrule
 \end{tabular}
 \end{center}
@@ -108,8 +108,18 @@ Because $\tau$ is deterministic, $(\int_0^t g\,dW,\int_0^t g\,dZ)$ is a correlat
 \end{proof}
 
 \begin{proposition}[Non-decaying vol-of-vol; \target]\label{prop:novol}
-If instead $d\alpha_t=\nu\alpha_t\,dZ_t$ (vol-of-vol does not run off, the physically defensible choice), then in the clock $\tau$ the vol-of-vol is $\nu/g(\tau^{-1}(u))$ and no closed form exists. The caplet is approximated by Hagan--Lesniewski--Woodward effective parameters $(\rho_{\mathrm{eff}},\nu_{\mathrm{eff}})$; relative to Lemma~\ref{lem:tc} the total vol-of-vol variance is $\nu^2(T+\Delta)$ rather than $\nu^2(T+\Delta/3)$, so Lemma~\ref{lem:tc} understates smile curvature by $\tfrac{2}{3}\nu^2\Delta$ (about 17\% for $T=1$y, $\Delta=3$m).
+If instead $d\alpha_t=\nu\alpha_t\,dZ_t$ (vol-of-vol does not run off, the physically defensible choice), then in the clock $\tau$ the vol-of-vol is $\nu/g(\tau^{-1}(u))$ and no closed form exists.
+\begin{enumerate}[nosep,label=(\roman*)]
+\item (Total variance.) The total vol-of-vol variance is $\nu^2(T+\Delta)$ rather than $\nu^2(T+\Delta/3)$: an excess of $\tfrac23\nu^2\Delta$, which is $15.4\%$ of $\nu^2\tau^*$ and $16.7\%$ of $\nu^2T$ for $T=1$y, $\Delta=3$m. This quantity is the variance of $\log\alpha_{T+\Delta}$; it does not by itself determine the smile.
+\item (Smile-relevant effective parameters.) At leading order the Hagan--Lesniewski--Woodward effective parameters, computed in calendar time with $du=g^2\,dt$ and $\int_T^{T+\Delta}g^{2k}\,dt=\Delta/(2k+1)$, satisfy
+\[
+\frac{\nu_{\mathrm{eff}}^2}{\nu^2}=1+\frac{2\Delta^3/567}{\tau^{*3}/3}=1.00013,\qquad \frac{\rho_{\mathrm{eff}}\nu_{\mathrm{eff}}}{\rho\nu}=1+\frac{\Delta^2/90}{\tau^{*2}/2}=1.0012
+\]
+for $T=1$y, $\Delta=3$m, so the two variants agree to about $0.002$ bp at $\pm50$ bp from the money. Lemma~\ref{lem:tc} does not understate smile curvature in any material way.
+\end{enumerate}
 \end{proposition}
+\corr{the second version claimed a 17\% curvature understatement by identifying curvature with total vol-of-vol variance; the forward-measures referee showed the smile-relevant effective parameters differ by $0.013\%$ and $0.12\%$, confirmed numerically by the rates code. Whether the leading-order weights coincide with Hagan et al.\ (2002), Appendix B, is a librarian task.}
+
 \begin{remark}
 Neither result is a contribution. Lemma~\ref{lem:tc} is cited; Proposition~\ref{prop:novol} is a two-page derivation in Chapter~2 and fixes which variant the empirical chapters use.
 \end{remark}
@@ -192,7 +202,7 @@ If $Q$ has a density bounded by $L$ (no assumption on $P$), then for all $x$, $F
 \begin{proof}
 Let $D=F_P-F_Q$. If $D(x_0)=d>0$ then, since $F_P$ is non-decreasing and $F_Q$ is $L$-Lipschitz, $D(x)\ge d-L(x-x_0)$ on $[x_0,x_0+d/L]$, whence $W_1(P,Q)=\int|D|\ge d^2/(2L)$. The $W_\infty$ bound uses the monotone coupling: $F_P(x)\le F_Q(x+W_\infty)\le F_Q(x)+LW_\infty$.
 \end{proof}
-\corr{the first version claimed $|F_P-F_Q|\le LW_1$, which is false: $P=\delta_0$, $Q=U[0,1/L]$ has $W_1=1/(2L)$ and CDF gap $1$. With the square-root form the plug-in penalty decays at $n^{-1/4}$, not $n^{-1/2}$. The i.i.d.\ rate $\E W_1(P_n,P)\le n^{-1/2}J_1(P)$ is Bobkov--Ledoux (2019) in $d=1$; deployment scores are dependent, so a $\beta$-mixing version (Dedecker--Merlev\`ede type) is needed and is part of Theorem~\ref{thm:block}(iii). $L$ is an assumption on the unobserved $Q$ and is stated as such.}
+\corr{the first version claimed $|F_P-F_Q|\le LW_1$, which is false: $P=\delta_0$, $Q=U[0,1/L]$ has $W_1=1/(2L)$ and CDF gap $1$. With the square-root form the plug-in penalty decays at $n^{-1/4}$, not $n^{-1/2}$. The i.i.d.\ rate $\E W_1(P_n,P)\le n^{-1/2}J_1(P)$ is Bobkov--Ledoux (2019) in $d=1$; deployment scores are dependent, so a $\beta$-mixing version (Dedecker--Merlev\`ede type) is needed and is part of Theorem~\ref{thm:block}(v). $L$ is an assumption on the unobserved $Q$ and is stated as such.}
 
 \begin{theorem}[Sharpness of the drift penalty]\label{thm:sharp}
 Let $T$ be any threshold procedure independent of the deployment score, and $C_T(R):=\Prob_{S\sim R}(S\le T)$. For every $P$ with continuous distribution function and every $\varepsilon\in(0,1)$:
@@ -208,25 +218,47 @@ For split conformal, $\Prob(F_P(T)<\varepsilon)=\Prob(\Beta(k,n+1-k)<\varepsilon
 \begin{proof}
 (a) is the definition of total variation applied to the event $\{S\le T\}$ conditional on $T$. (b) Under $Q_M$, mass $\varepsilon$ that $P$ placed below every plausible threshold now sits at $M$; if $T<M$ and $F_P(T)\ge\varepsilon$, coverage falls by exactly $\varepsilon$. The two correction terms cover the complementary events.
 \end{proof}
-\corr{$\delta_{+\infty}$ is not a probability measure on $\R$. The far-mass construction $(1-\varepsilon)P+\varepsilon\delta_M$ gives only $(1-\varepsilon)C_T(P)$, which is weaker and sharp only for degenerate procedures. Moving mass from the bottom of $P$ to a far point is what attains the constant $1$. Since $Q$ is never observed, this is a direct adversarial construction, not Le Cam's method; Le Cam enters only in Theorem~\ref{thm:block}(ii) where deployment scores are partially observed.}
+\corr{$\delta_{+\infty}$ is not a probability measure on $\R$. The far-mass construction $(1-\varepsilon)P+\varepsilon\delta_M$ gives only $(1-\varepsilon)C_T(P)$, which is weaker and sharp only for degenerate procedures. Moving mass from the bottom of $P$ to a far point is what attains the constant $1$. Since $Q$ is never observed, this is a direct adversarial construction, not Le Cam's method; Le Cam enters only in Theorem~\ref{thm:block}(iv) where deployment scores are partially observed.}
 
-\begin{theorem}[Optimal block length and minimax rate; \target, the doctoral theorem]\label{thm:block}
-Fix the mixing class $\mathcal B_r:=\{\beta(k)\le Ck^{-r}\}$, $r>1$, and a calibration record of $N$ periods. Any blocking scheme with block length $b$ and gaps $b$ yields $n\asymp N/(2b)$ blocks, and by Theorem~\ref{thm:cov}(i) its coverage deficit (excluding drift) is
-\[
-\mathcal E(b,N)\;\asymp\;\sqrt{b/N}\;+\;N\,b^{-(r+1)} .
-\]
+\begin{theorem}[Calibration-conditional coverage error over a mixing class: optimal blocking and minimax rate; \target, the doctoral theorem]\label{thm:block}
+Fix the mixing class $\mathcal B_r:=\{\beta(k)\le Ck^{-r}\}$, $r>1$, and a calibration record of $N$ periods, stationary on the record with continuous marginal score law $P$; write $F_N$ for the empirical distribution function of the $N$ scores. A \emph{threshold procedure} is any measurable $T=T(S_{1:N})$. Its \emph{conditional coverage error} is $\mathcal E(T):=|F_P(T)-(1-\alpha)|$, the error in the coverage $F_P(T)$ received by a deployment score independent of the record; the deployment gap and its coupling cost are handled as in Theorem~\ref{thm:cov} and are excluded here, as is drift. The error is two-sided because the one-sided deficit is degenerate over all procedures ($T=+\infty$ has deficit zero); over-coverage is the efficiency loss. The \emph{coverage error at confidence $\delta$} is $\mathcal E_\delta(T):=\inf\{\varepsilon:\Prob(\mathcal E(T)>\varepsilon)\le\delta\}$ and the minimax value is $\mathcal E^*_\delta(N,r):=\inf_T\sup_{\mathcal B_r}\mathcal E_\delta(T)$.
 \begin{enumerate}[nosep,label=(\roman*)]
-\item (Upper bound.) The minimiser is $b^*\asymp N^{3/(2r+3)}$, giving $\mathcal E(b^*,N)\asymp N^{-r/(2r+3)}$.
-\item (Lower bound.) There exist processes in $\mathcal B_r$ (hidden-regime constructions) for which no threshold procedure based on $N$ calibration periods achieves deficit smaller than $c\,N^{-r/(2r+3)}$. Hence the rate is minimax over $\mathcal B_r$. When $m$ deployment scores are additionally observed, the minimax certifiable deficit over $\{Q:\dK(P,Q)\le\varepsilon\}$ is obtained adaptively in unknown $\varepsilon$ by Le Cam's two-point method on the observed deployment sample.
-\item (Dependent empirical $W_1$.) For $\beta$-mixing scores with $\beta\in\mathcal B_r$, $\E\,W_1(Q_m,Q)\le c_r\,m^{-1/2}J_1(Q)$ with an explicit $c_r$, closing the gap left in Proposition~\ref{prop:w1}.
+\item (Optimal block length for the blocked route; provable.) Blocks of length $b$ with gaps $b$ give $n=\lfloor N/(2b)\rfloor$ blocks. By Theorem~\ref{thm:cov}(ii), the $\Beta(k,n+1-k)$ law of $F_P(\hat q)$ on the coupling event integrated over the confidence level, the expected conditional shortfall of $\hat q=S_{(k)}$ obeys
+\[
+\E\big[(1-\alpha-F_P(\hat q))^+\big]\;\le\;\frac{1}{2\sqrt{n+2}}+(n+1)\beta(b)\;\le\;\sqrt{\frac{b}{2N}}+C\,N\,b^{-(r+1)}\qquad(2\le b\le N/2),
+\]
+so that, up to the constants $1/\sqrt2$ and $C$, the bound is $f(b):=\sqrt{b/N}+Nb^{-(r+1)}$. The exact minimiser of $f$ is
+\[
+b^*=(2(r+1))^{2/(2r+3)}\,N^{3/(2r+3)},\qquad f(b^*)=\frac{2r+3}{2(r+1)}\,(2(r+1))^{1/(2r+3)}\,N^{-r/(2r+3)},
+\]
+with $f(b^*)=1.51\,N^{-r/(2r+3)}$ and $b^*=23.9$ at $r=2$, $N=500$; the bare balance $\sqrt{b/N}=Nb^{-(r+1)}$ gives $N^{3/(2r+3)}=14.3$ and is not the minimiser.
+\item (The blocked rate is not minimax; provable.) Since $|\Cov(\mathbf 1\{S_0\le x\},\mathbf 1\{S_k\le x\})|\le\alpha(k)\le\beta(k)$, $\operatorname{Var}F_N(x)\le(\tfrac14+2C\zeta(r))/N$ for every $x$, and the unblocked sample quantile $T_N:=S_{(\lceil(1-\alpha)N\rceil)}$ of the whole record satisfies, for every $\varepsilon>0$,
+\[
+\Prob\big(|F_P(T_N)-(1-\alpha)|>\varepsilon\big)\;\le\;\frac{\tfrac12+4C\zeta(r)}{N\varepsilon^{2}},\qquad\text{hence}\qquad \mathcal E_\delta(T_N)\;\le\;\sqrt{\frac{\tfrac12+4C\zeta(r)}{N\delta}} .
+\]
+I.i.d.\ scores lie in every $\mathcal B_r$, and the two-point argument for them gives $\mathcal E^*_\delta(N,r)\ge c_\delta N^{-1/2}$. At fixed $\delta$ the minimax rate over $\mathcal B_r$ is therefore exactly $N^{-1/2}$, attained without blocking; the blocked rate $N^{-r/(2r+3)}$ of (i) is slower by the factor $\sqrt{b^*}$. Blocking buys the exact Beta law and a certificate whose only dependence on $(C,r)$ is the failure probability $(n+1)\beta(b)$; it does not buy rate.
+\item (Mixing-driven lower bound at high confidence; \target.) There are $c_r,\delta_0>0$ and, for every $N$, a stationary process in $\mathcal B_r$ (regime-renewal construction: i.i.d.\ regime labels with score laws $P_1\ne P_2$, held for i.i.d.\ durations with tail $k^{-(r+1)}$, so that $\beta(k)\le\Prob(\text{no renewal in }k\text{ steps})\asymp k^{-r}$) such that for every threshold procedure $T$ and every $\delta\in[N^{-r},\delta_0]$,
+\[
+\Prob\big(\mathcal E(T)\ge c_r\,(N^{r}\delta)^{-1/(r+1)}\big)\;\ge\;\delta .
+\]
+Together with the Fuk--Nagaev inequality for bounded strongly mixing sequences (Rio 2017, Ch.~6) applied to $F_N$ at the two quantiles $q_{1-\alpha\mp\varepsilon}(P)$, this gives
+\[
+\mathcal E^*_\delta(N,r)\;\asymp\;\max\Big\{N^{-1/2}g_r(\delta),\;(N^{r}\delta)^{-1/(r+1)}\Big\},\qquad \sqrt{\log(1/\delta)}\;\lesssim\;g_r(\delta)\;\lesssim\;\delta^{-1/r},
+\]
+and the mixing term binds exactly when $\delta<N^{-(r-1)/2}$ (at $N=500$, $r=2$: $\delta<0.045$, so every certificate at the usual confidence levels sits in the mixing-bound regime). The same construction gives an expected shortfall of order $N^{-r/(r+1)}$, the rate that Barber and Pananjady (2026) prove for split conformal; part~(iii) extends the lower bound to all threshold procedures, which they leave open.
+\item (Partially observed drift; \target.) When $m$ deployment scores are additionally observed, the minimax certifiable deficit over $\{Q:\dK(P,Q)\le\varepsilon\}$ is obtained adaptively in unknown $\varepsilon$ by Le Cam's two-point method on the observed deployment sample.
+\item (Dependent empirical $W_1$; cited and specialised.) The dependent analogue of the Bobkov--Ledoux bound, $\E\,W_1(Q_m,Q)\lesssim m^{-1/2}$ under summable dependence with a moment condition on $Q$, is Dedecker and Merlev\`ede (2017). The thesis specialises it to $\beta\in\mathcal B_r$, $r>1$, with an explicit $c_r$, closing the gap in Proposition~\ref{prop:w1}. This part is not claimed as new.
 \end{enumerate}
 \end{theorem}
-\corr{this theorem did not exist in the first draft. The statistician's verdict on the first draft was that Theorems~\ref{thm:cov} and \ref{thm:sharp} together are Oliveira et al.\ (2024) glued to a one-line Kolmogorov shift bound plus a paragraph of folklore, with application-level novelty only. Theorem~\ref{thm:block} is the result that makes the statistics half doctoral: a rate, an optimal design, and a matching lower bound over a natural class.}
+\corr{third version. The second version stated (ii) as ``no threshold procedure achieves deficit smaller than $cN^{-r/(2r+3)}$; hence the rate is minimax over $\mathcal B_r$''. That is false in every coverage formulation: marginally, Barber and Pananjady (2026, Cor.~1--2) reach $N^{-r/(r+1)}$ without blocking; conditionally, the unblocked sample quantile reaches $N^{-1/2}$ for all $r>1$ by the covariance inequality, and over all procedures the one-sided deficit is degenerate. The second version also derived $\sqrt{b/N}+Nb^{-(r+1)}$ ``by Theorem~\ref{thm:cov}(i)'', which has no $\sqrt{b/N}$ term; the concentration term exists only in the conditional form (ii). The bare balance was quoted as $b^*$; the exact minimiser carries $(2(r+1))^{2/(2r+3)}$ (code agent, 2026-09-09). The old part (iii) is Dedecker--Merlev\`ede (2017) and is downgraded to cited.}
+\begin{remark}[Decision: why the spine is the calibration-conditional error]
+Three options were weighed. (a) Keep marginal coverage and target the Barber--Pananjady open question at rate $N^{-r/(r+1)}$: rejected as the spine, because over all procedures the marginal deficit is degenerate without an efficiency constraint, and adding one turns the question into (b); the blocked marginal bound of Theorem~\ref{thm:cov}(i) is dominated by their unblocked bound and is retained only as the route to (ii). (b) Restate for the calibration-conditional coverage error at confidence $\delta$: chosen. The concentration term is real there, the two-sided error is non-degenerate over all procedures, the fixed-$\delta$ minimax rate is settled by part~(ii), and the high-confidence regime of part~(iii) is where the mixing exponent is provably the binding constraint, which is the object a model-risk certificate needs. (c) Shift the spine to dependent $W_1$ plus partially observed drift: rejected, because Dedecker and Merlev\`ede (2017) already give the dependent $W_1$ rate and the drift part is an adaptation of Le Cam's method. Positioning: Halkiewicz (2026) proves an optimal calibration window with a Le Cam lower bound for rolling-origin conformal under local stationarity and $\alpha$-mixing; his hardness is drift-driven and his class carries no $\beta$-mixing exponent, no blocking and no conditional coverage. Theorem~\ref{thm:block} is not the first optimal-design result for conformal prediction under dependence and must not be described as such; its claim is the mixing-driven minimax statement (iii) over $\mathcal B_r$ for conditional coverage, and the honest accounting (ii) of what blocking does and does not buy.
+\end{remark}
 \begin{route}
-(i) Balance $\sqrt{b/N}=Nb^{-(r+1)}$. (ii) Construct a two-regime process in $\mathcal B_r$ whose regimes are indistinguishable from $N$ periods when the regime persistence matches $b^*$; standard Assouad or two-point reduction on the regime label. (iii) Adapt the Bobkov--Ledoux $d=1$ argument to blocked sums via the same Berbee coupling used in Theorem~\ref{thm:cov}.
+(i) $\E[(1-\alpha-B)^+]\le\E|B-k/(n+1)|\le\operatorname{sd}(B)\le1/(2\sqrt{n+2})$ for $B\sim\Beta(k,n+1-k)$, since $k/(n+1)\ge1-\alpha$; add the coupling failure $(n+1)\beta(b)$ of Theorem~\ref{thm:cov}; differentiate $f$. (ii) $F_P(T_N)<1-\alpha-\varepsilon$ forces $F_N(q_-^-)-F_P(q_-^-)\ge\varepsilon$ at $q_-=q_{1-\alpha-\varepsilon}(P)$, and $F_P(T_N)>1-\alpha+\varepsilon$ forces $F_N(q_+)-F_P(q_+)<-\varepsilon$; Chebyshev with the covariance bound at each point; the i.i.d.\ lower bound is the two-point argument on Bernoulli data with $\mathrm{KL}\asymp N\varepsilon^2$. (iii) A holding interval of length $m\asymp(N/\delta)^{1/(r+1)}$ meets the record with probability $\asymp Nm^{-(r+1)}\asymp\delta$ and shifts $F_N$ at the quantile by $\asymp(m/N)\,\dK(P_1,P_2)$; to pass from the sample quantile to all procedures, compare two regime-renewal processes whose mixture weights differ by $\asymp m/N$ and whose $N$-sample laws are close in total variation; Fuk--Nagaev (Rio 2017, Thm~6.2 form: a Gaussian-type term $(1+N\varepsilon^2/(r\sigma^2))^{-r/2}$ plus a polynomial term $N^{-r}\varepsilon^{-(r+1)}$) for the upper bound. (iv) Two-point reduction on the deployment sample. (v) Specialise Dedecker--Merlev\`ede to blocked scores under $\mathcal B_r$ with the Berbee coupling of Theorem~\ref{thm:cov}.
 \end{route}
 \begin{failure}
-The lower bound in (ii) may hold only up to a logarithmic factor, or over a slightly smaller class. Either outcome is publishable. The upper bound (i) is elementary and cannot fail.
+(i) and (ii) are elementary and cannot fail. In (iii) the two-point reduction over all procedures may lose a logarithmic factor or hold only over the regime-renewal subclass of $\mathcal B_r$; the $\delta$-dependence $g_r$ between $\sqrt{\log(1/\delta)}$ and $\delta^{-1/r}$ is open and is stated as open. Either outcome is publishable; the fixed-$\delta$ rate is settled either way.
 \end{failure}
 
 \begin{remark}[On the first-draft bootstrap theorem]
@@ -247,7 +279,7 @@ Prop.~\ref{prop:tenor} & algebra & variance matching & 2--3 & appendix \\
 Thm~\ref{thm:cov} & theorem & Berbee coupling, Beta law, $\dK$ & 3 & supports \\
 Prop.~\ref{prop:w1} & proposition & Lipschitz CDF argument & 2 & supports \\
 Thm~\ref{thm:sharp} & theorem & adversarial construction & 2 & supports \\
-\textbf{Thm~\ref{thm:block}} & \textbf{theorem} & \textbf{minimax lower bound, dependent empirical $W_1$} & \textbf{4} & \textbf{yes: the spine} \\
+\textbf{Thm~\ref{thm:block}} & \textbf{theorem} & \textbf{regime-renewal lower bound, Fuk--Nagaev under mixing} & \textbf{4} & \textbf{yes: the spine} \\
 \bottomrule
 \end{tabular}
 \end{center}
@@ -266,13 +298,13 @@ Not needed anywhere: Malliavin calculus, rough paths, G-expectation, optimal tra
 \toprule
 Months & Activity & Milestone \\
 \midrule
-1--4 & Stochastic calculus and forward measures; Barber et al.\ (2023), Oliveira et al.\ (2024), Vovk (2012) line by line & Reading report \\
+1--4 & Stochastic calculus and forward measures; Barber et al.\ (2023), Oliveira et al.\ (2024), Barber and Pananjady (2026), Vovk (2012), Rio (2017, Ch.~6) line by line & Reading report \\
 3--6 & Theorem~\ref{thm:sharp} proved; Theorem~\ref{thm:cov} route drafted with the Beta form & Thm~\ref{thm:sharp} done (m5) \\
 5--9 & USD multi-curve bootstrap and time-changed SABR caplet code; Lemma~\ref{lem:tc}, Prop.~\ref{prop:novol} & Working code \\
 7--10 & Theorem~\ref{thm:cov} full proof; Proposition~\ref{prop:w1} & Thm~\ref{thm:cov} done (m10) \\
 9--11 & Proposal defence: Chapters~1--2 drafts, Theorems~\ref{thm:cov}, \ref{thm:sharp} proved, Theorem~\ref{thm:block} stated & Faculty approval (m11) \\
 10--12 & USD data assembled; ZAR sponsor decision & Data agreement or public-data fallback (m12) \\
-10--18 & Theorem~\ref{thm:block}: upper bound (m12), lower-bound construction (m16), dependent $W_1$ (m18) & Thm~\ref{thm:block} done (m18) \\
+10--18 & Theorem~\ref{thm:block}: (i)--(ii) proved (m12), regime-renewal lower bound (iii) (m16), Fuk--Nagaev upper bound, (iv)--(v) (m18) & Thm~\ref{thm:block} done (m18) \\
 12--17 & USD certificate test with optimal blocking; bootstrap and traffic-light comparison & Chapter~6 part one \\
 14--20 & Theorem~\ref{thm:ident} expansion; Theorem~\ref{thm:two} construction, with finance co-supervisor & Chapter~4 draft (m20) \\
 18--22 & Paper~1: Theorems~\ref{thm:cov}, \ref{thm:sharp}, \ref{thm:block}, Prop.~\ref{prop:w1}, USD test & Submitted, \emph{EJS} or \emph{Bernoulli} (m22) \\
@@ -296,12 +328,16 @@ Months & Activity & Milestone \\
 \section*{References}
 \small
 \begin{itemize}[nosep,leftmargin=*]
+\item Barber, R.\,F., Pananjady, A. (2026). Predictive inference for time series: why is split conformal effective despite temporal dependence? \emph{Proc.\ 37th Int.\ Conf.\ Algorithmic Learning Theory}, PMLR 313, 1--24. arXiv:2510.02471.
 \item Barber, R.\,F., Cand\`es, E.\,J., Ramdas, A., Tibshirani, R.\,J. (2023). Conformal prediction beyond exchangeability. \emph{Ann.\ Statist.} 51(2), 816--845.
 \item Bobkov, S., Ledoux, M. (2019). One-dimensional empirical measures, order statistics, and Kantorovich transport distances. \emph{Mem.\ Amer.\ Math.\ Soc.} 261.
+\item Dedecker, J., Merlev\`ede, F. (2017). Behavior of the Wasserstein distance between the empirical and the marginal distributions of stationary $\alpha$-dependent sequences. \emph{Bernoulli} 23(3), 2083--2127.
 \item Hagan, P.\,S., Kumar, D., Lesniewski, A.\,S., Woodward, D.\,E. (2002). Managing smile risk. \emph{Wilmott}, Sept., 84--108.
+\item Halkiewicz, S.\,M.\,S. (2026). Rolling-origin conformal prediction under local stationarity and weak dependence. arXiv:2605.08422.
 \item Lyashenko, A., Mercurio, F. (2019). Looking forward to backward-looking rates. SSRN 3330240.
 \item Oliveira, R.\,I., Orenstein, P., Ramos, T., Romano, J.\,V. (2024). Split conformal prediction and non-exchangeable data. \emph{J.\ Mach.\ Learn.\ Res.} 25.
 \item Piterbarg, V. (2020). Interest rates benchmark reform and options markets. SSRN 3537925.
+\item Rio, E. (2017). \emph{Asymptotic Theory of Weakly Dependent Random Processes}. Probability Theory and Stochastic Modelling 80, Springer.
 \item Vovk, V. (2012). Conditional validity of inductive conformal predictors. \emph{Proc.\ ACML}, JMLR W\&CP 25, 475--490.
 \item Willems, S. (2020). SABR smiles for RFR caplets. arXiv:2004.04501.
 \item Yu, B. (1994). Rates of convergence for empirical processes of stationary mixing sequences. \emph{Ann.\ Probab.} 22(1), 94--116.

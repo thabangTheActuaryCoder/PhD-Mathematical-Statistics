@@ -156,3 +156,6 @@ ch:intro, ch:prelim, ch:certification, ch:sharpness, ch:identifiability, ch:usd,
 - Appendix C is the home of all data descriptions; Chapters 6 and 7 reference it and give only the analysis.
 - Chapter 1 is the home of the transition record (dates, spreads, conventions); Chapters 5, 6, 7 reference it.
 - Writers consult CONTENT-MAP.md before writing and add a row for every new object they create. Panels check every round for cross-chapter repetition ([CUT-REPETITION] items are must-priority). `thesis-redundancy-cutter` sweeps pairwise after each round.
+
+## Citation command (settled 2026-09-09)
+Both builds load natbib (author-year, round). Use `\citep[locator]{key}` for parenthetical and `\citet[locator]{key}` for textual citations; `\cite[locator]{key}` is accepted and behaves as `\citet`. Never wrap a `\cite` inside a theorem's optional title without braces.
