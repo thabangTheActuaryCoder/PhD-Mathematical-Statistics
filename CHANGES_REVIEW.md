@@ -37,3 +37,9 @@ Running record of the write, review, revise, compile loop. One entry per round. 
 - The two-sided over-coverage counterpart of Chapter 4's minimax object is stated here, under a continuity hypothesis without which no such bound survives.
 - The bootstrap and backtest comparison is staged for Chapter 6 and the block-length sweep for Chapter 4.
 - The content map is rebuilt from the files themselves: 147 objects, each with one home.
+
+## 2026-09-10 - Chapter 5 drafted
+- Identifiability of the successor-rate smile written at about 12,300 words, deriving the fitted triple in closed form by matching the second and third cumulants of the predecessor rate and the variance of its realised variance.
+- Three results are stronger than the plan assumed. The admissible correlations lie on a Schur-complement ellipse; the at-the-money identified interval is exactly the level plus or minus the basis volatility, with both endpoints attained, so the result is exact rather than first order; and the identified region in the level-skew plane is an ellipse rather than a rectangle.
+- At the worked-example parameters the skew interval contains zero, so the sign of the successor skew is not identified at all.
+- Two errors in the plan were corrected: the curvature does move at first order, and the earlier expressions for the fitted correlation and for the skew difference between the two matching models were dimensionally inconsistent.

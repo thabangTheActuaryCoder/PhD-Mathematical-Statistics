@@ -151,6 +151,33 @@ Rebuilt from the files themselves after the Chapter 2 and Chapter 3 revisions mo
 | sec:appC-code | section | Code architecture | Appendix C (app:data) |
 | sec:appC-protocol | section | Reproducibility protocol | Appendix C (app:data) |
 | subsec:appC-checklist | section | Terminal session checklist | Appendix C (app:data) |
+| def:ident-identified | definition | Identified functional and identified set | Chapter 5 (ch:identifiability) |
+| def:ident-observable | definition | Observable set and target smile | Chapter 5 (ch:identifiability) |
+| lem:ident-psd | lemma | Admissible correlation triples; the ellipse $E_\eta$ | Chapter 5 (ch:identifiability) |
+| lem:ident-cumulants | lemma | Cumulants of the JIBAR forward at expiry | Chapter 5 (ch:identifiability) |
+| prop:ident-map | proposition | Contamination map $(\alpha_0,\rho,\nu)\mapsto(a,r,n)$ | Chapter 5 (ch:identifiability) |
+| rem:ident-checks | remark | Two exact checks of the contamination map | Chapter 5 (ch:identifiability) |
+| rem:ident-reading | remark | Level shift, skew tilt, curvature move | Chapter 5 (ch:identifiability) |
+| thm:ident | theorem | Identified and unidentified components of the smile map (GT Thm 3) | Chapter 5 (ch:identifiability) |
+| prop:ident-termstructure | proposition | Basis with a deterministic volatility profile: level shift, $h(\kappa T)$ | Chapter 5 (ch:identifiability) |
+| prop:ident-inverse | proposition | Inverse of the contamination map | Chapter 5 (ch:identifiability) |
+| thm:ident-two | theorem | Two models (GT Thm 4); exact at-the-money interval | Chapter 5 (ch:identifiability) |
+| rem:ident-reading-two | remark | Reading the two extreme models | Chapter 5 (ch:identifiability) |
+| rem:ident-extreme | remark | Why $\rho_{BF}=\pm1$ is not a pathology | Chapter 5 (ch:identifiability) |
+| prop:ident-consistent | proposition | Dimension and shape of the consistent set | Chapter 5 (ch:identifiability) |
+| rem:ident-epsilon | remark | The expansion parameter is not small in this market | Chapter 5 (ch:identifiability) |
+| tab:ident-count | table | Parameter count for $m$ expiries | Chapter 5 (ch:identifiability) |
+| tab:ident-example | table | Worked example summary | Chapter 5 (ch:identifiability) |
+| fig:ident-region | figure | Identified region in (at-the-money, skew) space | Chapter 5 (ch:identifiability) |
+| sec:ident-question | section | The question, and why it is identifiability and not calibration | Chapter 5 (ch:identifiability) |
+| sec:ident-model | section | Model, observables and admissible parameters | Chapter 5 (ch:identifiability) |
+| sec:ident-expansion | section | The expansion in the basis scale | Chapter 5 (ch:identifiability) |
+| sec:ident-thm3 | section | The decomposition theorem | Chapter 5 (ch:identifiability) |
+| sec:ident-thm4 | section | Two observationally equivalent models | Chapter 5 (ch:identifiability) |
+| sec:ident-count | section | Parameter count and the dimension of the consistent set | Chapter 5 (ch:identifiability) |
+| sec:ident-example | section | Worked example | Chapter 5 (ch:identifiability) |
+| sec:ident-validation | section | What the validation will test | Chapter 5 (ch:identifiability) |
+| sec:ident-discussion | section | Discussion | Chapter 5 (ch:identifiability) |
 
 ## Reserved homes
 | Object | Home |

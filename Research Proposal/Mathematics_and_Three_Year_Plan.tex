@@ -139,14 +139,18 @@ Consequently: the curvature parameter $\nu$ and the map $\Phi_0$ are identified 
 \end{theorem}
 \corr{the first draft had the unidentified correlation entering the compounded caplet; it is the other way round. The compounded caplet depends only on $(\alpha_0,\beta,\rho,\nu)$. The JIBAR smile is a contaminated view of that triple, because $L=F+B+s$ and the basis noise shifts its level (through $\rho_{BF}$) and tilts its skew (through $\rho_{B\alpha}\nu$). The convexity term was deleted because both instruments pay at $T+\Delta$.}
 \begin{route}
-Under $\Q^{T+\Delta}$ write $L=F+B+s$ and expand the JIBAR caplet in $\varepsilon$: the level of $\sigma^N_L$ is $\sigma^N_F$-at-clock-$T$ plus $\rho_{BF}\eta$ at first order (variance of a sum), the skew acquires $\rho_{B\alpha}\eta\nu$ from $\Cov(B,\alpha)$, and the curvature is unaffected at $O(\varepsilon)$. Invert: fitting SABR to $\sigma^N_L$ returns $(\alpha_0-\rho_{BF}\eta+\dots,\;\rho+c\,\rho_{B\alpha}\eta\nu/\alpha_0+\dots,\;\nu)$. Push the fitted triple through the time change to obtain $\Phi_0$; the residual terms are $\Phi_1,\Phi_2$.
+Under $\Q^{T+\Delta}$ write $L=F+B+s$ and match the second and third cumulants of $L_T$, together with the variance of its realised variance, to a normal SABR triple. With $\theta=\alpha_0+\rho_{BF}\eta$ this gives in closed form
+\[
+a=\sqrt{\alpha_0^2+2\rho_{BF}\alpha_0\eta+\eta^2},\qquad r=\frac{\alpha_0\rho+\eta\rho_{B\alpha}}{a},\qquad n=\frac{\alpha_0\theta\nu}{a^2},
+\]
+so that fitting SABR to $\sigma^N_L$ returns level $a$, correlation $r=\rho+\varepsilon(\rho_{B\alpha}-\rho\rho_{BF})+O(\varepsilon^2)$ and vol-of-vol $n=\nu(1-\rho_{BF}\varepsilon)+O(\varepsilon^2)$. The curvature therefore also moves at first order, by a multiple of the same two products; that movement folds into $\Phi_1$ and $\Phi_2$ and the decomposition stands. Push the fitted triple through the time change to obtain $\Phi_0$; the residual terms are $\Phi_1,\Phi_2$. The closed form is confirmed by the special case $\rho_{BF}=1$, $\rho_{B\alpha}=\rho$, where $dL=(\alpha_t+\eta)\,dW_t$ exactly.
 \end{route}
 \begin{failure}
 If the basis has mean reversion comparable to $1/T$, the $O(\varepsilon)$ coefficients acquire $T$-dependence and the interval half-width becomes $\eta\,h(\kappa T)$ for an explicit $h$. The statement survives with a modified constant.
 \end{failure}
 
 \begin{theorem}[Two models; corollary of Theorem~\ref{thm:ident}]\label{thm:two}
-For any $(v_1,v_2)$ with $|v_i|\le\eta$ there exist models $\mathcal M_\pm$ with $(\eta\rho_{BF},\eta\rho_{B\alpha})=\pm(v_1,v_2)$ that match every JIBAR caplet to $O(\varepsilon^2)$ and match $B_0$ exactly, while their compounded-rate at-the-money volatilities differ by $2v_1$ and their skews by $2v_2\nu$, at every strike.
+The admissible pair $(v_1,v_2)=(\eta\rho_{BF},\eta\rho_{B\alpha})$ ranges over the Schur-complement ellipse determined by positivity of the correlation matrix, on which $\max|v_1|=\max|v_2-2\rho v_1|=\eta$. For each admissible $(v_1,v_2)$ there are models $\mathcal M_\pm$ with $\pm(v_1,v_2)$ that match every JIBAR caplet to $O(\varepsilon^2)$ and match $B_0$ exactly, while their compounded-rate at-the-money volatilities differ by $2v_1$ and their skews by $qc^*(\nu/\alpha_0)(v_2-2\rho v_1)$, at every strike. The at-the-money identified interval is exactly $[a-\eta,\,a+\eta]$, both endpoints being attained by $dL=(\alpha_t\pm\eta)\,dW_t$, so the interval is exact rather than first order; the identified region in the level-skew plane is an ellipse, not a rectangle.
 \end{theorem}
 \begin{proof}
 Flip the sign of $(\rho_{BF},\rho_{B\alpha})$ and re-solve $(\alpha_0,\rho)$ so that the first-order level and skew of $\sigma^N_L$ are unchanged. The Jacobian $\partial(\text{level},\text{skew})/\partial(\alpha_0,\rho)$ is nonsingular for $\nu\ne0$, so the re-solve exists. Read the differences off \eqref{eq:decomp}. \corr{rank is immediate, not a research question; difference is at the money, not wing-only}
