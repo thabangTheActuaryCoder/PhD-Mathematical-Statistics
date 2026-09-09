@@ -184,9 +184,10 @@ Equation \eqref{eq:appA-level} is the displayed relation of ground-truth Proposi
 
 \begin{proposition}[Skew and curvature constraints at leading order]\label{prop:appA-skewcurv}
 Extend $\mathcal M(h)$ by allowing window-specific vol-of-vol constants $\nu_{12},\nu_{23}$ with the common driver $Z$ and profile $h$, so that $\sigma^{ij}_t=a_{ij}g_{ij}(t)\exp(\nu_{ij}\int_0^th\,dZ-\tfrac12\nu_{ij}^2\int_0^th^2)$. Write
-\[
-\sigma(t):=a_{12}\Delta_{12}g_{12}(t)+a_{23}\Delta_{23}g_{23}(t),\qquad \sigma_\nu(t):=a_{12}\Delta_{12}g_{12}(t)\,\nu_{12}+a_{23}\Delta_{23}g_{23}(t)\,\nu_{23},
-\]
+\begin{align*}
+\sigma(t)&:=a_{12}\Delta_{12}g_{12}(t)+a_{23}\Delta_{23}g_{23}(t),\\
+\sigma_\nu(t)&:=a_{12}\Delta_{12}g_{12}(t)\,\nu_{12}+a_{23}\Delta_{23}g_{23}(t)\,\nu_{23},
+\end{align*}
 and, for the linear-profile target, $\sigma_{13}(t):=a_{13}^*\Delta_{13}g_{13}(t)$. Then, to first order in the vol-of-vol constants and neglecting the drift \eqref{eq:appA-mu}, the third cumulant of $\Delta_{13}(\bar R_{13}-\bar F^{13}_0)$ and the variance of its realised variance are
 \begin{equation}\label{eq:appA-cumulants}
 \begin{aligned}
@@ -259,7 +260,7 @@ The following procedure applies Propositions~\ref{prop:appA-level} and~\ref{prop
 \item \emph{Forward check.} Verify $1+\Delta_{13}F^{13}_0=(1+\Delta_{12}F^{12}_0)(1+\Delta_{23}F^{23}_0)$ to rounding. If it fails, stop and report a curve-construction inconsistency; the forwards are bond ratios and the smile test presupposes them.
 \item \emph{Common driver.} Set $\rho:=(\Delta_{12}\hat\rho_{12}+\Delta_{23}\hat\rho_{23})/\Delta_{13}$. If $|\hat\rho_{12}-\hat\rho_{23}|>\epsilon_\rho$, record that the three-month pair itself is outside the single-driver family $\mathcal M(h)$ and continue with $\rho$.
 \item \emph{Projection.} With the frozen weights $w_{12}=\Delta_{12}(1+\Delta_{23}F^{23}_0)$, $w_{23}=\Delta_{23}(1+\Delta_{12}F^{12}_0)$ of Remark~\ref{rem:appA-frozen}, compute $a_{13}^*$ from \eqref{eq:appA-level} and $\rho_{13}^*\nu_{13}^*$, $\nu_{13}^{*2}$ from \eqref{eq:appA-constraints} by numerical quadrature of the integrals in \eqref{eq:appA-cumulants} and \eqref{eq:appA-constraints}; the integrands are piecewise polynomial and Simpson quadrature on a grid containing $T_1,T_2$ is exact enough.
-\item \emph{Features.} With $c_\tau:=1+\frac{2-3\rho^2}{24}\nu^2\tau_{13}$ evaluated at each triple, compute for the projected and for the fitted six-month triple the level $\ell=a\,c_\tau$, the skew per $100$ basis points of strike $\mathsf s\times0.01=\tfrac12\rho\nu\,c_\tau\times0.01$, and the curvature lift at $\pm50$ basis points $\tfrac12\mathsf c\times(0.005)^2=\frac{(2-3\rho^2)\nu^2}{12a}c_\tau\times(0.005)^2$, all from \eqref{eq:prelim-lsc}. Let $d_\ell,d_s,d_c$ be the differences, fitted minus projected, in basis points.
+\item \emph{Features.} With $c_\tau:=1+\frac{2-3\rho^2}{24}\nu^2\tau_{13}$ evaluated at each triple, compute for the projected and for the fitted six-month triple the level $\ell=a\,c_\tau$, the skew per $100$ basis points of strike, $0.01\,\mathsf s$ with $\mathsf s=\tfrac12\rho\nu\,c_\tau$, and the curvature lift at $\pm50$ basis points, $\tfrac12(0.005)^2\,\mathsf c$ with $\mathsf c=(2-3\rho^2)\nu^2c_\tau/(6a)$, all from \eqref{eq:prelim-lsc}. Let $d_\ell,d_s,d_c$ be the differences, fitted minus projected, in basis points.
 \item \emph{Verdict.} If $|d_\ell|>\epsilon_\ell$ or $|d_s|>\epsilon_s$ or $|d_c|>\epsilon_c$, report \textsc{inconsistent}: no model in $\mathcal M(h)$ calibrates jointly to the three-month pair and the six-month smile; name the offending feature and its excess. Otherwise report \textsc{consistent within tolerance}. The report never uses the word arbitrage.
 \item \emph{Profile sensitivity.} For one or two mean-reversion speeds $\kappa$, replace $\Delta_{ij}g_{ij}(t)$ by the HJM coefficient functions $\varphi_{ij}(t)$ of Remark~\ref{rem:appA-hjm}, rescaled per window so that each three-month window keeps its fitted total variance $\hat a_{ij}^2w_{ij}^2\tau_{ij}$, and recompute the six-month total variance and hence $a_{13}^*$ relative to the clock $\tau_{13}$ at which the six-month smile is quoted; repeat steps 4--5. Report whether the verdict survives the profile assumption.
 \end{enumerate}
