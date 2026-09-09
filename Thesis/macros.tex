@@ -1,0 +1,22 @@
+% Shared macros. Chapters use these and only these.
+\newcommand{\E}{\mathbb{E}}
+\newcommand{\Prob}{\mathbb{P}}
+\newcommand{\Q}{\mathbb{Q}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\dTV}{d_{\mathrm{TV}}}
+\newcommand{\dK}{d_{\mathrm{K}}}
+\newcommand{\Wone}{W_1}
+\newcommand{\Winf}{W_\infty}
+\newcommand{\ind}[1]{\mathbf{1}\{#1\}}
+\newcommand{\Dfit}{\mathcal D_{\mathrm{fit}}}
+\newcommand{\Sset}{\mathcal S}
+\newcommand{\Bclass}[1]{\mathcal B_{#1}}
+\DeclareMathOperator{\Cov}{Cov}
+\DeclareMathOperator{\Var}{Var}
+\DeclareMathOperator{\Beta}{Beta}
+% status boxes
+\newcommand{\gap}[1]{\par\noindent\fcolorbox{ox}{ox!6}{\parbox{\dimexpr\linewidth-2\fboxsep-2\fboxrule}{\small\textsf{\textbf{To be established.}} #1}}\par}
+\newcommand{\datanote}[1]{\par\noindent\fcolorbox{teal}{teal!6}{\parbox{\dimexpr\linewidth-2\fboxsep-2\fboxrule}{\small\textsf{\textbf{Data and computation.}} #1}}\par}
+\newcommand{\figplan}[2]{\begin{figure}[htbp]\centering\fcolorbox{gray}{gray!5}{\parbox{0.92\linewidth}{\vspace{2.2cm}\centering\small\textsf{Planned figure: #1}\vspace{2.2cm}}}\caption{#2}\end{figure}}
+\DeclareMathOperator*{\esssup}{ess\,sup}

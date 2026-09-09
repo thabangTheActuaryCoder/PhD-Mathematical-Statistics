@@ -1,0 +1,24 @@
+\chapter*{Notation and abbreviations}
+\begin{longtable}{@{}p{0.22\textwidth}p{0.72\textwidth}@{}}
+$\Q^{U}$ & $U$-forward measure, num\'eraire $P(\cdot,U)$ \\
+$P(t,U)$ & zero-coupon bond price at $t$ maturing at $U$ \\
+$R(T,T+\Delta)$ & compounded-in-arrears rate over $[T,T+\Delta]$ \\
+$F_t$ & forward compounded rate, $\Q^{T+\Delta}$-martingale \\
+$L_t$ & JIBAR forward rate, fixed at $T$, paid at $T+\Delta$ \\
+$s$ & fixed credit adjustment spread (fallback spread) \\
+$B_t$ & basis, $L_t-F_t-s$ \\
+$g,\ \tau$ & volatility decay profile and clock $\tau(t)=\int_0^t g^2$ \\
+$(\alpha_0,\beta,\rho,\nu)$ & SABR parameters \\
+$\eta,\ \rho_{BF},\ \rho_{B\alpha}$ & basis volatility and its correlations with rate and volatility drivers \\
+$\varepsilon$ & dimensionless basis scale $\eta/(\alpha_0F_0^\beta)$ \\
+$\pi,\ \Dfit$ & fixed valuation-and-hedging policy and the sample it was fixed on \\
+$S,\ P,\ Q$ & block hedging-error score; calibration law; deployment law \\
+$n,\ b,\ N$ & number of calibration blocks; block length; total record length \\
+$k,\ \hat q$ & $\lceil(1-\alpha)(n+1)\rceil$; the $k$-th order statistic of calibration scores \\
+$\beta(k),\ \Bclass{r}$ & $\beta$-mixing coefficient; class $\{\beta(k)\le Ck^{-r}\}$ \\
+$\dK,\ \dTV,\ \Wone,\ \Winf$ & Kolmogorov, total-variation, Wasserstein-1 and Wasserstein-$\infty$ distances \\
+CAS & credit adjustment spread \\
+MPG & Market Practitioners Group (SARB) \\
+OIS & overnight index swap \\
+SABR & stochastic alpha-beta-rho model \\
+\end{longtable}

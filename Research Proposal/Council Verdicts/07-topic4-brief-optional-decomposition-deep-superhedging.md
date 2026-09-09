@@ -1,0 +1,24 @@
+# Proposed PhD topic (candidate's own title)
+
+## Title
+Optional Decomposition of Supermartingales and Super-Hedging of American Options using Deep Learning in Incomplete Markets
+
+## Brief (inferred from the title by the council secretary; the candidate supplied only the title)
+The optional decomposition theorem (El Karoui & Quenez 1995; Kramkov 1996; Follmer & Kabanov 1998) states that a process which is a supermartingale under every equivalent (local) martingale measure of an incomplete market decomposes as V = V_0 + integral of H dS - C, with H an admissible strategy and C an increasing optional process. It is the structural result behind superhedging: the minimal superhedging price of a claim is the supremum of its expectations over all martingale measures, and the superhedging strategy is the integrand H in the decomposition of the Snell-type upper envelope, with C the "consumption" that is never needed. For American options the superhedging price is sup over measures and stopping times (Karatzas & Kou 1998; Follmer & Kramkov 1997), and the upper envelope is the smallest supermartingale under all measures dominating the payoff. Closed forms exist only in trivial cases and the dual optimisation over measures and stopping times is intractable beyond low dimension. Deep learning has separately produced deep optimal stopping (Becker, Cheridito & Jentzen 2019), deep BSDE and deep backward schemes for reflected BSDEs (Han, Jentzen & E 2018; Hure, Pham & Warin 2020), deep hedging (Buehler et al. 2019), and neural approaches to robust/model-free pricing (Eckstein & Kupper 2021; Eckstein, Guo, Lim & Obloj 2021; Neufeld & Sester 2021). The thesis would (i) build a neural approximation of the optional decomposition itself: parameterise the hedging integrand H and the increasing process C by networks and learn them jointly from the supermartingale property under a family of measures, (ii) use it to compute superhedging prices and strategies for American options in incomplete markets (stochastic volatility, jumps, trading constraints, multiple assets), where the upper envelope must be a supermartingale under all measures and dominate the payoff at every stopping time, (iii) obtain primal-dual certificates: a primal network superhedge (upper bound) and a dual network over measures and stopping times (lower bound) whose gap certifies the price, (iv) prove convergence of the neural scheme (approximation error, statistical error, optimisation error) to the true superhedging price, and (v) benchmark against reflected-BSDE and least-squares Monte Carlo methods.
+
+## Claimed gap (as the candidate would presumably claim it)
+- Deep optimal stopping computes the price under ONE measure; deep hedging minimises a risk measure rather than superhedging; robust-pricing numerics handle European claims and static/semi-static hedges. A neural method for the superhedging of AMERICAN claims in a genuinely incomplete dynamic market, with both the integrand and the increasing process learned, is not published.
+- The optional decomposition has never been the direct target of a numerical method; existing schemes go through reflected BSDEs with constraints, which are not available for general incompleteness.
+- Convergence theory for neural superhedging schemes is essentially absent.
+
+## Candidate research questions
+1. Can the optional decomposition of a given supermartingale be learned: is there a well-posed loss whose minimisers are (H, C), and is the minimiser unique in the relevant sense?
+2. For American claims in an incomplete market, how does one parameterise "supermartingale under all equivalent martingale measures" tractably (the set of measures is infinite-dimensional): via a parameterised family of densities, via a nonlinear expectation / G-expectation, or via the constrained reflected-BSDE characterisation?
+3. What primal-dual gap can be achieved and certified, and does it close as network width and sample size grow?
+4. What convergence rate holds for the neural superhedging price in terms of approximation, statistical and optimisation error, and does the curse of dimensionality appear?
+
+## Candidate methods
+Optional decomposition and superhedging duality; Snell envelopes under nonlinear expectations; reflected BSDEs with constraints (Cvitanic & Karatzas 1993; El Karoui, Pardoux & Quenez 1997; Bouchard, Elie & Reveillac 2015); deep optimal stopping; deep BSDE / deep backward dynamic programming; neural network approximation theory for stochastic control (Gonon, Grohs, Jentzen, Kutyniok); robust finance and G-expectation (Peng; Nutz & Zhang; Bayraktar & Yao); martingale optimal transport numerics.
+
+## Context of candidate
+Completing an MSc in Mathematical Statistics (UFS, South Africa), works as an AI engineer. Wants a topic that is novel, mathematically serious and feasible in 3-4 years; comfortable with deep learning implementation.

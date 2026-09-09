@@ -1,0 +1,309 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage[margin=25mm]{geometry}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{booktabs,array,longtable}
+\usepackage{enumitem}
+\usepackage{xcolor}
+\usepackage[colorlinks=true,linkcolor=black,citecolor=black,urlcolor=blue!50!black]{hyperref}
+\usepackage{microtype}
+\setlength{\parskip}{4pt}
+\setlength{\parindent}{0pt}
+
+\definecolor{teal}{HTML}{166B67}
+\definecolor{ox}{HTML}{8A3236}
+\newcommand{\corr}[1]{{\color{ox}\textsf{\small [Council correction: #1]}}}
+\newcommand{\target}{{\color{teal}\textsf{\small target}}}
+
+\theoremstyle{plain}
+\newtheorem{theorem}{Theorem}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{corollary}[theorem]{Corollary}
+\theoremstyle{definition}
+\newtheorem{assumption}{Assumption}
+\theoremstyle{remark}
+\newtheorem*{remark}{Remark}
+\newtheorem*{route}{Proof route}
+\newtheorem*{failure}{Failure mode}
+
+\newcommand{\E}{\mathbb{E}}
+\newcommand{\Prob}{\mathbb{P}}
+\newcommand{\Q}{\mathbb{Q}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\dTV}{d_{\mathrm{TV}}}
+\newcommand{\dK}{d_{\mathrm{K}}}
+\DeclareMathOperator{\Cov}{Cov}
+\DeclareMathOperator{\Beta}{Beta}
+
+\title{\Large The Mathematics of the Thesis\\[4pt]
+\large Identifiability, Smile Transport and Finite-Sample Model-Risk Certification\\ for the JIBAR-to-ZARONIA Derivatives Book\\[8pt]
+\normalsize Revised after council review, and re-cut to a three-year programme}
+\author{Thabang Baloyi\\ \small PhD in Mathematical Statistics (proposed), School of Statistics and Actuarial Science,\\ \small University of the Witwatersrand}
+\date{9 September 2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+\noindent This document states every mathematical result the thesis promises, at proposal precision: hypotheses, statement, proof route, failure mode. It is the second version. The first version was put before three reviewers acting as a mathematical statistician, a mathematical finance theorist and a doctoral examiner; their corrections are incorporated and marked in the margin. Two corrections were structural. First, the direction of the identifiability argument in the finance half was reversed: the unidentified correlations contaminate the observed JIBAR smile, not the target compounded-rate smile. Second, the statistics half as first drafted assembled known results and would not carry a mathematical-statistics doctorate; a new theorem on optimal block length with a matching minimax lower bound (Theorem~\ref{thm:block}) is now the spine. The final section re-cuts the programme to thirty-six months.
+\end{abstract}
+
+\section*{Summary of council corrections}
+\begin{center}\small
+\begin{tabular}{@{}p{0.30\textwidth}p{0.66\textwidth}@{}}
+\toprule
+Result & Change forced by review \\
+\midrule
+Lemma~\ref{lem:tc} & Same-$g$ scaling is valid without Dambis--Dubins--Schwarz; linear $g$ and the factor $\Delta/3$ are assumptions, not theorems. Non-decaying vol-of-vol added as Proposition~\ref{prop:novol}. \\
+Theorem~\ref{thm:ident} & JIBAR caplet is priced under $\Q^{T+\Delta}$, not $\Q^{T}$; the in-advance/in-arrears convexity term does not exist and is deleted. Basis correlations enter the JIBAR smile, not the compounded caplet. Two unidentified correlations, not one. Expansion parameter redefined. \\
+Theorem~\ref{thm:two} & Becomes a corollary of Theorem~\ref{thm:ident}; difference is at the money, not wing-only; rank condition is trivial. Demoted from difficulty 4 to 2--3. \\
+Proposition~\ref{prop:tenor} & ``Static arbitrage'' replaced by ``model inconsistency''; exact only for normal SABR with equal volatilities; otherwise leading order in variance. Demoted to proposition, appendix in the three-year plan. \\
+Theorem~\ref{thm:cov} & Coupling cost $(n+1)\beta(b)$, not $2n\beta(b)$; deployment block must be gap-separated; conditional form uses the Beta law of conformal coverage, not DKW; drift penalty is Kolmogorov distance $\dK \le \dTV$, applied after coupling. \\
+Proposition~\ref{prop:w1} & The first version was false (counterexample: point mass versus narrow uniform). Correct bound is $\sqrt{2LW_1}$; plug-in rate $n^{-1/4}$; the dependent-data version of the empirical $W_1$ bound is currently missing. \\
+Theorem~\ref{thm:sharp} & $\delta_{+\infty}$ is not a measure on $\R$; construction replaced; the sharp constant is $1$, not $1-\alpha$; the argument is adversarial, not Le Cam. \\
+First-draft bootstrap theorem & Dropped as a theorem. Empirical comparison with block bootstrap retained. \\
+Theorem~\ref{thm:block} & \textbf{New.} Optimal block length and minimax rate over a mixing class. This is the doctoral theorem. \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\section{Setting and notation}
+
+Fix a filtered probability space carrying a Brownian motion $(W,Z)$ with $d\langle W,Z\rangle_t=\rho\,dt$, and a third Brownian motion $W^B$ with $d\langle W^B,W\rangle_t=\rho_{BF}\,dt$, $d\langle W^B,Z\rangle_t=\rho_{B\alpha}\,dt$. Let $P(t,U)$ denote the zero-coupon bond price and $\Q^{U}$ the $U$-forward measure.
+
+\paragraph{Compounded rate.} For an accrual window $[T,T+\Delta]$ with daily fixings $r_i$ and day-count fractions $\delta_i$,
+\begin{equation}
+R(T,T+\Delta)=\frac{1}{\Delta}\Big(\prod_i(1+r_i\delta_i)-1\Big)\;\approx\;\frac{1}{\Delta}\Big(\exp\!\Big(\int_T^{T+\Delta}r_u\,du\Big)-1\Big).
+\end{equation}
+The continuous approximation is used throughout; it makes $1+\Delta F_t=P(t,T)/P(t,T+\Delta)$ exact and differs from the daily product at second order in $r_i\delta_i$, below a basis point. \corr{state once, keep continuous form}
+
+\paragraph{Forwards.} The forward compounded rate $F_t:=\E^{\Q^{T+\Delta}}[R(T,T+\Delta)\mid\mathcal F_t]$ is a $\Q^{T+\Delta}$-martingale. The JIBAR forward $L_t$ for the same window is fixed at $T$ and \emph{paid at $T+\Delta$}; it is therefore also a $\Q^{T+\Delta}$-martingale, and so is the basis $B_t:=L_t-F_t-s$, where $s$ is the fixed credit adjustment spread. In particular $\E^{\Q^{T+\Delta}}[B_T]=B_0=L_0-F_0-s$ is read off the two curves. \corr{both caplets live under $\Q^{T+\Delta}$; no in-advance/in-arrears convexity term}
+
+\paragraph{Decay and clock.} Let $g$ be deterministic and bounded with $g(t)=1$ for $t\le T$ and $g(t)\downarrow 0$ on $(T,T+\Delta]$, and set $\tau(t):=\int_0^t g(u)^2\,du$.
+
+\begin{assumption}[Linear decay]\label{ass:linear}
+$g(t)=(T+\Delta-t)/\Delta$ on $(T,T+\Delta]$, so that $\tau(T+\Delta)=T+\Delta/3$.
+\end{assumption}
+\corr{linear $g$ is exact only when the instantaneous forward-rate volatility is flat in maturity; generically $\tau(T+\Delta)=T+c_g\Delta$ with $c_g\in(0,1)$. Every result below inherits this assumption.}
+
+\paragraph{Dynamics.} Under $\Q^{T+\Delta}$,
+\begin{equation}\label{eq:sabr}
+dF_t=g(t)\,\alpha_t F_t^{\beta}\,dW_t,\qquad d\alpha_t=g(t)\,\nu\,\alpha_t\,dZ_t,\qquad dB_t=\eta\,dW^B_t .
+\end{equation}
+The dimensionless basis scale is $\varepsilon:=\eta/(\alpha_0F_0^{\beta})$. \corr{$\eta\sqrt T$ is a rate, not a small parameter}
+
+\paragraph{Scores.} For a fixed valuation-and-hedging policy $\pi$, the hedging error over a block of $b$ consecutive rebalancing periods is the \emph{score} $S$. Calibration scores have law $P$, deployment scores law $Q$. $F_P,F_Q$ are their distribution functions, $\dK(P,Q)=\sup_x|F_P(x)-F_Q(x)|\le\dTV(P,Q)$ the Kolmogorov distance.
+
+\section{Finance results}
+
+\begin{lemma}[Time-changed SABR; Willems 2020, Lyashenko--Mercurio 2019]\label{lem:tc}
+Under \eqref{eq:sabr} with the same $g$ on both diffusion coefficients, $(F_t,\alpha_t)=(\tilde F_{\tau(t)},\tilde\alpha_{\tau(t)})$ where $(\tilde F,\tilde\alpha)$ is constant-parameter SABR$(\alpha_0,\beta,\rho,\nu)$. Hence
+\begin{equation}
+P(0,T+\Delta)\,\E^{\Q^{T+\Delta}}\big[(F_{T+\Delta}-K')^+\big]=P(0,T+\Delta)\,C^{\mathrm{SABR}}\big(F_0,K',\tau(T+\Delta);\alpha_0,\beta,\rho,\nu\big),
+\end{equation}
+with the Hagan approximation carrying its usual $O(\alpha^2\tau)$ error.
+\end{lemma}
+\begin{proof}
+Because $\tau$ is deterministic, $(\int_0^t g\,dW,\int_0^t g\,dZ)$ is a correlated Brownian pair in the clock $\tau$; substitute. \corr{no Dambis--Dubins--Schwarz needed; the same-$g$ condition is what makes the substitution exact}
+\end{proof}
+
+\begin{proposition}[Non-decaying vol-of-vol; \target]\label{prop:novol}
+If instead $d\alpha_t=\nu\alpha_t\,dZ_t$ (vol-of-vol does not run off, the physically defensible choice), then in the clock $\tau$ the vol-of-vol is $\nu/g(\tau^{-1}(u))$ and no closed form exists. The caplet is approximated by Hagan--Lesniewski--Woodward effective parameters $(\rho_{\mathrm{eff}},\nu_{\mathrm{eff}})$; relative to Lemma~\ref{lem:tc} the total vol-of-vol variance is $\nu^2(T+\Delta)$ rather than $\nu^2(T+\Delta/3)$, so Lemma~\ref{lem:tc} understates smile curvature by $\tfrac{2}{3}\nu^2\Delta$ (about 17\% for $T=1$y, $\Delta=3$m).
+\end{proposition}
+\begin{remark}
+Neither result is a contribution. Lemma~\ref{lem:tc} is cited; Proposition~\ref{prop:novol} is a two-page derivation in Chapter~2 and fixes which variant the empirical chapters use.
+\end{remark}
+
+\begin{theorem}[Identified and unidentified components of the smile map; \target]\label{thm:ident}
+Let \eqref{eq:sabr} hold with Assumption~\ref{ass:linear}, fix $\beta$, and suppose $\nu\neq0$. Denote by $\sigma^N_L(K,T)$ the observed JIBAR normal implied volatility and by $\sigma^N_F(K',T+\Delta)$ the compounded-rate normal implied volatility at the fallback strike $K'=K-s$. Then
+\begin{equation}\label{eq:decomp}
+\sigma^N_F(K',T+\Delta)\;=\;\Phi_0\big(K';\,\sigma^N_L(\cdot,T),\,s,\,B_0,\,\Delta\big)\;-\;\rho_{BF}\,\eta\,\Phi_1(K')\;-\;\rho_{B\alpha}\,\eta\,\nu\,\Phi_2(K')\;+\;O(\varepsilon^2),
+\end{equation}
+where
+\begin{enumerate}[nosep]
+\item $\Phi_0$ is the SABR smile at clock $T+\Delta/3$ whose triple $(\alpha_0,\rho,\nu)$ is fitted to $\sigma^N_L(K'+s+B_0,\,T)$ at clock $T$: a strike shift by $s+B_0$ and the time change of Lemma~\ref{lem:tc};
+\item $\Phi_1(K')=1+O(K'-F_0)$: a parallel level shift;
+\item $\Phi_2(K')\propto(K'-F_0)$: a skew tilt.
+\end{enumerate}
+Consequently: the curvature parameter $\nu$ and the map $\Phi_0$ are identified from the observable set $\mathcal S=\{\sigma^N_L(\cdot,T)\}\cup\{B_0\}\cup\{s\}$; the pair $(\eta\rho_{BF},\eta\rho_{B\alpha})$ is not identified at $O(\varepsilon)$, and $(\eta,\rho_{BF},\rho_{B\alpha})$ is not identified at $O(\varepsilon^2)$. In particular the successor at-the-money volatility is identified only within an interval of half-width $\eta$.
+\end{theorem}
+\corr{the first draft had the unidentified correlation entering the compounded caplet; it is the other way round. The compounded caplet depends only on $(\alpha_0,\beta,\rho,\nu)$. The JIBAR smile is a contaminated view of that triple, because $L=F+B+s$ and the basis noise shifts its level (through $\rho_{BF}$) and tilts its skew (through $\rho_{B\alpha}\nu$). The convexity term was deleted because both instruments pay at $T+\Delta$.}
+\begin{route}
+Under $\Q^{T+\Delta}$ write $L=F+B+s$ and expand the JIBAR caplet in $\varepsilon$: the level of $\sigma^N_L$ is $\sigma^N_F$-at-clock-$T$ plus $\rho_{BF}\eta$ at first order (variance of a sum), the skew acquires $\rho_{B\alpha}\eta\nu$ from $\Cov(B,\alpha)$, and the curvature is unaffected at $O(\varepsilon)$. Invert: fitting SABR to $\sigma^N_L$ returns $(\alpha_0-\rho_{BF}\eta+\dots,\;\rho+c\,\rho_{B\alpha}\eta\nu/\alpha_0+\dots,\;\nu)$. Push the fitted triple through the time change to obtain $\Phi_0$; the residual terms are $\Phi_1,\Phi_2$.
+\end{route}
+\begin{failure}
+If the basis has mean reversion comparable to $1/T$, the $O(\varepsilon)$ coefficients acquire $T$-dependence and the interval half-width becomes $\eta\,h(\kappa T)$ for an explicit $h$. The statement survives with a modified constant.
+\end{failure}
+
+\begin{theorem}[Two models; corollary of Theorem~\ref{thm:ident}]\label{thm:two}
+For any $(v_1,v_2)$ with $|v_i|\le\eta$ there exist models $\mathcal M_\pm$ with $(\eta\rho_{BF},\eta\rho_{B\alpha})=\pm(v_1,v_2)$ that match every JIBAR caplet to $O(\varepsilon^2)$ and match $B_0$ exactly, while their compounded-rate at-the-money volatilities differ by $2v_1$ and their skews by $2v_2\nu$, at every strike.
+\end{theorem}
+\begin{proof}
+Flip the sign of $(\rho_{BF},\rho_{B\alpha})$ and re-solve $(\alpha_0,\rho)$ so that the first-order level and skew of $\sigma^N_L$ are unchanged. The Jacobian $\partial(\text{level},\text{skew})/\partial(\alpha_0,\rho)$ is nonsingular for $\nu\ne0$, so the re-solve exists. Read the differences off \eqref{eq:decomp}. \corr{rank is immediate, not a research question; difference is at the money, not wing-only}
+\end{proof}
+\begin{remark}[Parameter count]
+With $m$ expiries and $\beta$ fixed: observables are $3m$ smile features (level, skew, curvature per expiry; additional strikes test SABR shape and carry $\eta$ only at $O(\varepsilon^2)$) plus $m$ basis points, which pin $B_{0,i}$ and hence strike shifts but no smile parameters. Unknowns are $3m$ SABR parameters plus $(\eta,\rho_{BF},\rho_{B\alpha})$ if shared across expiries. Deficit: $3$ (two at $O(\varepsilon)$). If the basis parameters are per-expiry, the deficit is $3m$. Historical basis data estimate the nuisance under the physical measure, not the pricing measure; that estimate is the ambiguity set that Theorem~\ref{thm:cov} takes as input.
+\end{remark}
+
+\begin{proposition}[Tenor consistency; \target, appendix in the three-year plan]\label{prop:tenor}
+For $t\le T_1<T_2<T_3$, $(1+\Delta_{13}F^{13}_t)=(1+\Delta_{12}F^{12}_t)(1+\Delta_{23}F^{23}_t)$ exactly (ratios of zero-coupon bonds).
+\begin{enumerate}[nosep,label=(\alph*)]
+\item If $\beta=0$, $g$ linear and $(W,Z)$ common, the induced $R_{13}$ is time-changed normal SABR with linear decay if and only if $\alpha_{12}=\alpha_{23}$; then $\alpha_{13}=\alpha_{12}$, $(\rho,\nu)$ are inherited, and
+\[
+\Delta_{13}^2\tau_{13}=\Delta_{12}^2\tau_{12}+\Delta_{23}^2\tau_{23}+2\Delta_{12}\Delta_{23}\,c,\qquad c=T_1+\Delta_{12}/2,
+\]
+exactly; the clocks compose.
+\item Otherwise the displayed relation is the variance-matched projection, valid to leading order in $\alpha^2\tau$, and the constraints tying $(\rho,\nu)$ across tenors are approximate.
+\item Violation of (a)--(b) means no model in the class calibrates jointly to the 3M and 6M smiles. It is \emph{not} a static arbitrage: $(R_{13}-K)^+$ is not spanned by 3M caplets. \corr{a model-free statement would need Hobson--Laurence--Wang-type bounds for an option on a product with given marginals, which is a different theorem and is not claimed}
+\end{enumerate}
+\end{proposition}
+
+\section{Statistics results}
+
+\begin{assumption}[Mixing and separation]\label{ass:mix}
+The per-period hedging-error process of the fixed policy $\pi$ is $\beta$-mixing with coefficients $\beta(k)$ (non-stationary definition: supremum over time origins) and stationary on the calibration window. The fitting sample $\mathcal D_{\mathrm{fit}}$, the $n$ calibration blocks of length $b$, and the deployment block are pairwise separated by gaps of length at least $b$. \corr{the deployment gap is required; without it $S_0$ is not controlled at all}
+\end{assumption}
+
+Let $k:=\lceil(1-\alpha)(n+1)\rceil$, $\hat q:=S_{(k)}$ the $k$-th order statistic of the calibration scores, and $b_{n,k}(\delta):=\Beta^{-1}(\delta;\,k,\,n+1-k)$ the $\delta$-quantile of the $\Beta(k,n+1-k)$ law.
+
+\begin{theorem}[Coverage under mixing and drift; \target]\label{thm:cov}
+Under Assumption~\ref{ass:mix}, with calibration scores $S_1,\dots,S_n\sim P$ marginally and deployment score $S_0\sim Q$:
+\begin{enumerate}[nosep,label=(\roman*)]
+\item (Marginal.) $\displaystyle \Prob(S_0\le\hat q)\;\ge\;1-\alpha-\dK(P,Q)-(n+1)\beta(b).$
+\item (Conditional.) For any $\delta,\delta'\in(0,1)$, with probability at least $1-\delta-n\beta(b)$ over $(\mathcal D_{\mathrm{fit}},S_{1:n})$,
+\[
+\Prob\big(S_0\le\hat q\;\big|\;\mathcal D_{\mathrm{fit}},S_{1:n}\big)\;\ge\;b_{n,k}(\delta)-\dK(P,Q)-\beta(b)/\delta',
+\]
+the last term holding on an event of probability at least $1-\delta'$. Moreover $b_{n,k}(\delta)\ge1-\alpha-\sqrt{\log(1/\delta)/(2n)}$, and $b_{n,k}(\delta)\approx1-\alpha-\sqrt{2\alpha(1-\alpha)\log(1/\delta)/n}$, which is about $2.3$ times tighter than the DKW form at $\alpha=0.05$.
+\end{enumerate}
+No assumption is made that the model underlying $\pi$ is correct.
+\end{theorem}
+\corr{coupling cost is $(n+1)\beta(b)$ (Yu 1994, Lemma 4.1: $(m-1)\beta(b)$ for $m$ blocks, plus independence from $\mathcal D_{\mathrm{fit}}$ and the deployment block); the conditional statement cannot be obtained from a joint total-variation bound and uses the $\beta$-mixing definition with Markov's inequality; the conformal coverage is $\Beta(k,n+1-k)$-distributed (Vovk 2012), so DKW is a corollary, not the tool; the drift penalty is Kolmogorov distance because only half-lines are evaluated, applied to the fixed set $(-\infty,\hat q^*]$ after coupling has made $S^*_0$ independent of $\hat q^*$.}
+\begin{route}
+(i) Sequential Berbee coupling replaces the $n+1$ separated blocks and $\mathcal D_{\mathrm{fit}}$ by independent copies $S^*_{0:n}$ on an event of probability $\ge1-(n+1)\beta(b)$. (ii) On that event, conditional on $\pi$, the calibration copies are i.i.d.\ $P$ and $F_P(\hat q^*)\sim\Beta(k,n+1-k)$, so $\Prob(S^*_0\le\hat q^*)\ge1-\alpha$ if $S^*_0\sim P$. (iii) For $S^*_0\sim Q$ and the fixed half-line $(-\infty,\hat q^*]$, $|Q(S\le\hat q^*)-P(S\le\hat q^*)|\le\dK(P,Q)$. Sum.
+\end{route}
+\begin{remark}
+$\beta(b)$ is not estimable from data (Adams--Nobel-type impossibility). The certificate is conditional on an \emph{assumed} mixing class $\{\beta(k)\le Ck^{-r}\}$, and the thesis says so. \corr{added}
+\end{remark}
+
+\begin{proposition}[Drift penalty bounded by $W_1$; \target]\label{prop:w1}
+If $Q$ has a density bounded by $L$ (no assumption on $P$), then for all $x$, $F_P(x)-F_Q(x)\le\sqrt{2L\,W_1(P,Q)}$. If both have densities bounded by $L$, $\dK(P,Q)\le\sqrt{L\,W_1(P,Q)}$. Also $F_P(x)-F_Q(x)\le L\,W_\infty(P,Q)$.
+\end{proposition}
+\begin{proof}
+Let $D=F_P-F_Q$. If $D(x_0)=d>0$ then, since $F_P$ is non-decreasing and $F_Q$ is $L$-Lipschitz, $D(x)\ge d-L(x-x_0)$ on $[x_0,x_0+d/L]$, whence $W_1(P,Q)=\int|D|\ge d^2/(2L)$. The $W_\infty$ bound uses the monotone coupling: $F_P(x)\le F_Q(x+W_\infty)\le F_Q(x)+LW_\infty$.
+\end{proof}
+\corr{the first version claimed $|F_P-F_Q|\le LW_1$, which is false: $P=\delta_0$, $Q=U[0,1/L]$ has $W_1=1/(2L)$ and CDF gap $1$. With the square-root form the plug-in penalty decays at $n^{-1/4}$, not $n^{-1/2}$. The i.i.d.\ rate $\E W_1(P_n,P)\le n^{-1/2}J_1(P)$ is Bobkov--Ledoux (2019) in $d=1$; deployment scores are dependent, so a $\beta$-mixing version (Dedecker--Merlev\`ede type) is needed and is part of Theorem~\ref{thm:block}(iii). $L$ is an assumption on the unobserved $Q$ and is stated as such.}
+
+\begin{theorem}[Sharpness of the drift penalty]\label{thm:sharp}
+Let $T$ be any threshold procedure independent of the deployment score, and $C_T(R):=\Prob_{S\sim R}(S\le T)$. For every $P$ with continuous distribution function and every $\varepsilon\in(0,1)$:
+\begin{enumerate}[nosep,label=(\alph*)]
+\item (Universal.) $\displaystyle\inf_{Q:\,\dTV(P,Q)\le\varepsilon}C_T(Q)\;\ge\;C_T(P)-\varepsilon.$
+\item (Attained.) Let $Q_M$ be $P$ with its bottom-$\varepsilon$ mass on $(-\infty,q_\varepsilon(P)]$ moved to the point $M$. Then $\dTV(P,Q_M)=\dK(P,Q_M)=\varepsilon$ and
+\[
+C_T(Q_M)\;\le\;C_T(P)-\varepsilon+\varepsilon\,\Prob\big(F_P(T)<\varepsilon\big)+\varepsilon\,\Prob(T\ge M).
+\]
+For split conformal, $\Prob(F_P(T)<\varepsilon)=\Prob(\Beta(k,n+1-k)<\varepsilon)$, exponentially small for $\varepsilon<1-\alpha$. Hence the constant $1$ on $\dK$ in Theorem~\ref{thm:cov} is sharp.
+\end{enumerate}
+\end{theorem}
+\begin{proof}
+(a) is the definition of total variation applied to the event $\{S\le T\}$ conditional on $T$. (b) Under $Q_M$, mass $\varepsilon$ that $P$ placed below every plausible threshold now sits at $M$; if $T<M$ and $F_P(T)\ge\varepsilon$, coverage falls by exactly $\varepsilon$. The two correction terms cover the complementary events.
+\end{proof}
+\corr{$\delta_{+\infty}$ is not a probability measure on $\R$. The far-mass construction $(1-\varepsilon)P+\varepsilon\delta_M$ gives only $(1-\varepsilon)C_T(P)$, which is weaker and sharp only for degenerate procedures. Moving mass from the bottom of $P$ to a far point is what attains the constant $1$. Since $Q$ is never observed, this is a direct adversarial construction, not Le Cam's method; Le Cam enters only in Theorem~\ref{thm:block}(ii) where deployment scores are partially observed.}
+
+\begin{theorem}[Optimal block length and minimax rate; \target, the doctoral theorem]\label{thm:block}
+Fix the mixing class $\mathcal B_r:=\{\beta(k)\le Ck^{-r}\}$, $r>1$, and a calibration record of $N$ periods. Any blocking scheme with block length $b$ and gaps $b$ yields $n\asymp N/(2b)$ blocks, and by Theorem~\ref{thm:cov}(i) its coverage deficit (excluding drift) is
+\[
+\mathcal E(b,N)\;\asymp\;\sqrt{b/N}\;+\;N\,b^{-(r+1)} .
+\]
+\begin{enumerate}[nosep,label=(\roman*)]
+\item (Upper bound.) The minimiser is $b^*\asymp N^{3/(2r+3)}$, giving $\mathcal E(b^*,N)\asymp N^{-r/(2r+3)}$.
+\item (Lower bound.) There exist processes in $\mathcal B_r$ (hidden-regime constructions) for which no threshold procedure based on $N$ calibration periods achieves deficit smaller than $c\,N^{-r/(2r+3)}$. Hence the rate is minimax over $\mathcal B_r$. When $m$ deployment scores are additionally observed, the minimax certifiable deficit over $\{Q:\dK(P,Q)\le\varepsilon\}$ is obtained adaptively in unknown $\varepsilon$ by Le Cam's two-point method on the observed deployment sample.
+\item (Dependent empirical $W_1$.) For $\beta$-mixing scores with $\beta\in\mathcal B_r$, $\E\,W_1(Q_m,Q)\le c_r\,m^{-1/2}J_1(Q)$ with an explicit $c_r$, closing the gap left in Proposition~\ref{prop:w1}.
+\end{enumerate}
+\end{theorem}
+\corr{this theorem did not exist in the first draft. The statistician's verdict on the first draft was that Theorems~\ref{thm:cov} and \ref{thm:sharp} together are Oliveira et al.\ (2024) glued to a one-line Kolmogorov shift bound plus a paragraph of folklore, with application-level novelty only. Theorem~\ref{thm:block} is the result that makes the statistics half doctoral: a rate, an optimal design, and a matching lower bound over a natural class.}
+\begin{route}
+(i) Balance $\sqrt{b/N}=Nb^{-(r+1)}$. (ii) Construct a two-regime process in $\mathcal B_r$ whose regimes are indistinguishable from $N$ periods when the regime persistence matches $b^*$; standard Assouad or two-point reduction on the regime label. (iii) Adapt the Bobkov--Ledoux $d=1$ argument to blocked sums via the same Berbee coupling used in Theorem~\ref{thm:cov}.
+\end{route}
+\begin{failure}
+The lower bound in (ii) may hold only up to a logarithmic factor, or over a slightly smaller class. Either outcome is publishable. The upper bound (i) is elementary and cannot fail.
+\end{failure}
+
+\begin{remark}[On the first-draft bootstrap theorem]
+The comparison with the stationary block bootstrap is no longer stated as a theorem. Bootstrap coverage rates for quantiles under mixing require Edgeworth expansions with unknown constants, and ``the only method with a provable finite-sample level'' is a comparison of assumptions, not a result. The comparison is retained as an empirical section on USD and ZAR data. \corr{dropped}
+\end{remark}
+
+\section{Difficulty after correction}
+\begin{center}\small
+\begin{tabular}{@{}p{0.13\textwidth}p{0.15\textwidth}p{0.34\textwidth}p{0.10\textwidth}p{0.18\textwidth}@{}}
+\toprule
+Result & Kind & Deepest tool & Difficulty (1--5) & Carries the doctorate \\
+\midrule
+Lemma~\ref{lem:tc} & cited & deterministic time change & 1 & no \\
+Prop.~\ref{prop:novol} & derivation & HLW effective parameters & 2 & no \\
+Thm~\ref{thm:ident} & expansion, error bound & forward measure, SABR inversion & 3 & finance paper \\
+Thm~\ref{thm:two} & corollary & nonsingular Jacobian & 2 & no \\
+Prop.~\ref{prop:tenor} & algebra & variance matching & 2--3 & appendix \\
+Thm~\ref{thm:cov} & theorem & Berbee coupling, Beta law, $\dK$ & 3 & supports \\
+Prop.~\ref{prop:w1} & proposition & Lipschitz CDF argument & 2 & supports \\
+Thm~\ref{thm:sharp} & theorem & adversarial construction & 2 & supports \\
+\textbf{Thm~\ref{thm:block}} & \textbf{theorem} & \textbf{minimax lower bound, dependent empirical $W_1$} & \textbf{4} & \textbf{yes: the spine} \\
+\bottomrule
+\end{tabular}
+\end{center}
+Not needed anywhere: Malliavin calculus, rough paths, G-expectation, optimal transport, reflected BSDEs, deep-learning theory.
+
+\section{The three-year programme}
+
+\paragraph{Principles.} The statistics spine is proved first, in the candidate's home field, while finance prerequisites are learned in parallel: Theorem~\ref{thm:cov} needs only a fixed policy, and the market convention (strike shift, volatility scaling) supplies one without Theorem~\ref{thm:ident}. The USD LIBOR-to-SOFR transition is the empirical spine, because the target smile became observable there and every input is on the university terminal; the South African book is a coda, because by month~30 it will have at most twenty-four monthly hedging-error observations and its option surfaces need a sponsor who may not sign.
+
+\paragraph{Cuts.} Proposition~\ref{prop:tenor} to an appendix, stated with the exact case (a) proved and (b) as a conjecture. The first-draft bootstrap theorem to an empirical section. The standalone factual-record note folded into Chapter~1 at three thousand words. The standalone time-changed-SABR note becomes Chapter~2 preliminaries. The South African chapter shrinks to five thousand words.
+
+\paragraph{Minimal passing thesis.} Theorems~\ref{thm:cov}, \ref{thm:sharp} and \ref{thm:block} proved; the USD certificate test with honest coverage; Theorem~\ref{thm:ident} with the $O(\varepsilon)$ identified part and Theorem~\ref{thm:two} demonstrated numerically on USD; the South African coda on public data if no sponsor. This passes because the spine is proved, sharp, rate-optimal, and tested where the truth was observable.
+
+\begin{center}\small
+\begin{tabular}{@{}p{0.10\textwidth}p{0.55\textwidth}p{0.28\textwidth}@{}}
+\toprule
+Months & Activity & Milestone \\
+\midrule
+1--4 & Stochastic calculus and forward measures; Barber et al.\ (2023), Oliveira et al.\ (2024), Vovk (2012) line by line & Reading report \\
+3--6 & Theorem~\ref{thm:sharp} proved; Theorem~\ref{thm:cov} route drafted with the Beta form & Thm~\ref{thm:sharp} done (m5) \\
+5--9 & USD multi-curve bootstrap and time-changed SABR caplet code; Lemma~\ref{lem:tc}, Prop.~\ref{prop:novol} & Working code \\
+7--10 & Theorem~\ref{thm:cov} full proof; Proposition~\ref{prop:w1} & Thm~\ref{thm:cov} done (m10) \\
+9--11 & Proposal defence: Chapters~1--2 drafts, Theorems~\ref{thm:cov}, \ref{thm:sharp} proved, Theorem~\ref{thm:block} stated & Faculty approval (m11) \\
+10--12 & USD data assembled; ZAR sponsor decision & Data agreement or public-data fallback (m12) \\
+10--18 & Theorem~\ref{thm:block}: upper bound (m12), lower-bound construction (m16), dependent $W_1$ (m18) & Thm~\ref{thm:block} done (m18) \\
+12--17 & USD certificate test with optimal blocking; bootstrap and traffic-light comparison & Chapter~6 part one \\
+14--20 & Theorem~\ref{thm:ident} expansion; Theorem~\ref{thm:two} construction, with finance co-supervisor & Chapter~4 draft (m20) \\
+18--22 & Paper~1: Theorems~\ref{thm:cov}, \ref{thm:sharp}, \ref{thm:block}, Prop.~\ref{prop:w1}, USD test & Submitted, \emph{EJS} or \emph{Bernoulli} (m22) \\
+20--24 & USD identifiability validation: predicted SOFR smile and $\pm\eta$ interval against the observed smile & Chapter~6 complete (m24) \\
+24--28 & Paper~2: Theorems~\ref{thm:ident}, \ref{thm:two}, USD identifiability & Submitted, \emph{Quantitative Finance} (m28) \\
+26--30 & ZAR coda: JIBAR surface to Dec 2026, converted-book P\&L to m30, reserve decomposition & Chapter~7 draft (m30) \\
+30--34 & Full write-up; Chapters~1, 8, appendices; internal review & Complete draft (m34) \\
+34--36 & Corrections, submission & Thesis submitted (m36) \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\paragraph{Chapters and words.} 1 Introduction and the transition (5k); 2 Preliminaries (8k); 3 Certification (10k); 4 Sharpness and optimal blocking (6k); 5 Identifiability (10k); 6 USD validation (10k); 7 South African coda (5k); 8 Conclusions (3k); appendices. About 57 thousand words.
+
+\paragraph{Papers.} Two, not three. Paper~1 is the doctoral paper. The South African material becomes a practitioner note to the Market Practitioners Group.
+
+\paragraph{Probability of submission.} Examiner's estimate: about 60\% by month~36; about 85\% by month~42 with the customary extension. The plan passes without ZAR data and without Theorem~\ref{thm:ident} being clean. It does not pass without Theorem~\ref{thm:cov} by month~10--12, Theorem~\ref{thm:block} by month~18, and the USD test by month~17.
+
+\paragraph{Ranking under three years.} Three years widens this topic's lead over the alternatives the council reviewed. Conformal deep hedging on index options needs a year of training infrastructure before any theorem. Certified superhedging under volatility uncertainty needs G-expectation prerequisites and carries difficulty-5 theorems that can fail outright. This topic's spine uses tools half-known already, and its finance half, which is the schedule risk, is exactly what the re-cut trims.
+
+\section*{References}
+\small
+\begin{itemize}[nosep,leftmargin=*]
+\item Barber, R.\,F., Cand\`es, E.\,J., Ramdas, A., Tibshirani, R.\,J. (2023). Conformal prediction beyond exchangeability. \emph{Ann.\ Statist.} 51(2), 816--845.
+\item Bobkov, S., Ledoux, M. (2019). One-dimensional empirical measures, order statistics, and Kantorovich transport distances. \emph{Mem.\ Amer.\ Math.\ Soc.} 261.
+\item Hagan, P.\,S., Kumar, D., Lesniewski, A.\,S., Woodward, D.\,E. (2002). Managing smile risk. \emph{Wilmott}, Sept., 84--108.
+\item Lyashenko, A., Mercurio, F. (2019). Looking forward to backward-looking rates. SSRN 3330240.
+\item Oliveira, R.\,I., Orenstein, P., Ramos, T., Romano, J.\,V. (2024). Split conformal prediction and non-exchangeable data. \emph{J.\ Mach.\ Learn.\ Res.} 25.
+\item Piterbarg, V. (2020). Interest rates benchmark reform and options markets. SSRN 3537925.
+\item Vovk, V. (2012). Conditional validity of inductive conformal predictors. \emph{Proc.\ ACML}, JMLR W\&CP 25, 475--490.
+\item Willems, S. (2020). SABR smiles for RFR caplets. arXiv:2004.04501.
+\item Yu, B. (1994). Rates of convergence for empirical processes of stationary mixing sequences. \emph{Ann.\ Probab.} 22(1), 94--116.
+\end{itemize}
+\end{document}

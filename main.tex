@@ -1,0 +1,190 @@
+\PassOptionsToPackage{final}{graphicx}
+\documentclass[12pt,a4paper,twoside,openright,final]{report}
+
+% =============================================================
+% Institution (single switch). The repository holds a UFS
+% conditional offer (Offer/PGRDCOND_LTR.pdf, 2027 intake); the
+% thesis is currently framed for Wits per the candidate's
+% instruction. Change these three lines to switch.
+% =============================================================
+\newcommand{\Institution}{University of the Witwatersrand, Johannesburg}
+\newcommand{\Faculty}{Faculty of Science}
+\newcommand{\School}{School of Statistics and Actuarial Science}
+\newcommand{\Degree}{Doctor of Philosophy in Mathematical Statistics}
+\newcommand{\Author}{Thabang Bongani Junior Baloyi}
+\newcommand{\Supervisor}{To be confirmed}
+\newcommand{\ThesisTitle}{Pricing and Hedging Through a Benchmark Transition Without an Options Market}
+\newcommand{\ThesisSubtitle}{Identifiability, Smile Transport and Finite-Sample Model-Risk Certification for the JIBAR-to-ZARONIA Derivatives Book}
+
+% =============================================================
+% Font Encoding
+% =============================================================
+\usepackage[T1]{fontenc}
+
+% =============================================================
+% Page Layout (Wits Faculty of Science suggested layout)
+% =============================================================
+\usepackage{geometry}
+\geometry{a4paper, left=40mm, right=30mm, top=30mm, bottom=30mm}
+
+% =============================================================
+% Mathematics
+% =============================================================
+\usepackage{amsmath, amssymb, amsthm, mathtools}
+\usepackage{mathrsfs}
+
+% =============================================================
+% General Formatting
+% =============================================================
+\usepackage{setspace}
+\usepackage{titlesec}
+\usepackage{fancyhdr}
+\usepackage{xcolor}
+\usepackage{url}
+\usepackage{float}
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+\usepackage{etoolbox}
+\usepackage{emptypage}
+\usepackage{enumitem}
+\usepackage{microtype}
+
+% =============================================================
+% Code Listings
+% =============================================================
+\usepackage{listings}
+\lstset{language=Python, basicstyle=\ttfamily\footnotesize, keywordstyle=\color{blue},
+  commentstyle=\color{gray}, stringstyle=\color{red!60!black}, numbers=left,
+  numberstyle=\tiny\color{gray}, numbersep=8pt, frame=single, framesep=4pt,
+  breaklines=true, showstringspaces=false, tabsize=4, captionpos=b}
+
+% =============================================================
+% Colour Palette
+% =============================================================
+\definecolor{teal}{HTML}{166B67}
+\definecolor{ox}{HTML}{8A3236}
+\definecolor{framegray}{HTML}{E0E0E0}
+\definecolor{notepanel}{HTML}{F5F5EF}
+
+% =============================================================
+% Figures, Tables and Graphics
+% =============================================================
+\usepackage{graphicx}
+\usepackage{subcaption}
+\usepackage{booktabs}
+\usepackage{multirow}
+\usepackage{array}
+\usepackage{longtable}
+\usepackage{pdfpages}
+
+% =============================================================
+% TikZ and framed boxes
+% =============================================================
+\usepackage{tikz}
+\usetikzlibrary{positioning, arrows.meta, calc, fit, backgrounds, shapes.geometric, decorations.pathreplacing}
+\usepackage[framemethod=TikZ]{mdframed}
+\newmdenv[backgroundcolor=notepanel, linecolor=teal, linewidth=1pt, roundcorner=6pt,
+  innertopmargin=10pt, innerbottommargin=10pt, innerleftmargin=12pt, innerrightmargin=12pt,
+  skipabove=10pt, skipbelow=10pt]{frameworkbox}
+
+% =============================================================
+% Citations
+% =============================================================
+\usepackage{natbib}
+\setcitestyle{authoryear,open={(},close={)}}
+
+% =============================================================
+% Hyperlinks
+% =============================================================
+\usepackage[colorlinks=true, linkcolor=blue, citecolor=blue, urlcolor=blue, hyperfootnotes=true, pagebackref=true]{hyperref}
+\renewcommand*{\backref}[1]{}
+\renewcommand*{\backrefalt}[4]{\ifcase #1 (Not cited.)\or (Cited on p.~#2.)\else (Cited on pp.~#2.)\fi}
+
+% =============================================================
+% Glossaries and Acronyms
+% =============================================================
+\usepackage[acronym, sort=standard, nonumberlist]{glossaries}
+\makeglossaries
+\input{Thesis/Acronym Definitions/acronyms}
+
+% =============================================================
+% Theorem Environments (numbered within chapter)
+% =============================================================
+\theoremstyle{plain}
+\newtheorem{theorem}{Theorem}[chapter]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{assumption}[theorem]{Assumption}
+\newtheorem{example}[theorem]{Example}
+\newtheorem{algorithmenv}[theorem]{Algorithm}
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Remark}
+\newtheorem*{route}{Proof route}
+\let\failure\relax\let\endfailure\relax
+\newtheorem*{failure}{Failure mode}
+
+% =============================================================
+% Shared macros
+% =============================================================
+\input{Thesis/macros}
+
+% =============================================================
+% Paragraph and Equation Formatting
+% =============================================================
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{6pt}
+\numberwithin{equation}{section}
+\onehalfspacing
+\raggedright
+
+% =============================================================
+% Header and Footer
+% =============================================================
+\pagestyle{fancy}\fancyhf{}
+\renewcommand{\headrulewidth}{0.4pt}
+\renewcommand{\chaptermark}[1]{\markboth{\chaptername\ \thechapter\quad #1}{}}
+\renewcommand{\sectionmark}[1]{\markright{\thesection\quad #1}}
+\fancyhead[LE]{\nouppercase{\leftmark}}
+\fancyhead[RO]{\nouppercase{\rightmark}}
+\fancyfoot[C]{\thepage}
+
+% =============================================================
+% Document
+% =============================================================
+\begin{document}
+
+\pagenumbering{roman}
+\input{Thesis/Cover Page/src/title_page}
+\input{Thesis/Declarations/originality_declaration}
+\input{Thesis/Declarations/genai_declaration}
+\input{Thesis/Abstract/abstract}
+\input{Thesis/Acknowledgments/acknowledgments}
+\tableofcontents
+\listoffigures
+\listoftables
+\printglossary[type=\acronymtype, style=long, title={Acronyms}]
+\input{Thesis/List of Equations/notation}
+\cleardoublepage
+\pagenumbering{arabic}
+
+\input{Thesis/Chapter 1/src/chapter1_introduction}
+\input{Thesis/Chapter 2/src/chapter2_preliminaries}
+\input{Thesis/Chapter 3/src/chapter3_certification}
+\input{Thesis/Chapter 4/src/chapter4_sharpness_blocking}
+\input{Thesis/Chapter 5/src/chapter5_identifiability}
+\input{Thesis/Chapter 6/src/chapter6_usd_validation}
+\input{Thesis/Chapter 7/src/chapter7_zar_coda}
+\input{Thesis/Chapter 8/src/chapter8_conclusions}
+
+\appendix
+\input{Thesis/Annexures/annexureA_tenor_consistency}
+\input{Thesis/Annexures/annexureB_standard_proofs}
+\input{Thesis/Annexures/annexureC_data_code}
+
+\bibliographystyle{plainnat}
+\bibliography{References}
+
+\end{document}

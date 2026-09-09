@@ -1,0 +1,1207 @@
+% Chapter 2 — Preliminaries
+% Written against STANDARD.md, LESSONS.md and GROUND-TRUTH (13-mathematics-3yr.tex).
+\chapter{Preliminaries}\label{ch:prelim}
+
+\begin{quote}\itshape
+This chapter assembles, with complete proofs, every standard result that the later chapters use. The first half is finance: zero-coupon bonds and forward measures, the backward-looking compounded rate and its forward, the JIBAR forward and the basis, the volatility decay that the compounded rate forces on any model, the SABR model with Hagan's implied-volatility formulas, and the time-changed SABR caplet (ground-truth Lemma~1) together with the non-decaying vol-of-vol variant (ground-truth Proposition~2). The second half is statistics: split conformal prediction with its exact finite-sample coverage and the Beta law of conditional coverage, $\alpha$- and $\beta$-mixing with Berbee's coupling and the blocking construction, and the Kolmogorov, total-variation and Wasserstein distances between one-dimensional laws. Nothing here is new. What the chapter leaves open is recorded in one box: the step in Proposition~\ref{prop:prelim-novol} from total vol-of-vol variance to smile curvature is not justified by the effective-parameter theory it invokes, and the size of that discrepancy is computed.
+\end{quote}
+
+\section{Introduction to the chapter}\label{sec:prelim-intro}
+
+The thesis asks two questions. The finance question is how the implied-volatility smile of a JIBAR caplet is transported to the smile of the compounded ZARONIA caplet that the fallback substitutes for it, and which part of that transport is identified from observable prices. The statistics question is how to certify, with a finite-sample guarantee, the hedging error of a fixed valuation policy applied to a book that has just been converted, when the only data are a dependent record of past hedging errors and the deployment period may not resemble the calibration period. Both questions are answered in later chapters with tools that are standard in their own fields but rarely appear together. This chapter collects the tools.
+
+The chapter is written so that a reader from either field can check every step. Results are stated in full generality only where the generality costs nothing; otherwise they are stated in the one-dimensional, single-window form in which the thesis uses them. Each standard result is proved, with the source cited. Two results in the chapter come from the ground-truth document \cite{lyashenko2019,willems2020}: Lemma~\ref{lem:prelim-tc}, whose proof is written in full here for the first time in this project, and Proposition~\ref{prop:prelim-novol}, whose derivation is given and whose one questionable step is marked.
+
+Section~\ref{sec:prelim-forward} sets up the interest-rate market: the bank account, zero-coupon bonds, num\'eraires, the change-of-num\'eraire theorem with proof, forward measures, and the fact that simple forward rates are martingales under the forward measure of their payment date. It closes with the multi-curve setting in which JIBAR forwards and ZARONIA discount factors live on different curves. Section~\ref{sec:prelim-compounded} defines the backward-looking compounded rate, proves that the continuous approximation differs from the daily product at second order, and proves that the forward compounded rate, the JIBAR forward and the basis are all martingales under the same forward measure $\Q^{T+\Delta}$. Section~\ref{sec:prelim-decay} proves that the volatility of the forward compounded rate must vanish at the end of the accrual window, derives the linear decay from a flat forward-rate volatility, and computes the clock. Section~\ref{sec:prelim-sabr} states the SABR model and Hagan's formulas, sketches their derivation, and proves the first-order sensitivities that justify the reading of $(\alpha,\rho,\nu)$ as level, skew and curvature. Section~\ref{sec:prelim-tcsabr} proves Lemma~\ref{lem:prelim-tc}, derives Proposition~\ref{prop:prelim-novol}, and works a numerical example by hand.
+
+Sections~\ref{sec:prelim-conformal} to~\ref{sec:prelim-distances} are the statistical half. Section~\ref{sec:prelim-conformal} proves the exact coverage of split conformal prediction under exchangeability, the Beta law of conditional coverage, and the pointwise DKW-type bound as a corollary. Section~\ref{sec:prelim-mixing} defines $\alpha$- and $\beta$-mixing, gives the AR(1) example with an explicit bound, proves Berbee's coupling lemma for one pair and states the sequential version, and sets out the blocking construction with gaps that Chapter~\ref{ch:certification} uses. Section~\ref{sec:prelim-distances} defines the four distances between one-dimensional laws, proves $\dK\le\dTV$ and the one-dimensional identity $\Wone=\int|F_P-F_Q|$, and proves the Bobkov--Ledoux upper bound on the expected empirical $\Wone$ distance in dimension one. Section~\ref{sec:prelim-discussion} says what the chapter has established and what it hands to the chapters that follow.
+
+Two conventions hold throughout the chapter and the thesis. Both caplets, JIBAR and compounded, are priced under the $(T+\Delta)$-forward measure, because both pay at $T+\Delta$; no in-advance/in-arrears convexity term is introduced anywhere. And the linear volatility decay with its clock value $T+\Delta/3$ is an assumption, stated once in Assumption~\ref{ass:prelim-linear} and inherited by every later result without further comment.
+
+\section{Interest-rate market and forward measures}\label{sec:prelim-forward}
+
+\subsection{Bank account, bonds and the pricing rule}
+
+Fix a filtered probability space $(\Omega,\mathcal F,(\mathcal F_t)_{t\in[0,T^*]},\Q)$ satisfying the usual conditions, with a finite horizon $T^*$ that exceeds every maturity considered. The measure $\Q$ is a risk-neutral measure: there is an adapted short-rate process $r$ with $\int_0^{T^*}|r_u|\,du<\infty$ almost surely, the bank account is
+\[
+\beta_t:=\exp\Big(\int_0^t r_u\,du\Big),
+\]
+and the price at time $t$ of any $\mathcal F_U$-measurable payoff $X$ paid at $U\le T^*$, with $X/\beta_U$ integrable, is
+\begin{equation}\label{eq:prelim-pricing}
+V_t(X;U)\;=\;\beta_t\,\E^{\Q}\!\Big[\frac{X}{\beta_U}\,\Big|\,\mathcal F_t\Big],\qquad 0\le t\le U .
+\end{equation}
+We take \eqref{eq:prelim-pricing} as the definition of the pricing rule. Its justification, that an arbitrage-free market admits at least one such $\Q$ and that \eqref{eq:prelim-pricing} then gives the unique price of every attainable payoff, is the fundamental theorem of asset pricing; see \cite{filipovic2009} for a treatment in the term-structure setting and \cite{karatzas1991} for the stochastic-calculus background. Nothing in the thesis depends on completeness of the market, only on the existence of one pricing measure, which is fixed once and for all.
+
+\begin{definition}[Zero-coupon bond]\label{def:prelim-bond}
+The zero-coupon bond maturing at $U$ is the payoff $X\equiv1$ paid at $U$. Its price is
+\[
+P(t,U):=\beta_t\,\E^{\Q}\big[\beta_U^{-1}\,\big|\,\mathcal F_t\big],\qquad 0\le t\le U,
+\]
+with $P(U,U)=1$. We assume $P(t,U)>0$ for all $t\le U$, which holds because $\beta_U^{-1}>0$.
+\end{definition}
+
+The bond price is the discount factor from $U$ back to $t$ and will be the num\'eraire of the forward measure. The two elementary facts we need are that $P(t,U)/\beta_t$ is a $\Q$-martingale in $t$ (immediate from the definition and the tower property) and that $P(t,U)$ is strictly positive.
+
+\subsection{Num\'eraires and the abstract Bayes formula}
+
+\begin{definition}[Num\'eraire]\label{def:prelim-numeraire}
+A num\'eraire is a strictly positive adapted price process $N$ of a traded asset that pays no intermediate cash flows; that is, $N_t=V_t(N_U;U)$ for all $t\le U\le T^*$, so that $N/\beta$ is a $\Q$-martingale. The bank account $\beta$ and every bond $P(\cdot,U)$ on $[0,U]$ are num\'eraires.
+\end{definition}
+
+\begin{definition}[Martingale measure of a num\'eraire]\label{def:prelim-Qn}
+For a num\'eraire $N$ define the measure $\Q^{N}$ on $\mathcal F_{T^*}$ by
+\begin{equation}\label{eq:prelim-QN}
+\frac{d\Q^{N}}{d\Q}\Big|_{\mathcal F_{T^*}}\;=\;\frac{N_{T^*}}{N_0\,\beta_{T^*}} .
+\end{equation}
+\end{definition}
+
+The right-hand side of \eqref{eq:prelim-QN} is strictly positive and has $\Q$-expectation $\E^{\Q}[N_{T^*}/\beta_{T^*}]/N_0=1$, because $N/\beta$ is a $\Q$-martingale started at $N_0$. So $\Q^{N}$ is a probability measure equivalent to $\Q$. Its density process is
+\begin{equation}\label{eq:prelim-density}
+Z^{N}_t:=\E^{\Q}\Big[\frac{d\Q^{N}}{d\Q}\,\Big|\,\mathcal F_t\Big]=\frac{N_t}{N_0\,\beta_t},\qquad 0\le t\le T^*,
+\end{equation}
+again by the martingale property of $N/\beta$.
+
+\begin{lemma}[Abstract Bayes formula]\label{lem:prelim-bayes}
+Let $\Q'\ll\Q$ on $\mathcal F_{T}$ with density $Z_T=d\Q'/d\Q$ and density process $Z_t=\E^{\Q}[Z_T\mid\mathcal F_t]$, assumed strictly positive. For every $\mathcal F_T$-measurable $Y$ with $\E^{\Q'}|Y|<\infty$ and every $t\le T$,
+\[
+\E^{\Q'}[Y\mid\mathcal F_t]\;=\;\frac{\E^{\Q}[Y Z_T\mid\mathcal F_t]}{Z_t}\qquad\Q'\text{-a.s.}
+\]
+\end{lemma}
+
+\begin{proof}
+The right-hand side is $\mathcal F_t$-measurable. Let $A\in\mathcal F_t$. Then, using the definition of $Z_T$, the fact that $\ind{A}\,\E^{\Q}[YZ_T\mid\mathcal F_t]/Z_t$ is $\mathcal F_t$-measurable, and the tower property twice,
+\begin{align*}
+\E^{\Q'}\Big[\ind{A}\frac{\E^{\Q}[YZ_T\mid\mathcal F_t]}{Z_t}\Big]
+&=\E^{\Q}\Big[Z_T\ind{A}\frac{\E^{\Q}[YZ_T\mid\mathcal F_t]}{Z_t}\Big]
+=\E^{\Q}\Big[\E^{\Q}[Z_T\mid\mathcal F_t]\ind{A}\frac{\E^{\Q}[YZ_T\mid\mathcal F_t]}{Z_t}\Big]\\
+&=\E^{\Q}\big[\ind{A}\,\E^{\Q}[YZ_T\mid\mathcal F_t]\big]
+=\E^{\Q}[\ind{A}\,YZ_T]
+=\E^{\Q'}[\ind{A}\,Y].
+\end{align*}
+Since this holds for every $A\in\mathcal F_t$, the right-hand side of the claimed identity is a version of $\E^{\Q'}[Y\mid\mathcal F_t]$. Integrability of $YZ_T$ under $\Q$ is the same as integrability of $Y$ under $\Q'$.
+\end{proof}
+
+\subsection{The change-of-num\'eraire theorem}
+
+\begin{theorem}[Change of num\'eraire]\label{thm:prelim-numeraire}
+Let $N$ and $M$ be num\'eraires with associated measures $\Q^{N}$ and $\Q^{M}$ as in Definition~\ref{def:prelim-Qn}. Then:
+\begin{enumerate}[nosep,label=(\roman*)]
+\item For every $\mathcal F_U$-measurable payoff $X$ paid at $U\le T^*$ with $X/\beta_U$ $\Q$-integrable, and every $t\le U$,
+\begin{equation}\label{eq:prelim-con}
+V_t(X;U)\;=\;N_t\,\E^{\Q^{N}}\Big[\frac{X}{N_U}\,\Big|\,\mathcal F_t\Big]\;=\;M_t\,\E^{\Q^{M}}\Big[\frac{X}{M_U}\,\Big|\,\mathcal F_t\Big].
+\end{equation}
+In particular the price of every traded asset divided by $N$ is a $\Q^{N}$-martingale.
+\item The density of $\Q^{N}$ with respect to $\Q^{M}$ on $\mathcal F_U$ is
+\begin{equation}\label{eq:prelim-dQNdQM}
+\frac{d\Q^{N}}{d\Q^{M}}\Big|_{\mathcal F_U}=\frac{N_U/N_0}{M_U/M_0},
+\end{equation}
+and for $t\le U$ its density process is $(N_t/N_0)/(M_t/M_0)$.
+\end{enumerate}
+\end{theorem}
+
+\begin{proof}
+(i) Apply Lemma~\ref{lem:prelim-bayes} with $\Q'=\Q^{N}$, $T=T^*$, $Z_{T^*}=N_{T^*}/(N_0\beta_{T^*})$, $Z_t=N_t/(N_0\beta_t)$ from \eqref{eq:prelim-density}, and $Y=X/N_U$, which is $\mathcal F_U\subseteq\mathcal F_{T^*}$-measurable. Then
+\[
+N_t\,\E^{\Q^{N}}\Big[\frac{X}{N_U}\,\Big|\,\mathcal F_t\Big]
+=N_t\,\frac{N_0\beta_t}{N_t}\,\E^{\Q}\Big[\frac{X}{N_U}\,\frac{N_{T^*}}{N_0\beta_{T^*}}\,\Big|\,\mathcal F_t\Big]
+=\beta_t\,\E^{\Q}\Big[\frac{X}{N_U}\,\E^{\Q}\Big[\frac{N_{T^*}}{\beta_{T^*}}\,\Big|\,\mathcal F_U\Big]\Big|\,\mathcal F_t\Big],
+\]
+where the inner conditioning is legitimate because $X/N_U$ is $\mathcal F_U$-measurable. By the $\Q$-martingale property of $N/\beta$, the inner conditional expectation equals $N_U/\beta_U$, and the expression collapses to $\beta_t\,\E^{\Q}[X/\beta_U\mid\mathcal F_t]=V_t(X;U)$. The same computation with $M$ in place of $N$ gives the second equality in \eqref{eq:prelim-con}. For the martingale statement take $X$ to be the time-$U$ price of the asset: then $V_t(X;U)$ is its time-$t$ price, and \eqref{eq:prelim-con} says exactly that price$/N$ is a $\Q^{N}$-martingale.
+
+(ii) For $A\in\mathcal F_U$, using Definition~\ref{def:prelim-Qn} for both measures and the $\Q$-martingale property of $N/\beta$ conditional on $\mathcal F_U$,
+\[
+\Q^{N}(A)=\E^{\Q}\Big[\ind{A}\frac{N_{T^*}}{N_0\beta_{T^*}}\Big]=\E^{\Q}\Big[\ind{A}\frac{N_U}{N_0\beta_U}\Big]
+=\E^{\Q}\Big[\ind{A}\frac{M_U}{M_0\beta_U}\cdot\frac{N_U/N_0}{M_U/M_0}\Big]
+=\E^{\Q^{M}}\Big[\ind{A}\frac{N_U/N_0}{M_U/M_0}\Big],
+\]
+which is \eqref{eq:prelim-dQNdQM}. The density process follows by taking $\E^{\Q^{M}}[\,\cdot\mid\mathcal F_t]$ and using that $N/M$ is a $\Q^{M}$-martingale, which is (i) applied to the traded asset $N$ under the num\'eraire $M$.
+\end{proof}
+
+Theorem~\ref{thm:prelim-numeraire} is the Geman--El Karoui--Rochet theorem; the presentation follows \cite{brigo2006} and \cite{filipovic2009}. Its content for us is that a payoff may be priced under whichever num\'eraire makes the computation simplest, and that the result does not depend on the choice.
+
+\subsection{Forward measures and forward rates}
+
+\begin{definition}[Forward measure]\label{def:prelim-forward-measure}
+For $U\le T^*$, the $U$-forward measure $\Q^{U}$ is the martingale measure of the num\'eraire $P(\cdot,U)$, restricted to $\mathcal F_U$:
+\[
+\frac{d\Q^{U}}{d\Q}\Big|_{\mathcal F_U}=\frac{P(U,U)}{P(0,U)\,\beta_U}=\frac{1}{P(0,U)\,\beta_U}.
+\]
+\end{definition}
+
+\begin{corollary}[Pricing under the forward measure]\label{cor:prelim-forward-pricing}
+For an $\mathcal F_U$-measurable payoff $X$ paid at $U$,
+\begin{equation}\label{eq:prelim-fwd-price}
+V_t(X;U)=P(t,U)\,\E^{\Q^{U}}[X\mid\mathcal F_t],\qquad t\le U .
+\end{equation}
+\end{corollary}
+
+\begin{proof}
+Theorem~\ref{thm:prelim-numeraire}(i) with $N=P(\cdot,U)$ and $N_U=P(U,U)=1$.
+\end{proof}
+
+Formula \eqref{eq:prelim-fwd-price} is why the forward measure is the natural measure for a caplet: the price of a payoff at $U$ is its $\Q^{U}$-conditional expectation times the discount factor to $U$, with no joint law of payoff and discount factor to compute. The payment date decides the measure. This is the principle behind the first council correction in the ground-truth document and behind the first lesson in the lessons file: a JIBAR caplet pays at $T+\Delta$ and is therefore priced under $\Q^{T+\Delta}$, exactly as the compounded caplet is.
+
+\begin{definition}[Simple forward rate]\label{def:prelim-simple-forward}
+For $t\le T<U$, the simple forward rate for $[T,U]$ observed at $t$ is
+\[
+F(t;T,U):=\frac{1}{U-T}\Big(\frac{P(t,T)}{P(t,U)}-1\Big).
+\]
+\end{definition}
+
+The forward rate is the fixed rate that makes a forward rate agreement over $[T,U]$ costless at $t$: paying $(U-T)F$ at $U$ against receiving $P(T,U)^{-1}-1$ has zero value if and only if $F=F(t;T,U)$, because the floating leg is replicated by holding one $T$-bond and shorting one $U$-bond.
+
+\begin{proposition}[Forward rates are forward-measure martingales]\label{prop:prelim-forward-mart}
+For fixed $T<U$, the process $t\mapsto F(t;T,U)$, $t\in[0,T]$, is a $\Q^{U}$-martingale.
+\end{proposition}
+
+\begin{proof}
+$P(t,T)-P(t,U)$ is the price of the traded portfolio long one $T$-bond, short one $U$-bond, for $t\le T$. By Theorem~\ref{thm:prelim-numeraire}(i) with $N=P(\cdot,U)$, the ratio $(P(t,T)-P(t,U))/P(t,U)=P(t,T)/P(t,U)-1$ is a $\Q^{U}$-martingale. Dividing by the constant $U-T$ preserves the martingale property.
+\end{proof}
+
+\begin{remark}[Girsanov form of the forward measure]\label{rem:prelim-girsanov}
+When bond prices are driven by a $\Q$-Brownian motion $W$ with $dP(t,U)/P(t,U)=r_t\,dt-\sigma_P(t,U)\,dW_t$ for an adapted volatility $\sigma_P(\cdot,U)$ with $\sigma_P(U,U)=0$, the density process $Z^{U}_t=P(t,U)/(P(0,U)\beta_t)$ satisfies $dZ^{U}_t=-Z^{U}_t\sigma_P(t,U)\,dW_t$, so $Z^{U}_t=\exp(-\int_0^t\sigma_P(u,U)\,dW_u-\tfrac12\int_0^t\sigma_P(u,U)^2du)$ and, by Girsanov's theorem \cite[Thm.~3.5.1]{karatzas1991}, $W^{U}_t:=W_t+\int_0^t\sigma_P(u,U)\,du$ is a $\Q^{U}$-Brownian motion. We use this form in Section~\ref{sec:prelim-decay}.
+\end{remark}
+
+\subsection{The multi-curve setting}\label{subsec:prelim-multicurve}
+
+Before 2008 the bonds $P(t,U)$ in Definition~\ref{def:prelim-bond} were taken to be the same objects that determined interbank forward rates such as JIBAR, so that a JIBAR fixing for $[T,T+\Delta]$ was $F(T;T,T+\Delta)$ and its forward was $F(t;T,T+\Delta)$. That identification failed when interbank rates acquired a credit and liquidity premium over collateralised funding, and it has no meaning after the benchmark transition, when the discount curve is built from ZARONIA overnight index swaps and the JIBAR curve is built from JIBAR-linked instruments. The standard treatment is \cite{henrard2014}; see also \cite{brigo2006} for the single-curve background.
+
+Throughout the thesis the objects of Definitions~\ref{def:prelim-bond}--\ref{def:prelim-forward-measure} refer to the \emph{discount} curve: $\beta$ is the ZARONIA bank account, $r$ the ZARONIA overnight rate treated as a continuous short rate, $P(t,U)$ the ZARONIA OIS discount factor, and $\Q^{U}$ the forward measure with num\'eraire $P(\cdot,U)$. This is the choice under which the compounded rate of Section~\ref{sec:prelim-compounded} is exactly a ratio of discount bonds. The JIBAR fixing $J_T$ for the window $[T,T+\Delta]$ is a separate $\mathcal F_T$-measurable random variable, not a function of the discount bonds. Its forward is defined by the pricing rule alone.
+
+\begin{definition}[JIBAR forward]\label{def:prelim-jibar-forward}
+The JIBAR forward for the window $[T,T+\Delta]$ is
+\[
+L_t:=\E^{\Q^{T+\Delta}}[J_T\mid\mathcal F_t],\qquad 0\le t\le T,
+\]
+the fixed rate $\ell$ that gives zero time-$t$ value to the payoff $\Delta(J_T-\ell)$ paid at $T+\Delta$. By Corollary~\ref{cor:prelim-forward-pricing} that value is $P(t,T+\Delta)\Delta(\E^{\Q^{T+\Delta}}[J_T\mid\mathcal F_t]-\ell)$, which vanishes exactly when $\ell=L_t$.
+\end{definition}
+
+The JIBAR forward is a $\Q^{T+\Delta}$-martingale by the tower property, a fact recorded as Proposition~\ref{prop:prelim-L-mart} below because of its importance for the thesis. It is not the ratio of two traded bonds, so no replication argument is available for it, and its difference from the compounded forward, the tenor basis, is a genuine second stochastic object. In the multi-curve literature one sometimes introduces JIBAR ``pseudo-bonds'' $P^J(t,U)$ with $1+\Delta L_t=P^J(t,T)/P^J(t,T+\Delta)$; these are bookkeeping devices, not traded assets, and we do not use them.
+
+\section{Backward-looking compounded rates}\label{sec:prelim-compounded}
+
+\subsection{Definition and the continuous approximation}
+
+Fix an accrual window $[T,T+\Delta]$ containing $m$ business days with overnight fixings $r_1,\dots,r_m$ of the ZARONIA rate and day-count fractions $\delta_1,\dots,\delta_m$ with $\sum_i\delta_i=\Delta$. Each $r_i$ is fixed at the start of day $i$ and is $\mathcal F_{t_i}$-measurable, where $t_i$ is the start of that day.
+
+\begin{definition}[Compounded-in-arrears rate]\label{def:prelim-R}
+The backward-looking compounded rate for $[T,T+\Delta]$ is
+\begin{equation}\label{eq:prelim-R-daily}
+R(T,T+\Delta):=\frac1\Delta\Big(\prod_{i=1}^{m}(1+r_i\delta_i)-1\Big).
+\end{equation}
+Its continuous approximation is
+\begin{equation}\label{eq:prelim-R-cont}
+R^{c}(T,T+\Delta):=\frac1\Delta\Big(\exp\Big(\int_T^{T+\Delta}r_u\,du\Big)-1\Big)=\frac1\Delta\Big(\frac{\beta_{T+\Delta}}{\beta_T}-1\Big),
+\end{equation}
+where $r$ is the continuous short rate whose bank account is $\beta$ and which coincides with the overnight fixing on each day.
+\end{definition}
+
+The rate is known only at $T+\Delta$, which is what ``backward-looking'' means, and a caplet on it can therefore not settle before $T+\Delta$. This is the source of the volatility decay of Section~\ref{sec:prelim-decay}. The continuous approximation is what makes the forward compounded rate an exact ratio of discount bonds (Proposition~\ref{prop:prelim-F-bond}) and is used throughout the thesis. The next lemma quantifies what the approximation costs.
+
+\begin{lemma}[Second-order error of the continuous approximation]\label{lem:prelim-daily-error}
+Let $x_i:=r_i\delta_i\ge0$ for $i=1,\dots,m$ and $X:=\sum_i x_i$. Then
+\begin{equation}\label{eq:prelim-daily-bound}
+0\;\le\;e^{X}-\prod_{i=1}^{m}(1+x_i)\;\le\;\frac{e^{X}}{2}\sum_{i=1}^{m}x_i^2 .
+\end{equation}
+Consequently, if the overnight rate is piecewise constant on days, so that $\int_T^{T+\Delta}r_u\,du=X$, then
+\[
+0\;\le\;R^{c}(T,T+\Delta)-R(T,T+\Delta)\;\le\;\frac{e^{X}}{2\Delta}\sum_{i=1}^{m}r_i^2\delta_i^2 .
+\]
+\end{lemma}
+
+\begin{proof}
+For $x\ge0$ the inequalities $x-\tfrac{x^2}{2}\le\log(1+x)\le x$ hold: the upper one because $\log(1+x)-x$ vanishes at $0$ and has derivative $1/(1+x)-1\le0$; the lower one because $\log(1+x)-x+x^2/2$ vanishes at $0$ and has derivative $1/(1+x)-1+x=x^2/(1+x)\ge0$. Summing over $i$,
+\[
+X-\frac12\sum_i x_i^2\;\le\;\sum_i\log(1+x_i)\;\le\;X,
+\]
+and exponentiating,
+\[
+e^{X}\exp\Big(-\frac12\sum_i x_i^2\Big)\;\le\;\prod_i(1+x_i)\;\le\;e^{X}.
+\]
+The right-hand inequality gives the lower bound $0$ in \eqref{eq:prelim-daily-bound}. For the upper bound, $e^{X}-\prod_i(1+x_i)\le e^{X}(1-e^{-\frac12\sum x_i^2})\le e^{X}\cdot\frac12\sum_i x_i^2$, using $1-e^{-y}\le y$ for $y\ge0$. The statement for $R^{c}-R$ follows on dividing by $\Delta$.
+\end{proof}
+
+\begin{example}[Size of the error]\label{ex:prelim-daily-error}
+Take $r_i\equiv8\%$, $\delta_i\equiv1/365$ and $m=91$ days, so $\Delta=91/365=0.24932$ and $X=91\times0.08/365=0.019945$. Then $\prod(1+x_i)=1.0201432$ and $e^{X}=1.0201454$; the daily-product rate is $8.07942\%$ and the continuous rate is $8.08031\%$. The difference is $0.089$ basis points, and the bound of Lemma~\ref{lem:prelim-daily-error} evaluates to $e^{X}\cdot91\cdot(0.08/365)^2/(2\Delta)=0.089$ basis points: the bound is tight to three figures because the $x_i$ are equal. The error scales as $r^2\delta\,\cdot\,e^{X}/2$ per unit of $\Delta$, so it is below a tenth of a basis point for every rate level the South African market has seen. This is the ground-truth statement ``differs from the daily product at second order in $r_i\delta_i$, below a basis point'' made precise.
+\end{example}
+
+From here on $R(T,T+\Delta)$ denotes the continuous form \eqref{eq:prelim-R-cont}; the daily product is never used again.
+
+\subsection{The forward compounded rate}
+
+\begin{definition}[Forward compounded rate]\label{def:prelim-F}
+The forward compounded rate for $[T,T+\Delta]$ is
+\[
+F_t:=\E^{\Q^{T+\Delta}}\big[R(T,T+\Delta)\,\big|\,\mathcal F_t\big],\qquad 0\le t\le T+\Delta .
+\]
+\end{definition}
+
+\begin{proposition}[Martingale property and bond representation]\label{prop:prelim-F-bond}
+\begin{enumerate}[nosep,label=(\roman*)]
+\item $(F_t)_{0\le t\le T+\Delta}$ is a $\Q^{T+\Delta}$-martingale with $F_{T+\Delta}=R(T,T+\Delta)$.
+\item For $t\le T$, $\;1+\Delta F_t=P(t,T)/P(t,T+\Delta)$, so $F_t=F(t;T,T+\Delta)$ is the simple forward rate of Definition~\ref{def:prelim-simple-forward}.
+\item For $T<t\le T+\Delta$, $\;1+\Delta F_t=\dfrac{\beta_t/\beta_T}{P(t,T+\Delta)}$.
+\item Defining the extended bond $P(t,T):=\beta_t/\beta_T$ for $t>T$ (the value at $t$ of one unit received at $T$ and rolled in the bank account), the single formula $1+\Delta F_t=P(t,T)/P(t,T+\Delta)$ holds for all $t\in[0,T+\Delta]$.
+\end{enumerate}
+\end{proposition}
+
+\begin{proof}
+(i) $F$ is a conditional expectation of the fixed integrable random variable $R(T,T+\Delta)$ with respect to an increasing family of $\sigma$-fields, hence a martingale by the tower property; $R(T,T+\Delta)$ is $\mathcal F_{T+\Delta}$-measurable, so $F_{T+\Delta}=R(T,T+\Delta)$. Integrability holds because $\beta_{T+\Delta}/\beta_T$ is bounded when $r$ is bounded, which we assume; in general it is an integrability hypothesis on the short rate.
+
+(ii)--(iii) By Corollary~\ref{cor:prelim-forward-pricing} applied to the payoff $X=1+\Delta R(T,T+\Delta)=\beta_{T+\Delta}/\beta_T$ paid at $T+\Delta$, and then by the pricing rule \eqref{eq:prelim-pricing},
+\[
+P(t,T+\Delta)\,(1+\Delta F_t)=P(t,T+\Delta)\,\E^{\Q^{T+\Delta}}\Big[\frac{\beta_{T+\Delta}}{\beta_T}\,\Big|\,\mathcal F_t\Big]
+=\beta_t\,\E^{\Q}\Big[\frac{1}{\beta_{T+\Delta}}\cdot\frac{\beta_{T+\Delta}}{\beta_T}\,\Big|\,\mathcal F_t\Big]
+=\beta_t\,\E^{\Q}\big[\beta_T^{-1}\,\big|\,\mathcal F_t\big].
+\]
+If $t\le T$ the right-hand side is $P(t,T)$ by Definition~\ref{def:prelim-bond}. If $t>T$ then $\beta_T$ is $\mathcal F_t$-measurable and the right-hand side is $\beta_t/\beta_T$. Dividing by $P(t,T+\Delta)>0$ gives (ii) and (iii). Statement (iv) is (ii) and (iii) written with the extended bond; at $t=T+\Delta$ it reads $1+\Delta R=\beta_{T+\Delta}/\beta_T$, which is \eqref{eq:prelim-R-cont}.
+\end{proof}
+
+Statement (ii) says that before the window opens, the compounded forward is the ordinary forward rate of the discount curve, an exact statement because we chose the ZARONIA curve as the discount curve; in a market discounted on a different curve it would hold only up to a convexity adjustment. Statement (iii) says that inside the window the forward consists of a realised part, $\beta_t/\beta_T$, already fixed, and an unrealised part, $1/P(t,T+\Delta)$, whose randomness shrinks to zero as $t\uparrow T+\Delta$. The extended-bond notation is that of \cite{lyashenko2019}, whose generalised forward market model rests on exactly this decomposition.
+
+\subsection{The JIBAR forward, the fallback and the basis}
+
+\begin{proposition}[The JIBAR forward is a $\Q^{T+\Delta}$-martingale]\label{prop:prelim-L-mart}
+With $L_t=\E^{\Q^{T+\Delta}}[J_T\mid\mathcal F_t]$ as in Definition~\ref{def:prelim-jibar-forward}, $(L_t)_{0\le t\le T}$ is a $\Q^{T+\Delta}$-martingale with $L_T=J_T$. A JIBAR caplet with strike $K$, fixing $J_T$ at $T$ and paying $\Delta(J_T-K)^+$ at $T+\Delta$, has time-$t$ price
+\begin{equation}\label{eq:prelim-jibar-caplet}
+\mathrm{Cpl}^{L}_t(K)=P(t,T+\Delta)\,\Delta\,\E^{\Q^{T+\Delta}}\big[(L_T-K)^+\,\big|\,\mathcal F_t\big],\qquad t\le T .
+\end{equation}
+\end{proposition}
+
+\begin{proof}
+The martingale property is the tower property, and $L_T=J_T$ because $J_T$ is $\mathcal F_T$-measurable. The caplet payoff is $\mathcal F_T\subseteq\mathcal F_{T+\Delta}$-measurable and is paid at $T+\Delta$, so Corollary~\ref{cor:prelim-forward-pricing} with $U=T+\Delta$ gives \eqref{eq:prelim-jibar-caplet} directly, after replacing $J_T$ by $L_T$.
+\end{proof}
+
+\begin{remark}[Why there is no convexity term]\label{rem:prelim-no-convexity}
+Had the JIBAR caplet paid at the fixing date $T$, its price would be $P(t,T)\,\Delta\,\E^{\Q^{T}}[(J_T-K)^+\mid\mathcal F_t]$, an expectation under $\Q^{T}$, and rewriting it under $\Q^{T+\Delta}$ would produce the density $(P(T,T+\Delta)/P(t,T+\Delta))\cdot(P(t,T)/1)$ of Theorem~\ref{thm:prelim-numeraire}(ii) inside the expectation: the in-advance/in-arrears convexity term. The South African convention, like the LIBOR convention before it, fixes at $T$ and pays at $T+\Delta$ \cite{sarb2024conv}. The compounded caplet also pays at $T+\Delta$. Both are therefore $\Q^{T+\Delta}$-expectations of functions of $\Q^{T+\Delta}$-martingales, and no convexity term appears anywhere in the thesis. The first draft of the mathematics document had such a term; the council deleted it, and this remark is the reason.
+\end{remark}
+
+\begin{definition}[Fallback and basis]\label{def:prelim-fallback}
+The fallback replaces, from the cessation date, every reference to the JIBAR fixing $J_T$ by $R(T,T+\Delta)+s$, where $s$ is a fixed credit adjustment spread determined once, before cessation, as the five-year historical median of $J_T-R(T,T+\Delta)$ over past windows \cite{sarb2025fallback,isda2025}. A JIBAR caplet with strike $K$ becomes, after fallback, a compounded caplet with the fallback strike
+\[
+K':=K-s,\qquad\text{since }\;(R+s-K)^+=(R-K')^+ .
+\]
+The basis is
+\begin{equation}\label{eq:prelim-basis}
+B_t:=L_t-F_t-s,\qquad 0\le t\le T .
+\end{equation}
+\end{definition}
+
+\datanote{For three-month JIBAR the spread adjustment was fixed at $s=0.1619\%$ (16.19 basis points) on the spread adjustment fixing date of 3 December 2025, following the methodology of \cite{sarb2025fallback}; the one-, six-, nine- and twelve-month spreads are $0.1142\%$, $0.4323\%$, $0.5830\%$ and $0.7410\%$. Source: the benchmark administrator's technical note of 22 December 2025, as recorded in the project's lessons file. The thesis uses $s$ as a known constant.}
+
+\begin{proposition}[The basis is a $\Q^{T+\Delta}$-martingale]\label{prop:prelim-B-mart}
+$(B_t)_{0\le t\le T}$ is a $\Q^{T+\Delta}$-martingale, and
+\begin{equation}\label{eq:prelim-EB}
+\E^{\Q^{T+\Delta}}[B_T]=B_0=L_0-F_0-s .
+\end{equation}
+\end{proposition}
+
+\begin{proof}
+$L$ is a $\Q^{T+\Delta}$-martingale by Proposition~\ref{prop:prelim-L-mart}, $F$ is one by Proposition~\ref{prop:prelim-F-bond}(i), and $s$ is a constant. A linear combination of martingales with constant coefficients on the same filtered space under the same measure is a martingale, so $B=L-F-s$ is a $\Q^{T+\Delta}$-martingale on $[0,T]$. Taking $t=0$ in the martingale identity $\E^{\Q^{T+\Delta}}[B_T\mid\mathcal F_0]=B_0$ and using that $\mathcal F_0$ is trivial gives \eqref{eq:prelim-EB}; $B_0=L_0-F_0-s$ is the definition.
+\end{proof}
+
+The content of \eqref{eq:prelim-EB} is that the pricing-measure mean of the basis at expiry is read off today's two curves, the JIBAR forward $L_0$ and the ZARONIA forward $F_0$, with no model. What is not read off the curves is the law of $B_T$ around its mean: its volatility $\eta$ and its correlations $\rho_{BF}$ and $\rho_{B\alpha}$ with the drivers of the compounded rate. Chapter~\ref{ch:identifiability} shows that these are what the JIBAR smile cannot reveal about the compounded smile. Note the direction: the compounded caplet \eqref{eq:prelim-compounded-caplet} below depends only on the law of $F$, while the JIBAR caplet \eqref{eq:prelim-jibar-caplet} depends on the law of $L=F+B+s$ and hence on the basis. The basis contaminates the observed JIBAR smile, not the target compounded smile.
+
+\begin{definition}[Compounded caplet]\label{def:prelim-compounded-caplet}
+A compounded caplet with strike $K'$ on the window $[T,T+\Delta]$ pays $\Delta(R(T,T+\Delta)-K')^+$ at $T+\Delta$. Its time-$t$ price is
+\begin{equation}\label{eq:prelim-compounded-caplet}
+\mathrm{Cpl}^{F}_t(K')=P(t,T+\Delta)\,\Delta\,\E^{\Q^{T+\Delta}}\big[(F_{T+\Delta}-K')^+\,\big|\,\mathcal F_t\big],\qquad t\le T+\Delta .
+\end{equation}
+\end{definition}
+
+The price follows from Corollary~\ref{cor:prelim-forward-pricing} and $F_{T+\Delta}=R(T,T+\Delta)$. The ground-truth document writes the caplet without the accrual factor $\Delta$, as a price per unit of $\Delta\times$notional; we keep $\Delta$ explicit in the definition and drop it, as the ground truth does, whenever a formula is stated per unit accrual. Formula \eqref{eq:prelim-compounded-caplet} is an expectation of a payoff at time $T+\Delta$, not $T$: the option ``expires'' when the last overnight fixing is known. Everything in the next three sections is about the law of $F_{T+\Delta}$ under $\Q^{T+\Delta}$.
+
+\section{The volatility decay and the clock}\label{sec:prelim-decay}
+
+\subsection{Why the volatility must vanish at $T+\Delta$}
+
+The forward compounded rate is a martingale on $[0,T+\Delta]$ whose terminal value $R(T,T+\Delta)$ is determined progressively by the fixings inside the window. Its volatility therefore cannot stay at its pre-window level: the closer $t$ is to $T+\Delta$, the less of $R$ remains unknown. The following proposition makes this precise in two forms, a model-free form in terms of integrated variance and a pointwise form in a Heath--Jarrow--Morton model. Both are consequences of the definition of $R$ and Proposition~\ref{prop:prelim-F-bond}(iii).
+
+\begin{proposition}[Vanishing volatility of the compounded forward]\label{prop:prelim-vanish}
+\begin{enumerate}[nosep,label=(\roman*)]
+\item (Model-free.) Suppose $F$ is a continuous square-integrable $\Q^{T+\Delta}$-martingale with $dF_t=\sigma_t\,dW_t$ for a $\Q^{T+\Delta}$-Brownian motion $W$ and a progressively measurable $\sigma$ with $\E\int_0^{T+\Delta}\sigma_u^2du<\infty$. Then
+\[
+\E^{\Q^{T+\Delta}}\Big[\int_t^{T+\Delta}\sigma_u^2\,du\,\Big|\,\mathcal F_t\Big]=\E^{\Q^{T+\Delta}}\big[(F_{T+\Delta}-F_t)^2\,\big|\,\mathcal F_t\big]\;\xrightarrow[t\uparrow T+\Delta]{}\;0\quad\text{in }L^1 .
+\]
+\item (HJM form.) Suppose the discount bonds satisfy, under $\Q$, $dP(t,U)/P(t,U)=r_t\,dt-\sigma_P(t,U)\,dW_t$ with $\sigma_P(t,U)=\int_t^U\sigma_f(t,u)\,du$ for a bounded forward-rate volatility $\sigma_f$, so that $\sigma_P(t,U)\to0$ as $t\uparrow U$. Then under $\Q^{T+\Delta}$, with $W^{T+\Delta}$ the Brownian motion of Remark~\ref{rem:prelim-girsanov},
+\begin{equation}\label{eq:prelim-hjm-F}
+dF_t=\frac{1+\Delta F_t}{\Delta}\,\big(\sigma_P(t,T+\Delta)-\sigma_P(t,T)\ind{t\le T}\big)\,dW^{T+\Delta}_t,\qquad 0\le t\le T+\Delta,
+\end{equation}
+and the diffusion coefficient tends to $0$ as $t\uparrow T+\Delta$.
+\end{enumerate}
+\end{proposition}
+
+\begin{proof}
+(i) By It\^o's isometry conditional on $\mathcal F_t$, $\E[(F_{T+\Delta}-F_t)^2\mid\mathcal F_t]=\E[\int_t^{T+\Delta}\sigma_u^2du\mid\mathcal F_t]$, which is the identity. For the limit, $\E[(F_{T+\Delta}-F_t)^2]=\E\int_t^{T+\Delta}\sigma_u^2du\to0$ by dominated convergence, because $\int_t^{T+\Delta}\sigma_u^2du\downarrow0$ pointwise and is dominated by $\int_0^{T+\Delta}\sigma_u^2du$, which is integrable. $L^1$ convergence of the conditional expectations follows from $L^1$ convergence of the integrands.
+
+(ii) Write $Y_t:=1+\Delta F_t=P(t,T)/P(t,T+\Delta)$ with the extended bond of Proposition~\ref{prop:prelim-F-bond}(iv). By It\^o's formula, $d(1/P(t,T+\Delta))=(1/P(t,T+\Delta))\big[(-r_t+\sigma_P(t,T+\Delta)^2)\,dt+\sigma_P(t,T+\Delta)\,dW_t\big]$.
+
+For $t>T$, $P(t,T)=\beta_t/\beta_T$ has $dP(t,T)=r_tP(t,T)\,dt$ and no diffusion, so by the product rule
+\[
+\frac{dY_t}{Y_t}=r_t\,dt+(-r_t+\sigma_P(t,T+\Delta)^2)\,dt+\sigma_P(t,T+\Delta)\,dW_t=\sigma_P(t,T+\Delta)\big(dW_t+\sigma_P(t,T+\Delta)\,dt\big)=\sigma_P(t,T+\Delta)\,dW^{T+\Delta}_t .
+\]
+For $t\le T$, $dP(t,T)/P(t,T)=r_t\,dt-\sigma_P(t,T)\,dW_t$, and the product rule gives an additional $-\sigma_P(t,T)\,dW_t$ term and a cross-variation term $-\sigma_P(t,T)\sigma_P(t,T+\Delta)\,dt$:
+\[
+\frac{dY_t}{Y_t}=\big(\sigma_P(t,T+\Delta)^2-\sigma_P(t,T)\sigma_P(t,T+\Delta)\big)dt+\big(\sigma_P(t,T+\Delta)-\sigma_P(t,T)\big)dW_t
+=\big(\sigma_P(t,T+\Delta)-\sigma_P(t,T)\big)dW^{T+\Delta}_t .
+\]
+Since $dF_t=dY_t/\Delta$, both cases combine into \eqref{eq:prelim-hjm-F}. As $t\uparrow T+\Delta$, $\sigma_P(t,T+\Delta)=\int_t^{T+\Delta}\sigma_f(t,u)\,du\to0$ because $\sigma_f$ is bounded, while $1+\Delta F_t$ stays bounded away from $0$ and $\infty$ on a bounded-rate model; so the diffusion coefficient tends to $0$. The absence of a drift in both cases confirms directly that $F$ is a $\Q^{T+\Delta}$-martingale.
+\end{proof}
+
+\subsection{The decay profile and the clock}
+
+Proposition~\ref{prop:prelim-vanish}(ii) exhibits the volatility of $F$ inside the window as the pre-window volatility multiplied by a factor that falls from $1$ to $0$. This motivates the following structure, introduced by \cite{lyashenko2019} and used for SABR by \cite{willems2020}.
+
+\begin{definition}[Decay profile and clock]\label{def:prelim-decay}
+A decay profile is a deterministic, bounded, measurable function $g:[0,T+\Delta]\to[0,1]$ with $g(t)=1$ for $t\le T$, $g$ non-increasing on $(T,T+\Delta]$ with $g(T+\Delta)=0$, and $g>0$ on $[0,T+\Delta)$. The associated clock is
+\begin{equation}\label{eq:prelim-clock}
+\tau(t):=\int_0^t g(u)^2\,du,\qquad 0\le t\le T+\Delta,
+\end{equation}
+so that $\tau(t)=t$ for $t\le T$ and $\tau(T+\Delta)=T+c_g\Delta$ with $c_g:=\Delta^{-1}\int_T^{T+\Delta}g(u)^2du\in(0,1)$.
+\end{definition}
+
+The clock is continuous, strictly increasing (because $g>0$ almost everywhere on $[0,T+\Delta)$), and therefore has a continuous strictly increasing inverse $\tau^{-1}:[0,\tau(T+\Delta)]\to[0,T+\Delta]$. The bound $c_g<1$ holds because $g^2<1$ on $(T,T+\Delta]$ and $c_g>0$ because $g>0$ on a set of positive measure.
+
+\begin{assumption}[Linear decay]\label{ass:prelim-linear}
+$g(t)=(T+\Delta-t)/\Delta$ for $t\in(T,T+\Delta]$.
+\end{assumption}
+
+\begin{proposition}[The clock under linear decay]\label{prop:prelim-clock-linear}
+Under Assumption~\ref{ass:prelim-linear}, for $t\in[T,T+\Delta]$,
+\begin{equation}\label{eq:prelim-tau-linear}
+\tau(t)=T+\frac{\Delta}{3}\Big(1-g(t)^3\Big)=T+\frac\Delta3\Big(1-\Big(\frac{T+\Delta-t}{\Delta}\Big)^3\Big),
+\qquad\text{in particular}\qquad \tau(T+\Delta)=T+\frac\Delta3,\quad c_g=\frac13 .
+\end{equation}
+\end{proposition}
+
+\begin{proof}
+For $t\in[T,T+\Delta]$, substitute $v=(T+\Delta-u)/\Delta$, $du=-\Delta\,dv$:
+\[
+\tau(t)=T+\int_T^t\Big(\frac{T+\Delta-u}{\Delta}\Big)^2du=T+\Delta\int_{g(t)}^{1}v^2\,dv=T+\frac\Delta3\big(1-g(t)^3\big).
+\]
+At $t=T+\Delta$, $g=0$ and $\tau=T+\Delta/3$.
+\end{proof}
+
+\begin{proposition}[Linear decay is exact for flat forward-rate volatility]\label{prop:prelim-flat}
+In the HJM setting of Proposition~\ref{prop:prelim-vanish}(ii), suppose $\sigma_f(t,u)\equiv\sigma$ is constant. Then the diffusion coefficient of $F$ in \eqref{eq:prelim-hjm-F} equals $(1+\Delta F_t)\,\sigma\,g(t)$ with $g$ the linear profile of Assumption~\ref{ass:prelim-linear}. If instead $\sigma_f(t,u)=\sigma e^{-\kappa(u-t)}$ with $\kappa>0$, the ratio of the in-window to the at-$T$ diffusion coefficient is
+\begin{equation}\label{eq:prelim-g-hw}
+g_\kappa(t)=\frac{1-e^{-\kappa(T+\Delta-t)}}{1-e^{-\kappa\Delta}},\qquad t\in(T,T+\Delta],
+\end{equation}
+which is strictly convex in $t$, lies above the linear profile, and gives
+\begin{equation}\label{eq:prelim-cg-hw}
+c_{g_\kappa}=\frac{\kappa\Delta-2(1-e^{-\kappa\Delta})+\tfrac12(1-e^{-2\kappa\Delta})}{\kappa\Delta\,(1-e^{-\kappa\Delta})^2}\;\in\;\Big(\frac13,1\Big),\qquad c_{g_\kappa}\downarrow\frac13\text{ as }\kappa\downarrow0 .
+\end{equation}
+\end{proposition}
+
+\begin{proof}
+With $\sigma_f\equiv\sigma$, $\sigma_P(t,U)=\sigma(U-t)$. For $t\le T$ the coefficient in \eqref{eq:prelim-hjm-F} is $(1+\Delta F_t)\Delta^{-1}\sigma[(T+\Delta-t)-(T-t)]=(1+\Delta F_t)\sigma$. For $t\in(T,T+\Delta]$ it is $(1+\Delta F_t)\Delta^{-1}\sigma(T+\Delta-t)=(1+\Delta F_t)\sigma\cdot(T+\Delta-t)/\Delta$. The ratio is the linear profile.
+
+With $\sigma_f(t,u)=\sigma e^{-\kappa(u-t)}$, $\sigma_P(t,U)=\sigma(1-e^{-\kappa(U-t)})/\kappa$. At $t=T$ the coefficient is $(1+\Delta F_T)\sigma(1-e^{-\kappa\Delta})/\kappa$ and for $t>T$ it is $(1+\Delta F_t)\Delta^{-1}\sigma(1-e^{-\kappa(T+\Delta-t)})/\kappa$; dividing the in-window coefficient by its value at $t=T$ gives \eqref{eq:prelim-g-hw}. (In this model the pre-window coefficient $(1+\Delta F_t)\Delta^{-1}\sigma e^{-\kappa(T-t)}(1-e^{-\kappa\Delta})/\kappa$ is itself time-dependent, so the normalisation $g=1$ on $[0,T]$ is a second idealisation; the decay profile describes the shape of the run-off relative to the level reached at $T$.) Convexity: with $x=T+\Delta-t$, $g_\kappa=(1-e^{-\kappa x})/(1-e^{-\kappa\Delta})$ is concave increasing in $x$, hence convex decreasing in $t$, and lies above the chord from $(T,1)$ to $(T+\Delta,0)$, which is the linear profile. For $c_{g_\kappa}$ expand $(1-e^{-\kappa x})^2=1-2e^{-\kappa x}+e^{-2\kappa x}$ and integrate over $x\in[0,\Delta]$:
+\[
+\int_0^\Delta(1-e^{-\kappa x})^2dx=\Delta-\frac{2(1-e^{-\kappa\Delta})}{\kappa}+\frac{1-e^{-2\kappa\Delta}}{2\kappa},
+\]
+and divide by $\Delta(1-e^{-\kappa\Delta})^2$. Since $g_\kappa$ lies above the linear profile, $c_{g_\kappa}>1/3$; since $g_\kappa<1$ on the open window, $c_{g_\kappa}<1$. Expanding in $\kappa\Delta$: numerator $=\kappa^2\Delta^3/3+O(\kappa^3\Delta^4)$ and denominator $=\kappa^2\Delta^3+O(\kappa^3\Delta^4)$, so $c_{g_\kappa}\to1/3$.
+\end{proof}
+
+\begin{example}[Size of $c_g$ under mean reversion]\label{ex:prelim-cg}
+For $\Delta=0.25$ and $\kappa\in\{0.1,\,0.5,\,1,\,2,\,5\}$, formula \eqref{eq:prelim-cg-hw} gives $c_{g_\kappa}=0.3354,\,0.3438,\,0.3545,\,0.3762,\,0.4431$. For the mean-reversion speeds typical of calibrated one-factor models, $\kappa\le1$, the clock at $T+\Delta$ is within $0.021\Delta$ of $T+\Delta/3$, that is within about half a day for a three-month window; the linear profile is then a good approximation. For very fast mean reversion the clock moves towards $T+\Delta$ and the linear profile understates the in-window variance.
+\end{example}
+
+\begin{remark}[Status of Assumption~\ref{ass:prelim-linear}]\label{rem:prelim-linear-status}
+Proposition~\ref{prop:prelim-flat} identifies precisely when the linear profile is exact: when the instantaneous forward-rate volatility is flat in maturity. It also shows that even then the exactness is a statement about the HJM diffusion coefficient of $F$, which in that model is proportional to $1+\Delta F_t$, not about a normal or CEV SABR coefficient $\alpha_tF_t^\beta$. Assumption~\ref{ass:prelim-linear} transplants the profile onto the SABR dynamics of Section~\ref{sec:prelim-tcsabr}. It is therefore an assumption in two respects, the shape of the profile and its attachment to a different diffusion coefficient, and every result that depends on $\tau(T+\Delta)=T+\Delta/3$ inherits it. Generically $\tau(T+\Delta)=T+c_g\Delta$ with $c_g\in(0,1)$, and where a result of the thesis is sensitive to $c_g$ we say so. This remark is the only place the caveat is spelled out; the later chapters cite Assumption~\ref{ass:prelim-linear} and inherit it.
+\end{remark}
+
+\figplan{Decay profiles $g$ and clocks $\tau$ on the window $[T,T+\Delta]$ for $T=1$, $\Delta=0.25$: linear profile (Assumption~\ref{ass:prelim-linear}) and the Hull--White profiles $g_\kappa$ of \eqref{eq:prelim-g-hw} for $\kappa=0.5,\,2,\,5$; left panel $g(t)$ against $t$, right panel $\tau(t)-T$ against $t-T$ with the terminal values $c_g\Delta$ marked.}{Decay profiles and clocks. The left panel shows the linear profile $g(t)=(T+\Delta-t)/\Delta$ and three convex Hull--White profiles $g_\kappa(t)$ on $(T,T+\Delta]$; all start at $1$ and end at $0$. The right panel shows the corresponding clocks $\tau(t)-T=\int_T^t g^2$; the terminal value is $\Delta/3$ for the linear profile and $c_{g_\kappa}\Delta$ with $c_{g_\kappa}\in(1/3,1)$ for the others (Proposition~\ref{prop:prelim-flat}). The figure will show that for $\kappa\le1$ the clocks are visually indistinguishable at the scale of the window.}
+
+\section{SABR and the Hagan approximation}\label{sec:prelim-sabr}
+
+\subsection{The model}
+
+\begin{definition}[SABR]\label{def:prelim-sabr}
+The constant-parameter SABR model \cite{hagan2002} for a forward $\tilde F$ under its forward measure is
+\begin{equation}\label{eq:prelim-sabr-const}
+d\tilde F_u=\tilde\alpha_u\tilde F_u^{\beta}\,d\tilde W_u,\qquad d\tilde\alpha_u=\nu\,\tilde\alpha_u\,d\tilde Z_u,\qquad d\langle\tilde W,\tilde Z\rangle_u=\rho\,du,
+\end{equation}
+with $\tilde F_0=F_0>0$, $\tilde\alpha_0=\alpha_0>0$, $\beta\in[0,1]$, $\nu\ge0$ and $\rho\in(-1,1)$. For $\beta<1$ the origin is absorbing for $\tilde F$. The parameters are $(\alpha_0,\beta,\rho,\nu)$; $\alpha$ is the instantaneous volatility of $\tilde F$ in units of $\tilde F^{\beta}$, $\beta$ the backbone exponent, $\rho$ the rate--volatility correlation and $\nu$ the volatility of volatility.
+\end{definition}
+
+The volatility process $\tilde\alpha_u=\alpha_0\exp(\nu\tilde Z_u-\tfrac12\nu^2u)$ is an explicit geometric Brownian motion. For $\beta=0$ the model is normal SABR, $d\tilde F=\tilde\alpha\,d\tilde W$, and $\tilde F$ may take negative values; this is the case the thesis uses for rates, because interest-rate options are quoted in normal (Bachelier) implied volatility and because the fallback strike shift $K'=K-s$ is a translation, which normal SABR respects exactly. For $\beta=1$ the model is lognormal SABR. Existence of a weak solution to \eqref{eq:prelim-sabr-const} is standard; uniqueness in law is immediate for $\beta\in\{0,1\}$, where the rate equation is linear given the explicit $\tilde\alpha$, and for $\beta\in[\tfrac12,1)$ follows from the Yamada--Watanabe criterion applied to the rate equation conditionally on the volatility path when $\rho=0$ and from the general theory otherwise; see \cite[Ch.~5]{karatzas1991}. We take the law of the solution of \eqref{eq:prelim-sabr-const} as the definition of the model for each parameter set.
+
+\subsection{Implied volatilities}
+
+\begin{definition}[Normal and lognormal implied volatility]\label{def:prelim-implied}
+Let $C(K)$ be the undiscounted price of a call on a forward with expiry $t$, forward $f$ and strike $K$. The normal implied volatility $\sigma_N(K)$ is the unique $\sigma>0$ such that $C(K)=C_{\mathrm{Bach}}(f,K,\sigma\sqrt t)$ where
+\[
+C_{\mathrm{Bach}}(f,K,v)=(f-K)\Phi\Big(\frac{f-K}{v}\Big)+v\,\varphi\Big(\frac{f-K}{v}\Big),
+\]
+with $\Phi,\varphi$ the standard normal distribution and density. The lognormal implied volatility $\sigma_B(K)$ is, for $f,K>0$, the unique $\sigma>0$ with $C(K)=C_{\mathrm{BS}}(f,K,\sigma\sqrt t)=f\Phi(d_+)-K\Phi(d_-)$, $d_\pm=(\log(f/K)\pm\tfrac12\sigma^2t)/(\sigma\sqrt t)$.
+\end{definition}
+
+Both Bachelier and Black prices are strictly increasing in $v=\sigma\sqrt t$ from the intrinsic value to the forward, so the implied volatilities are well defined whenever $C(K)$ lies in that range, which it does for any arbitrage-free price. Because both prices depend on $\sigma$ and $t$ only through $v=\sigma\sqrt t$, an implied volatility quoted against a different time-to-expiry $t'$ is obtained by $\sigma'=\sigma\sqrt{t/t'}$. This is used in Section~\ref{sec:prelim-tcsabr} to move between the clock $\tau$ and calendar time.
+
+\begin{theorem}[Hagan approximation; \cite{hagan2002}]\label{thm:prelim-hagan}
+For the model \eqref{eq:prelim-sabr-const} with expiry $t$, forward $f=F_0$ and strike $K$, define
+\begin{equation}\label{eq:prelim-zx}
+x(z):=\log\Big(\frac{\sqrt{1-2\rho z+z^2}+z-\rho}{1-\rho}\Big),\qquad \frac{z}{x(z)}\Big|_{z=0}:=1 .
+\end{equation}
+\begin{enumerate}[nosep,label=(\roman*)]
+\item (Lognormal.) With $z=\dfrac{\nu}{\alpha_0}(fK)^{(1-\beta)/2}\log\dfrac fK$,
+\begin{equation}\label{eq:prelim-hagan-B}
+\sigma_B(K)\approx\frac{\alpha_0}{(fK)^{\frac{1-\beta}2}\Big[1+\frac{(1-\beta)^2}{24}\log^2\frac fK+\frac{(1-\beta)^4}{1920}\log^4\frac fK\Big]}\cdot\frac{z}{x(z)}\cdot
+\Big\{1+\Big[\frac{(1-\beta)^2\alpha_0^2}{24(fK)^{1-\beta}}+\frac{\rho\beta\nu\alpha_0}{4(fK)^{\frac{1-\beta}2}}+\frac{2-3\rho^2}{24}\nu^2\Big]t\Big\}.
+\end{equation}
+\item (Normal.) With $\zeta=\dfrac{\nu}{\alpha_0}\dfrac{f-K}{(fK)^{\beta/2}}$,
+\begin{equation}\label{eq:prelim-hagan-N}
+\sigma_N(K)\approx\alpha_0\,\frac{(1-\beta)(f-K)}{f^{1-\beta}-K^{1-\beta}}\cdot\frac{\zeta}{x(\zeta)}\cdot
+\Big\{1+\Big[-\frac{\beta(2-\beta)\alpha_0^2}{24(fK)^{1-\beta}}+\frac{\rho\beta\nu\alpha_0}{4(fK)^{\frac{1-\beta}2}}+\frac{2-3\rho^2}{24}\nu^2\Big]t\Big\},
+\end{equation}
+where the first factor is read as $\alpha_0f^{\beta}$ at $K=f$.
+\item (Normal SABR, $\beta=0$.) With $\zeta=\nu(f-K)/\alpha_0$,
+\begin{equation}\label{eq:prelim-hagan-N0}
+\sigma_N(K)\approx\alpha_0\,\frac{\zeta}{x(\zeta)}\Big\{1+\frac{2-3\rho^2}{24}\nu^2t\Big\}.
+\end{equation}
+\end{enumerate}
+The approximations are the first two terms of a singular perturbation expansion in the small parameter $\epsilon$ obtained by scaling $\alpha_0\mapsto\epsilon\alpha_0$, $\nu\mapsto\epsilon\nu$, so that both $\alpha_0^2t$ and $\nu^2t$ are $O(\epsilon^2)$; the terms neglected are $O(\epsilon^4)$ relative to the leading term. Following the ground-truth document, we say that the formulas carry their usual $O(\alpha^2t)$ error, meaning that their accuracy is governed by the size of the correction bracket, which is $O(\alpha_0^2t)+O(\nu^2t)$.
+\end{theorem}
+
+Formula \eqref{eq:prelim-hagan-N0} is \eqref{eq:prelim-hagan-N} at $\beta=0$: the prefactor $(f-K)/(f-K)$ is $1$, $\zeta$ reduces to $\nu(f-K)/\alpha_0$, and the two $\beta$-dependent terms in the bracket vanish. It is exact in $\nu\to0$, where it returns the Bachelier volatility $\alpha_0$, and it is the formula the thesis uses for every rate smile. Hagan et al.\ give \eqref{eq:prelim-hagan-B} as their equation (2.17) and the normal formula in two equivalent-to-this-order forms in their Appendix~A; \eqref{eq:prelim-hagan-N} is the form written in terms of $f-K$ rather than $\log(f/K)$.
+
+\subsection{Derivation sketch}
+
+We indicate the structure of the derivation in \cite{hagan2002} at the level needed to understand where each factor of \eqref{eq:prelim-hagan-N0} comes from; the full computation is eleven pages of the original and is not reproduced. The steps are these.
+
+\emph{Step 1: the problem as a backward equation.} Write the SABR dynamics with the scaling $\alpha\mapsto\epsilon\alpha$, $\nu\mapsto\epsilon\nu$, and let $C(F,\alpha,t)$ be the undiscounted call price as a function of the current state and the time to expiry. It satisfies the backward Kolmogorov equation
+\[
+\partial_tC=\tfrac12\epsilon^2\alpha^2\big[F^{2\beta}\partial_{FF}C+2\rho\nu F^{\beta}\partial_{F\alpha}C+\nu^2\partial_{\alpha\alpha}C\big],\qquad C(F,\alpha,0)=(F-K)^+ .
+\]
+Because the payoff is not smooth at $K$ and the diffusion is small, the problem is a singular perturbation problem in $\epsilon$, and a regular expansion of $C$ fails near the strike.
+
+\emph{Step 2: the near-strike scaling and the geodesic distance.} Introduce the variable $y=\int_K^F\frac{dF'}{\alpha F'^{\beta}}$, the distance from $F$ to the strike measured in units of the local volatility, so that the rate diffusion becomes a unit-speed motion in $y$. In the $(y,\alpha)$ variables the generator becomes, to leading order, that of a Brownian motion on a two-dimensional space of constant negative curvature, and the option price to leading order depends on the state only through the hyperbolic distance from the current point $(F,\alpha)$ to the strike line $\{F=K\}$. For the model \eqref{eq:prelim-sabr-const} this distance is computed in closed form and equals $x(z)/\nu$ with $z$ as in Theorem~\ref{thm:prelim-hagan}: $x(z)$ is the integral of the hyperbolic line element along the geodesic. The ratio $z/x(z)$ compares this distance with the distance $z/\nu$ that a model with frozen volatility $\alpha_0$ would assign; it is therefore the leading-order ratio of the effective volatility to $\alpha_0$, and it equals $1$ at the money.
+
+\emph{Step 3: matching to a normal model.} The leading-order price obtained in Step 2 has the form of a Bachelier price with an effective variance; identifying the two gives the leading factor of \eqref{eq:prelim-hagan-N}: the local-volatility average $\alpha_0(1-\beta)(f-K)/(f^{1-\beta}-K^{1-\beta})$, which is the harmonic-type mean of $\alpha_0F^{\beta}$ between $K$ and $f$ that a small-noise expansion of the local-volatility model $dF=\alpha_0F^{\beta}dW$ produces, multiplied by $\zeta/x(\zeta)$.
+
+\emph{Step 4: the first correction.} Carrying the expansion to the next order in $\epsilon^2$ produces three corrections, each linear in $t$: a local-volatility curvature term proportional to $\alpha_0^2$, which is $-\beta(2-\beta)\alpha_0^2/(24(fK)^{1-\beta})$ in normal units and $(1-\beta)^2\alpha_0^2/(24(fK)^{1-\beta})$ in lognormal units; a cross term $\rho\beta\nu\alpha_0/(4(fK)^{(1-\beta)/2})$ from the covariation of rate and volatility interacting with the backbone; and the term $(2-3\rho^2)\nu^2/24$ from the second moment of the volatility process itself, which is the only correction that survives at $\beta=0$. The lognormal formula is obtained by matching the same leading-order price to a Black price instead, which introduces the $\log(f/K)$ bracket in the denominator of \eqref{eq:prelim-hagan-B}.
+
+The derivation is asymptotic, not convergent; for $\nu^2t$ of order one or for strikes several standard deviations from the forward the formulas lose accuracy, and for $\beta<1$ the lognormal form can produce negative densities in the low-strike wing. The thesis uses expiries of at most a few years, $\nu^2t$ below one, and strikes within two standard deviations, and it treats the Hagan formula as the market's pricing convention rather than as an approximation to the exact SABR density: what is calibrated and quoted in practice is \eqref{eq:prelim-hagan-N0}.
+
+\subsection{Level, skew and curvature}
+
+The reading of $(\alpha_0,\rho,\nu)$ as the level, skew and curvature of the smile is a statement about first-order sensitivities. We prove it for the normal SABR formula \eqref{eq:prelim-hagan-N0}, which is the case used in the thesis.
+
+\begin{lemma}[Expansion of $z/x(z)$]\label{lem:prelim-zx-series}
+As $z\to0$,
+\begin{equation}\label{eq:prelim-zx-series}
+\frac{z}{x(z)}=1-\frac\rho2\,z+\frac{2-3\rho^2}{12}\,z^2+\frac{\rho(5-6\rho^2)}{24}\,z^3+O(z^4).
+\end{equation}
+\end{lemma}
+
+\begin{proof}
+Expand the square root: $\sqrt{1-2\rho z+z^2}=1-\rho z+\tfrac12(1-\rho^2)z^2+\tfrac12\rho(1-\rho^2)z^3+O(z^4)$; the coefficients follow from $\sqrt{1+w}=1+\tfrac w2-\tfrac{w^2}8+\tfrac{w^3}{16}+O(w^4)$ with $w=-2\rho z+z^2$, collecting powers of $z$. Then
+\[
+\frac{\sqrt{1-2\rho z+z^2}+z-\rho}{1-\rho}=1+z+\frac{1+\rho}2z^2+\frac{\rho(1+\rho)}2z^3+O(z^4),
+\]
+and applying $\log(1+w)=w-\tfrac{w^2}2+\tfrac{w^3}3+O(w^4)$ with $w=z+\tfrac{1+\rho}2z^2+\tfrac{\rho(1+\rho)}2z^3$,
+\[
+x(z)=z+\frac\rho2z^2+\frac{3\rho^2-1}{6}z^3+O(z^4),
+\]
+after collecting: the $z^2$ coefficient is $\tfrac{1+\rho}2-\tfrac12=\tfrac\rho2$, and the $z^3$ coefficient is $\tfrac{\rho(1+\rho)}2-\tfrac{1+\rho}2+\tfrac13=\tfrac{3\rho^2-1}6$. Finally
+\[
+\frac{z}{x(z)}=\Big(1+\frac\rho2z+\frac{3\rho^2-1}6z^2+O(z^3)\Big)^{-1}=1-\frac\rho2z+\Big(\frac{\rho^2}4-\frac{3\rho^2-1}{6}\Big)z^2+O(z^3)=1-\frac\rho2z+\frac{2-3\rho^2}{12}z^2+O(z^3),
+\]
+and one further order of the same computation gives the $z^3$ coefficient. The expansion was checked by computer algebra.
+\end{proof}
+
+\begin{proposition}[First-order sensitivities of the normal SABR smile]\label{prop:prelim-lsc}
+Let $\sigma_N(K)$ be given by \eqref{eq:prelim-hagan-N0} with $\beta=0$, expiry $t$, and write $c_t:=1+\frac{2-3\rho^2}{24}\nu^2t$. Define the level, skew and curvature of the smile as $\ell:=\sigma_N(f)$, $\mathsf s:=\partial_K\sigma_N(K)|_{K=f}$ and $\mathsf c:=\partial^2_K\sigma_N(K)|_{K=f}$. Then
+\begin{equation}\label{eq:prelim-lsc}
+\ell=\alpha_0\,c_t,\qquad \mathsf s=\frac{\rho\nu}{2}\,c_t,\qquad \mathsf c=\frac{(2-3\rho^2)\nu^2}{6\alpha_0}\,c_t,
+\end{equation}
+and consequently, to first order in $\nu^2t$,
+\[
+\frac{\partial\ell}{\partial\alpha_0}=1,\qquad \frac{\partial\mathsf s}{\partial\rho}=\frac\nu2,\qquad \frac{\partial\mathsf c}{\partial\nu}=\frac{(2-3\rho^2)\nu}{3\alpha_0},
+\]
+while $\partial\ell/\partial\rho=\partial\ell/\partial\nu=0$, $\partial\mathsf s/\partial\alpha_0=0$ and $\partial\mathsf s/\partial\nu=\rho/2$ at this order. In words: $\alpha_0$ alone moves the level, $\rho$ moves the skew and not the level, and $\nu$ is the only parameter that creates curvature when $\rho=0$; the skew is proportional to the product $\rho\nu$, and the curvature is proportional to $\nu^2$ with a $\rho$-dependent coefficient $2-3\rho^2$, which is positive for $|\rho|<\sqrt{2/3}$.
+\end{proposition}
+
+\begin{proof}
+Substitute $\zeta=\nu(f-K)/\alpha_0$ into Lemma~\ref{lem:prelim-zx-series}:
+\[
+\sigma_N(K)=\alpha_0c_t\Big[1-\frac{\rho\nu}{2\alpha_0}(f-K)+\frac{(2-3\rho^2)\nu^2}{12\alpha_0^2}(f-K)^2+O\big((f-K)^3\big)\Big].
+\]
+Setting $K=f$ gives $\ell$. Differentiating once with respect to $K$, the term $-\frac{\rho\nu}{2\alpha_0}(f-K)$ contributes $+\frac{\rho\nu}{2\alpha_0}$ and the quadratic term contributes $-\frac{(2-3\rho^2)\nu^2}{6\alpha_0^2}(f-K)$, which vanishes at $K=f$; multiplying by $\alpha_0c_t$ gives $\mathsf s$. Differentiating twice, only the quadratic term survives at $K=f$, with second derivative $\frac{(2-3\rho^2)\nu^2}{6\alpha_0^2}$; multiplying by $\alpha_0c_t$ gives $\mathsf c$. The partial derivatives follow by differentiating \eqref{eq:prelim-lsc} and discarding the $O(\nu^2t)$ corrections carried by $c_t$; at exact order, $\ell$ depends weakly on $\rho$ and $\nu$ through $c_t$, and $\mathsf s,\mathsf c$ carry the same factor.
+\end{proof}
+
+\begin{remark}[Sign conventions]\label{rem:prelim-skew-sign}
+With $\rho<0$ the skew $\mathsf s=\rho\nu c_t/2$ is negative: implied volatility falls as the strike rises, the usual shape of rate smiles in a market that fears rallies more than sell-offs. Some authors define the skew as the derivative with respect to $f-K$, which flips the sign. The thesis always differentiates with respect to $K$.
+\end{remark}
+
+The proposition is the reason a three-parameter fit to level, skew and curvature at one expiry pins $(\alpha_0,\rho,\nu)$ given $\beta$: the Jacobian of $(\ell,\mathsf s,\mathsf c)$ with respect to $(\alpha_0,\rho,\nu)$ is, to first order, upper triangular with non-zero diagonal $(1,\nu/2,(2-3\rho^2)\nu/(3\alpha_0))$ whenever $\nu\ne0$ and $|\rho|\neq\sqrt{2/3}$. Chapter~\ref{ch:identifiability} uses this non-singularity, and the fact that the level is the only one of the three that the basis correlation $\rho_{BF}$ shifts at first order, when it inverts the smile map.
+
+\section{Time-changed SABR}\label{sec:prelim-tcsabr}
+
+\subsection{The decaying-volatility SABR model}
+
+Combining the SABR model of Section~\ref{sec:prelim-sabr} with the decay profile of Section~\ref{sec:prelim-decay} gives the model of the ground-truth document for the forward compounded rate. Under $\Q^{T+\Delta}$, with $(W,Z)$ a pair of Brownian motions with $d\langle W,Z\rangle_t=\rho\,dt$,
+\begin{equation}\label{eq:prelim-sabr-decay}
+dF_t=g(t)\,\alpha_tF_t^{\beta}\,dW_t,\qquad d\alpha_t=g(t)\,\nu\,\alpha_t\,dZ_t,\qquad 0\le t\le T+\Delta,
+\end{equation}
+with $F_0$, $\alpha_0$ given. The same profile $g$ multiplies both diffusion coefficients. Before $T$, where $g=1$, this is constant-parameter SABR; inside the window both the rate volatility and the volatility of volatility run off together. The alternative in which only the rate volatility runs off is the subject of Proposition~\ref{prop:prelim-novol}.
+
+\subsection{Deterministic time change of stochastic integrals}
+
+The proof of Lemma~\ref{lem:prelim-tc} rests on the following two facts about deterministic time changes, which we prove in full. Throughout, $\tau$ is the clock of Definition~\ref{def:prelim-decay} and $\tau^{-1}$ its inverse on $[0,\tau^*]$, $\tau^*:=\tau(T+\Delta)$.
+
+\begin{lemma}[Time-changed Brownian pair]\label{lem:prelim-tc-bm}
+Let $(W,Z)$ be $(\mathcal F_t)$-Brownian motions with $d\langle W,Z\rangle_t=\rho\,dt$ and let $g$ be a decay profile. Define $M_t:=\int_0^tg(u)\,dW_u$, $N_t:=\int_0^tg(u)\,dZ_u$ and, for $u\in[0,\tau^*]$,
+\[
+\tilde W_u:=M_{\tau^{-1}(u)},\qquad \tilde Z_u:=N_{\tau^{-1}(u)},\qquad \mathcal G_u:=\mathcal F_{\tau^{-1}(u)} .
+\]
+Then $(\tilde W,\tilde Z)$ is a pair of $(\mathcal G_u)$-Brownian motions on $[0,\tau^*]$ with $d\langle\tilde W,\tilde Z\rangle_u=\rho\,du$.
+\end{lemma}
+
+\begin{proof}
+$(\mathcal G_u)$ is a filtration because $\tau^{-1}$ is increasing, and it satisfies the usual conditions because $(\mathcal F_t)$ does. $M$ and $N$ are continuous square-integrable $(\mathcal F_t)$-martingales, $g$ being bounded, with quadratic variations and covariation
+\[
+\langle M\rangle_t=\int_0^tg^2\,du=\tau(t),\qquad\langle N\rangle_t=\tau(t),\qquad\langle M,N\rangle_t=\rho\,\tau(t).
+\]
+For each $u$, $\tau^{-1}(u)$ is a deterministic time, so $\tilde W_u=M_{\tau^{-1}(u)}$ is $\mathcal G_u$-measurable, and for $u<v$, $\E[\tilde W_v\mid\mathcal G_u]=\E[M_{\tau^{-1}(v)}\mid\mathcal F_{\tau^{-1}(u)}]=M_{\tau^{-1}(u)}=\tilde W_u$: $\tilde W$ is a $(\mathcal G_u)$-martingale, continuous because $M$ and $\tau^{-1}$ are continuous. Its quadratic variation is $\langle\tilde W\rangle_u=\langle M\rangle_{\tau^{-1}(u)}=\tau(\tau^{-1}(u))=u$, because quadratic variation along a deterministic continuous strictly increasing reparametrisation of time is the reparametrised quadratic variation (the approximating sums over partitions of $[0,u]$ are the approximating sums of $\langle M\rangle$ over the image partitions of $[0,\tau^{-1}(u)]$, whose mesh tends to zero by uniform continuity of $\tau^{-1}$). By L\'evy's characterisation \cite[Thm.~3.3.16]{karatzas1991}, $\tilde W$ is a $(\mathcal G_u)$-Brownian motion. The same argument applies to $\tilde Z$, and $\langle\tilde W,\tilde Z\rangle_u=\langle M,N\rangle_{\tau^{-1}(u)}=\rho u$. Finally, $\tilde Z^\perp:=(\tilde Z-\rho\tilde W)/\sqrt{1-\rho^2}$ is a continuous $(\mathcal G_u)$-martingale with $\langle\tilde Z^\perp\rangle_u=u$ and $\langle\tilde W,\tilde Z^\perp\rangle_u=0$, so by the two-dimensional L\'evy characterisation $(\tilde W,\tilde Z^\perp)$ is a two-dimensional Brownian motion and $(\tilde W,\tilde Z)$ is a $\rho$-correlated pair.
+\end{proof}
+
+\begin{lemma}[Time change of the stochastic integral]\label{lem:prelim-tc-int}
+In the setting of Lemma~\ref{lem:prelim-tc-bm}, let $H$ be $(\mathcal F_t)$-progressively measurable with $\E\int_0^{T+\Delta}H_t^2g(t)^2\,dt<\infty$, and set $\tilde H_u:=H_{\tau^{-1}(u)}$. Then $\tilde H$ is $(\mathcal G_u)$-progressively measurable with $\E\int_0^{\tau^*}\tilde H_u^2\,du<\infty$, and for every $t\in[0,T+\Delta]$,
+\begin{equation}\label{eq:prelim-tc-int}
+\int_0^tH_s\,g(s)\,dW_s=\int_0^{\tau(t)}\tilde H_u\,d\tilde W_u\qquad\text{a.s.}
+\end{equation}
+The same holds with $Z,\tilde Z$ in place of $W,\tilde W$.
+\end{lemma}
+
+\begin{proof}
+Measurability: the map $(u,\omega)\mapsto(\tau^{-1}(u),\omega)$ is measurable from $[0,v]\times\Omega$ with the $\sigma$-field $\mathcal B([0,v])\otimes\mathcal G_v$ to $[0,\tau^{-1}(v)]\times\Omega$ with $\mathcal B\otimes\mathcal F_{\tau^{-1}(v)}$, and progressive measurability of $H$ is preserved under composition. Integrability: substituting $u=\tau(s)$, $du=g(s)^2ds$,
+\[
+\int_0^{\tau^*}\tilde H_u^2\,du=\int_0^{T+\Delta}H_s^2\,g(s)^2\,ds ,
+\]
+which is the change-of-variables formula for the Lebesgue--Stieltjes measure $d\tau$, valid because $\tau$ is absolutely continuous and increasing.
+
+Identity \eqref{eq:prelim-tc-int} for simple integrands: let $H_s=\sum_{i=0}^{m-1}\xi_i\ind{s\in(t_i,t_{i+1}]}$ with $0=t_0<\dots<t_m=T+\Delta$ and $\xi_i$ bounded $\mathcal F_{t_i}$-measurable. Then $\tilde H_u=\sum_i\xi_i\ind{u\in(\tau(t_i),\tau(t_{i+1})]}$ is simple for $(\mathcal G_u)$, since $\xi_i$ is $\mathcal G_{\tau(t_i)}=\mathcal F_{t_i}$-measurable, and for $t=t_j$,
+\[
+\int_0^{t_j}H_sg(s)\,dW_s=\sum_{i<j}\xi_i\big(M_{t_{i+1}}-M_{t_i}\big)=\sum_{i<j}\xi_i\big(\tilde W_{\tau(t_{i+1})}-\tilde W_{\tau(t_i)}\big)=\int_0^{\tau(t_j)}\tilde H_u\,d\tilde W_u ,
+\]
+where the first equality is the definition of the integral of a simple process against $M$, which for $M=\int g\,dW$ is the integral of $Hg$ against $W$, and the second is the definition $\tilde W_{\tau(t)}=M_t$. Times $t$ not in the partition are handled by refining the partition.
+
+Extension: both sides of \eqref{eq:prelim-tc-int} are isometries from the respective $L^2$ spaces of integrands into $L^2(\Omega)$, with norms $\E\int_0^tH^2g^2\,ds$ and $\E\int_0^{\tau(t)}\tilde H^2\,du$, which coincide by the change of variables above. Simple processes are dense in the space of progressively measurable $H$ with $\E\int H^2g^2<\infty$ \cite[Prop.~3.2.6]{karatzas1991}. If $H^{(k)}\to H$ in that norm then $\tilde H^{(k)}\to\tilde H$ in the other, both sides of \eqref{eq:prelim-tc-int} converge in $L^2(\Omega)$, and the identity passes to the limit.
+\end{proof}
+
+\subsection{Ground-truth Lemma 1}
+
+\begin{lemma}[Time-changed SABR; \cite{willems2020}, \cite{lyashenko2019}]\label{lem:prelim-tc}
+Under \eqref{eq:prelim-sabr-decay} with the same profile $g$ on both diffusion coefficients, $(F_t,\alpha_t)=(\tilde F_{\tau(t)},\tilde\alpha_{\tau(t)})$ for $t\in[0,T+\Delta]$, where $(\tilde F,\tilde\alpha)$ is constant-parameter SABR$(\alpha_0,\beta,\rho,\nu)$ in the sense of Definition~\ref{def:prelim-sabr}, driven by the Brownian pair $(\tilde W,\tilde Z)$ of Lemma~\ref{lem:prelim-tc-bm}. Hence, per unit accrual,
+\begin{equation}\label{eq:prelim-tc-price}
+P(0,T+\Delta)\,\E^{\Q^{T+\Delta}}\big[(F_{T+\Delta}-K')^+\big]=P(0,T+\Delta)\,C^{\mathrm{SABR}}\big(F_0,K',\tau(T+\Delta);\alpha_0,\beta,\rho,\nu\big),
+\end{equation}
+where $C^{\mathrm{SABR}}(f,K,t;\cdot)$ is the undiscounted constant-parameter SABR call price with expiry $t$, with the Hagan approximation of Theorem~\ref{thm:prelim-hagan} carrying its usual $O(\alpha^2\tau)$ error. Under Assumption~\ref{ass:prelim-linear}, $\tau(T+\Delta)=T+\Delta/3$.
+\end{lemma}
+
+\begin{proof}
+Define $\tilde F_u:=F_{\tau^{-1}(u)}$ and $\tilde\alpha_u:=\alpha_{\tau^{-1}(u)}$ for $u\in[0,\tau^*]$, so that $F_t=\tilde F_{\tau(t)}$ and $\alpha_t=\tilde\alpha_{\tau(t)}$ by construction. It remains to show that $(\tilde F,\tilde\alpha)$ solves \eqref{eq:prelim-sabr-const} with the driving pair $(\tilde W,\tilde Z)$.
+
+Integrating the second equation of \eqref{eq:prelim-sabr-decay} to time $t=\tau^{-1}(u)$ and applying Lemma~\ref{lem:prelim-tc-int} with $H_s=\nu\alpha_s$ and the Brownian motion $Z$,
+\[
+\tilde\alpha_u=\alpha_0+\int_0^{\tau^{-1}(u)}\nu\alpha_s\,g(s)\,dZ_s=\alpha_0+\int_0^u\nu\,\alpha_{\tau^{-1}(v)}\,d\tilde Z_v=\alpha_0+\nu\int_0^u\tilde\alpha_v\,d\tilde Z_v .
+\]
+The integrability hypothesis of Lemma~\ref{lem:prelim-tc-int} holds because $\alpha$ is a geometric Brownian motion in the clock and has finite second moments on a bounded interval. Likewise, with $H_s=\alpha_sF_s^{\beta}$ and the Brownian motion $W$,
+\[
+\tilde F_u=F_0+\int_0^{\tau^{-1}(u)}\alpha_sF_s^{\beta}g(s)\,dW_s=F_0+\int_0^u\tilde\alpha_v\tilde F_v^{\beta}\,d\tilde W_v ,
+\]
+the integrability hypothesis being the same one that makes $F$ a square-integrable martingale in \eqref{eq:prelim-sabr-decay}, which we assume; for $\beta=0$ it is automatic. By Lemma~\ref{lem:prelim-tc-bm}, $(\tilde W,\tilde Z)$ is a $\rho$-correlated $(\mathcal G_u)$-Brownian pair, and $(\tilde F,\tilde\alpha)$ is $(\mathcal G_u)$-adapted and continuous. Thus $(\tilde F,\tilde\alpha)$ is a solution of the constant-parameter SABR equation \eqref{eq:prelim-sabr-const} on $[0,\tau^*]$ with the given initial condition, and by uniqueness in law it has the SABR$(\alpha_0,\beta,\rho,\nu)$ law. This is the first assertion. No Dambis--Dubins--Schwarz argument is needed: the clock is deterministic, and the same $g$ on both equations is exactly what makes both substitutions produce the same clock; with different profiles the two time changes would not coincide, which is the situation of Proposition~\ref{prop:prelim-novol}.
+
+For \eqref{eq:prelim-tc-price}, the caplet price per unit accrual is $P(0,T+\Delta)\,\E^{\Q^{T+\Delta}}[(F_{T+\Delta}-K')^+]$ by Definition~\ref{def:prelim-compounded-caplet}, and $F_{T+\Delta}=\tilde F_{\tau(T+\Delta)}$ has the law of a constant-parameter SABR forward at expiry $\tau(T+\Delta)$ started at $F_0$. Its call price is therefore $C^{\mathrm{SABR}}(F_0,K',\tau(T+\Delta);\alpha_0,\beta,\rho,\nu)$, and the Hagan approximation to it is Theorem~\ref{thm:prelim-hagan} with $t=\tau(T+\Delta)$. The value $T+\Delta/3$ is Proposition~\ref{prop:prelim-clock-linear}.
+\end{proof}
+
+\begin{corollary}[Quoted normal volatility of the compounded caplet]\label{cor:prelim-quoted}
+Under the hypotheses of Lemma~\ref{lem:prelim-tc} with $\beta=0$, the normal implied volatility of the compounded caplet, quoted against the calendar time to payment $T+\Delta$, is
+\begin{equation}\label{eq:prelim-quoted}
+\sigma^{N}_{F}(K',T+\Delta)=\sigma_N^{\mathrm{SABR}}\big(K';\tau(T+\Delta)\big)\sqrt{\frac{\tau(T+\Delta)}{T+\Delta}},
+\end{equation}
+where $\sigma_N^{\mathrm{SABR}}(\cdot;t)$ is \eqref{eq:prelim-hagan-N0} with expiry $t$. Under Assumption~\ref{ass:prelim-linear} the factor is $\sqrt{(T+\Delta/3)/(T+\Delta)}$.
+\end{corollary}
+
+\begin{proof}
+The Bachelier price depends on $(\sigma,t)$ only through $\sigma\sqrt t$ (Definition~\ref{def:prelim-implied}), so the price $C_{\mathrm{Bach}}(F_0,K',\sigma_N^{\mathrm{SABR}}\sqrt{\tau})$ equals $C_{\mathrm{Bach}}(F_0,K',\sigma'\sqrt{T+\Delta})$ exactly when $\sigma'=\sigma_N^{\mathrm{SABR}}\sqrt{\tau/(T+\Delta)}$.
+\end{proof}
+
+The council's observation that the same-$g$ condition, not a Dambis--Dubins--Schwarz argument, is the substance of the lemma deserves emphasis. Dambis--Dubins--Schwarz would represent the continuous martingale $F$ as a Brownian motion run with a random clock $\langle F\rangle_t$, which is not deterministic here because $\alpha$ is random. The lemma does something simpler: it reparametrises time by the deterministic function $\tau$, under which the two driving Brownian motions become Brownian motions again and the two stochastic integrals become the same integrals with constant coefficients. What makes this work is that the factor removed by the reparametrisation, $g(t)$, is the same in both equations.
+
+\subsection{Ground-truth Proposition 2: non-decaying vol-of-vol}
+
+The physical case for the alternative model is that the volatility of volatility describes how quickly the market's estimate of rate volatility changes, and there is no mechanism by which the passage of the accrual window should slow that process down. What the window slows down is the sensitivity of the compounded rate to the short rate, which is the factor $g$ in the first equation. Under this reading the model is
+\begin{equation}\label{eq:prelim-sabr-novol}
+dF_t=g(t)\,\alpha_tF_t^{\beta}\,dW_t,\qquad d\alpha_t=\nu\,\alpha_t\,dZ_t,\qquad 0\le t\le T+\Delta .
+\end{equation}
+
+\begin{proposition}[Non-decaying vol-of-vol]\label{prop:prelim-novol}
+Under \eqref{eq:prelim-sabr-novol}, in the clock $\tau$ the pair $(\tilde F_u,\tilde\alpha_u):=(F_{\tau^{-1}(u)},\alpha_{\tau^{-1}(u)})$ satisfies
+\begin{equation}\label{eq:prelim-novol-clock}
+d\tilde F_u=\tilde\alpha_u\tilde F_u^{\beta}\,d\tilde W_u,\qquad d\tilde\alpha_u=\tilde\nu(u)\,\tilde\alpha_u\,d\tilde Z_u,\qquad \tilde\nu(u):=\frac{\nu}{g(\tau^{-1}(u))},
+\end{equation}
+a SABR model with time-dependent vol-of-vol, for which no constant-parameter closed form of Hagan type exists. The caplet is approximated by the Hagan--Lesniewski--Woodward effective parameters $(\rho_{\mathrm{eff}},\nu_{\mathrm{eff}})$ for time-dependent SABR. Relative to Lemma~\ref{lem:prelim-tc} the total vol-of-vol variance is
+\begin{equation}\label{eq:prelim-novol-total}
+\int_0^{\tau^*}\tilde\nu(u)^2\,du=\nu^2(T+\Delta)\qquad\text{rather than}\qquad\nu^2\tau^*=\nu^2\Big(T+\frac\Delta3\Big),
+\end{equation}
+so that, on the ground-truth accounting in which smile curvature is proportional to total vol-of-vol variance, Lemma~\ref{lem:prelim-tc} understates smile curvature by $\tfrac23\nu^2\Delta$, which is $2\Delta/(3T)$ of $\nu^2T$, about $17\%$ for $T=1$y and $\Delta=3$m.
+\end{proposition}
+
+\begin{proof}[Derivation]
+The rate equation is time-changed exactly as in the proof of Lemma~\ref{lem:prelim-tc}, giving the first equation of \eqref{eq:prelim-novol-clock}. For the volatility equation, apply Lemma~\ref{lem:prelim-tc-int} in reverse: with $H_s=\nu\alpha_s/g(s)$, which is well defined on $[0,T+\Delta)$ because $g>0$ there, $\nu\alpha_s\,dZ_s=H_s\,g(s)\,dZ_s$, so
+\[
+\tilde\alpha_u=\alpha_0+\int_0^{\tau^{-1}(u)}H_sg(s)\,dZ_s=\alpha_0+\int_0^u\frac{\nu}{g(\tau^{-1}(v))}\,\tilde\alpha_v\,d\tilde Z_v ,
+\]
+which is the second equation of \eqref{eq:prelim-novol-clock}. The integrability hypothesis $\E\int_0^{T+\Delta}H_s^2g(s)^2ds=\nu^2\E\int_0^{T+\Delta}\alpha_s^2ds<\infty$ holds. The vol-of-vol $\tilde\nu(u)=\nu/g(\tau^{-1}(u))$ is $\nu$ on $[0,T]$ and increases to $+\infty$ as $u\uparrow\tau^*$; under Assumption~\ref{ass:prelim-linear}, $\tau(t)=T+\tfrac\Delta3(1-g(t)^3)$ by Proposition~\ref{prop:prelim-clock-linear}, so $g(\tau^{-1}(u))=(1-3(u-T)/\Delta)^{1/3}$ and
+\begin{equation}\label{eq:prelim-nutilde-linear}
+\tilde\nu(u)^2=\nu^2\Big(1-\frac{3(u-T)}{\Delta}\Big)^{-2/3},\qquad u\in(T,\tau^*],
+\end{equation}
+an integrable singularity. The total vol-of-vol variance is, by the change of variables $u=\tau(t)$, $du=g^2dt$,
+\[
+\int_0^{\tau^*}\tilde\nu(u)^2du=\int_0^{T+\Delta}\frac{\nu^2}{g(t)^2}\,g(t)^2\,dt=\nu^2(T+\Delta),
+\]
+and directly from \eqref{eq:prelim-nutilde-linear}: $\nu^2T+\nu^2\int_0^1w^{-2/3}\tfrac\Delta3\,dw=\nu^2T+\nu^2\Delta$ with $w=1-3(u-T)/\Delta$. The comparison with $\nu^2\tau^*=\nu^2(T+\Delta/3)$ gives $\tfrac23\nu^2\Delta$, and $\tfrac23\Delta/T=\tfrac23\cdot\tfrac14=0.1667$ for $T=1$, $\Delta=0.25$.
+
+Because $\tilde\nu$ is not constant, Lemma~\ref{lem:prelim-tc} does not apply and Theorem~\ref{thm:prelim-hagan} cannot be used with a single $\nu$. The time-dependent extension of the Hagan expansion, given in Appendix~B of \cite{hagan2002} and developed by Hagan, Lesniewski and Woodward, replaces $(\rho,\nu)$ by effective constants $(\rho_{\mathrm{eff}},\nu_{\mathrm{eff}})$ such that the constant-parameter formula with these constants reproduces the time-dependent smile to the order of the expansion. In the ground-truth accounting the effective vol-of-vol variance is identified with the total $\int\tilde\nu^2$, which gives $\nu_{\mathrm{eff}}^2\tau^*=\nu^2(T+\Delta)$, that is $\nu_{\mathrm{eff}}^2=\nu^2(T+\Delta)/\tau^*=1.154\,\nu^2$ in the example; the curvature $\mathsf c\propto\nu^2$ of Proposition~\ref{prop:prelim-lsc} is then understated by Lemma~\ref{lem:prelim-tc} in the stated proportion.
+\end{proof}
+
+\begin{proposition}[Effective vol-of-vol at leading order]\label{prop:prelim-nueff}
+For normal SABR ($\beta=0$) with time-dependent vol-of-vol $\tilde\nu(u)$ and correlation $\rho$ on the clock interval $[0,\tau^*]$, the third cumulant of $\tilde F_{\tau^*}-F_0$ and the variance of the realised variance $V:=\int_0^{\tau^*}\tilde\alpha_u^2du$ are, to leading order in $\tilde\nu$,
+\begin{equation}\label{eq:prelim-eff-weights}
+\kappa_3=6\alpha_0^3\rho\int_0^{\tau^*}\tilde\nu(u)(\tau^*-u)\,du+O(\tilde\nu^2),\qquad
+\Var(V)=4\alpha_0^4\int_0^{\tau^*}\tilde\nu(u)^2(\tau^*-u)^2\,du+O(\tilde\nu^3).
+\end{equation}
+Matching to constant parameters gives the Hagan--Lesniewski--Woodward effective parameters
+\begin{equation}\label{eq:prelim-eff}
+\rho_{\mathrm{eff}}\nu_{\mathrm{eff}}=\frac{2}{(\tau^*)^2}\int_0^{\tau^*}\rho\,\tilde\nu(u)(\tau^*-u)\,du,\qquad
+\nu_{\mathrm{eff}}^2=\frac{3}{(\tau^*)^3}\int_0^{\tau^*}\tilde\nu(u)^2(\tau^*-u)^2\,du .
+\end{equation}
+\end{proposition}
+
+\begin{proof}
+Write $\tilde\alpha_u=\alpha_0(1+I_u)+O(\tilde\nu^2)$ with $I_u:=\int_0^u\tilde\nu(s)\,d\tilde Z_s$, the first-order expansion of the stochastic exponential. Then $\tilde F_{\tau^*}-F_0=\alpha_0\tilde W_{\tau^*}+\alpha_0\int_0^{\tau^*}I_u\,d\tilde W_u+O(\tilde\nu^2)$, and its third central moment to first order is $3\alpha_0^3\E[\tilde W_{\tau^*}^2\int_0^{\tau^*}I_ud\tilde W_u]$, all other terms being of higher order or zero by symmetry. By It\^o's formula $\tilde W_{\tau^*}^2=2\int_0^{\tau^*}\tilde W_ud\tilde W_u+\tau^*$, and by the isometry for the product of two stochastic integrals against the same Brownian motion, $\E[\tilde W_{\tau^*}^2\int I\,d\tilde W]=2\int_0^{\tau^*}\E[\tilde W_uI_u]\,du=2\int_0^{\tau^*}\int_0^u\rho\tilde\nu(s)\,ds\,du=2\rho\int_0^{\tau^*}\tilde\nu(s)(\tau^*-s)\,ds$, interchanging the order of integration. This gives $\kappa_3$. For $\Var(V)$, $\tilde\alpha_u^2=\alpha_0^2(1+2I_u)+O(\tilde\nu^2)$, so $V-\E V=2\alpha_0^2\int_0^{\tau^*}I_u\,du+O(\tilde\nu^2)=2\alpha_0^2\int_0^{\tau^*}\tilde\nu(s)(\tau^*-s)\,d\tilde Z_s+O(\tilde\nu^2)$ by the stochastic Fubini theorem, and the isometry gives the stated variance. For constant $\tilde\nu\equiv\nu$ the two integrals equal $\rho\nu(\tau^*)^2/2$ and $\nu^2(\tau^*)^3/3$; equating the time-dependent expressions to the constant-parameter ones with $(\rho_{\mathrm{eff}},\nu_{\mathrm{eff}})$ gives \eqref{eq:prelim-eff}. The skew of the smile is driven by $\kappa_3$ and its curvature by $\Var(V)$ at this order, which is how the effective parameters reproduce the smile.
+\end{proof}
+
+\gap{The step in Proposition~\ref{prop:prelim-novol} from total vol-of-vol variance $\int\tilde\nu^2du$ to smile curvature is not supported by the effective-parameter theory that the proposition invokes. By Proposition~\ref{prop:prelim-nueff} the effective vol-of-vol weights $\tilde\nu(u)^2$ by $(\tau^*-u)^2$: a volatility shock that arrives when little of the rate variance remains has little to act on. For the linear profile, $\tau^*-u=\tfrac\Delta3 g^3$ on the in-window part of the clock, so the excess of the non-decaying variant over Lemma~\ref{lem:prelim-tc} in $\int\tilde\nu^2(\tau^*-u)^2du$ is $\nu^2(\Delta/3)^3\big(\tfrac37-\tfrac13\big)=\nu^2\Delta^3\cdot\tfrac{2}{567}$, against a total of $\nu^2(\tau^*)^3/3$. For $T=1$y, $\Delta=3$m this makes $\nu_{\mathrm{eff}}^2$ larger by $0.013\%$, not by $15$--$17\%$; the two variants produce the same smile to well within the accuracy of the Hagan expansion. The ground-truth statement is kept as written because the ground truth is the source of record. What must be established is which of the two accountings the council intends: if total vol-of-vol variance, then the proposition is correct as stated but its conclusion does not describe the caplet smile; if effective vol-of-vol, then the ``$17\%$ understatement'' should be withdrawn and the choice of variant declared immaterial for pricing at this order. Either way the empirical chapters can use Lemma~\ref{lem:prelim-tc}. A lesson has been appended.}
+
+\subsection{Worked numerical example}\label{subsec:prelim-worked}
+
+We take $T=1$ year, $\Delta=0.25$ year, $F_0=f=7.00\%$, $\alpha_0=0.006$ (60 basis points of normal volatility), $\beta=0$, $\nu=0.4$, $\rho=-0.2$, and the linear profile. All arithmetic is shown to five significant figures.
+
+\emph{The clock.} By Proposition~\ref{prop:prelim-clock-linear}, $\tau^*=\tau(T+\Delta)=T+\Delta/3=1+0.083333=1.0833$. The calendar time to payment is $T+\Delta=1.25$; the ratio is $\tau^*/(T+\Delta)=0.86667$ and its square root is $0.93095$.
+
+\emph{The at-the-money volatility at the clock.} In \eqref{eq:prelim-hagan-N0}, $2-3\rho^2=2-3(0.04)=1.88$, $\nu^2=0.16$, and the correction bracket is
+\[
+c_{\tau^*}=1+\frac{1.88\times0.16\times1.0833}{24}=1+\frac{0.32587}{24}=1+0.013578=1.013578 .
+\]
+So $\sigma_N^{\mathrm{SABR}}(f;\tau^*)=0.006\times1.013578=0.0060815$, that is $60.81$ basis points.
+
+\emph{Quoted at-the-money volatility.} By Corollary~\ref{cor:prelim-quoted}, $\sigma^N_F(f,T+\Delta)=60.81\times0.93095=56.62$ basis points.
+
+\emph{The wings at $\pm50$ basis points.} For $K=f-0.005$: $\zeta=\nu(f-K)/\alpha_0=0.4\times0.005/0.006=0.33333$. Then $1-2\rho\zeta+\zeta^2=1+0.13333+0.11111=1.24444$, whose square root is $1.11555$; adding $\zeta-\rho=0.33333+0.2$ gives $1.64888$; dividing by $1-\rho=1.2$ gives $1.37407$; its logarithm is $x(\zeta)=0.31777$. Hence $\zeta/x(\zeta)=0.33333/0.31777=1.04896$ and
+\[
+\sigma_N^{\mathrm{SABR}}(f-50\,\mathrm{bp};\tau^*)=0.006\times1.04896\times1.013578=0.0063792=63.79\text{ bp}.
+\]
+For $K=f+0.005$: $\zeta=-0.33333$, $1-2\rho\zeta+\zeta^2=1-0.13333+0.11111=0.97778$, square root $0.98883$; adding $\zeta-\rho=-0.13333$ gives $0.85549$; dividing by $1.2$ gives $0.71291$; logarithm $x(\zeta)=-0.33840$; $\zeta/x(\zeta)=0.98503$; and $\sigma_N^{\mathrm{SABR}}(f+50\,\mathrm{bp};\tau^*)=0.006\times0.98503\times1.013578=0.0059904=59.90$ bp. The series of Lemma~\ref{lem:prelim-zx-series} to second order gives $1+0.033333+0.017407=1.05074$ and $1-0.033333+0.017407=0.98407$, within $0.2\%$ of the exact factors; the skew of $63.79-59.90=3.89$ bp per 100 bp of strike agrees with $\mathsf s\times0.01=\rho\nu c_{\tau^*}/2\times0.01=-4.05$ bp per 100 bp from Proposition~\ref{prop:prelim-lsc}, the difference being the third-order term. Quoted at $T+\Delta$ the three volatilities are $59.39$, $56.62$ and $55.77$ bp.
+
+\emph{The caplet-volatility difference from the time change.} Had the decay been ignored and constant-parameter SABR run to $T+\Delta=1.25$, the at-the-money volatility would be $0.006\times(1+1.88\times0.16\times1.25/24)=0.006\times1.015667=60.94$ bp, quoted at $1.25$ years as $60.94$ bp. The time change lowers the quoted at-the-money volatility from $60.94$ to $56.62$ bp, a difference of $4.32$ bp or $7.1\%$; in price terms, the Bachelier at-the-money price is $0.39894\,\sigma\sqrt t$ per unit notional and accrual, so the caplet is worth $0.39894\times0.0060815\times\sqrt{1.0833}=0.0025252$ under the time change against $0.39894\times0.0060940\times\sqrt{1.25}=0.0027181$ without it, a reduction of $7.1\%$. This is the effect of the run-off of rate volatility inside the window and is the same under both variants of the model.
+
+\emph{The Lemma~\ref{lem:prelim-tc} versus Proposition~\ref{prop:prelim-novol} difference.} On the ground-truth accounting $\nu_{\mathrm{eff}}^2=\nu^2(T+\Delta)/\tau^*=0.16\times1.15385=0.18462$, $\nu_{\mathrm{eff}}=0.42967$. Repeating the wing computation with $\nu_{\mathrm{eff}}$ in place of $\nu$: at $f-50$ bp, $\zeta=0.35806$, $\zeta/x(\zeta)=1.05367$, bracket $1.015667$, volatility $64.21$ bp; at $f+50$ bp, $60.05$ bp; at the money $60.94$ bp. The differences from Lemma~\ref{lem:prelim-tc} are $+0.42$, $+0.15$ and $+0.13$ bp; the average wing lift net of the at-the-money lift, which is the curvature effect, is $0.16$ bp at $\pm50$ bp. On the effective-parameter accounting of Proposition~\ref{prop:prelim-nueff}, $\nu_{\mathrm{eff}}^2=1.00013\,\nu^2$ and the differences are below $0.001$ bp at every strike. Both numbers are far below the bid--offer spread of any caplet market; the substantive number in this example is the $4.32$ bp time-change effect, not the variant choice.
+
+\datanote{All figures in Section~\ref{subsec:prelim-worked} were recomputed in double precision from formulas \eqref{eq:prelim-hagan-N0}, \eqref{eq:prelim-quoted} and \eqref{eq:prelim-eff}; the hand arithmetic agrees to the stated five significant figures. The parameter values are illustrative and are not calibrated to any market; the Chapter~\ref{ch:usd} calibrations replace them.}
+
+\figplan{Normal SABR smiles for the worked example: $\sigma_N(K)$ against $K-f$ on $[-150,150]$ basis points for (a) Lemma~\ref{lem:prelim-tc} at clock $\tau^*=1.0833$, quoted at $T+\Delta$; (b) constant-parameter SABR run to $T+\Delta=1.25$ without decay; (c) Proposition~\ref{prop:prelim-novol} on the ground-truth accounting with $\nu_{\mathrm{eff}}=0.4297$; the three at-the-money values $56.62$, $60.94$ and $56.73$ bp marked.}{Smile of the compounded caplet in the worked example. Curve (a) is the time-changed SABR smile of Lemma~\ref{lem:prelim-tc}; curve (b) ignores the decay; curve (c) is the non-decaying vol-of-vol variant on the ground-truth accounting. The vertical gap between (a) and (b) is the $7\%$ run-off effect; the gap between (a) and (c) is the disputed curvature effect, invisible at this scale. The figure will make the point of the gap box: the variant choice is immaterial for pricing, the decay is not.}
+
+\section{Conformal prediction}\label{sec:prelim-conformal}
+
+\subsection{Split conformal prediction}
+
+The certification problem of Chapter~\ref{ch:certification} is, in its simplest form, the following. A fixed policy $\pi$ produces, on each block of $b$ rebalancing periods, a scalar hedging-error score $S$. We observe scores $S_1,\dots,S_n$ from calibration blocks and want a threshold $\hat q$ such that the next score $S_0$ satisfies $\Prob(S_0\le\hat q)\ge1-\alpha$. Split conformal prediction \cite{vovk2005} is the procedure that takes $\hat q$ to be an order statistic of the calibration scores. Its guarantee needs no assumption on the law of the scores beyond exchangeability, and it is exact in finite samples.
+
+\begin{definition}[Exchangeability]\label{def:prelim-exch}
+Random variables $S_0,S_1,\dots,S_n$ are exchangeable if for every permutation $\sigma$ of $\{0,\dots,n\}$ the vector $(S_{\sigma(0)},\dots,S_{\sigma(n)})$ has the same joint law as $(S_0,\dots,S_n)$. Independent and identically distributed variables are exchangeable; the converse fails.
+\end{definition}
+
+\begin{definition}[Split conformal threshold]\label{def:prelim-split}
+Given $\alpha\in(0,1)$ and calibration scores $S_1,\dots,S_n$ with order statistics $S_{(1)}\le\dots\le S_{(n)}$, let
+\[
+k:=\lceil(1-\alpha)(n+1)\rceil,\qquad\hat q:=S_{(k)}\quad\text{if }k\le n,\qquad\hat q:=+\infty\quad\text{if }k=n+1 .
+\]
+The split conformal prediction set for $S_0$ is $(-\infty,\hat q]$.
+\end{definition}
+
+The case $k=n+1$ arises when $n<1/\alpha-1$; then no finite threshold can be certified at level $1-\alpha$ and the set is the whole line. For $\alpha=0.05$ one needs $n\ge19$ for a finite threshold.
+
+\begin{theorem}[Exact finite-sample coverage; \cite{vovk2005}]\label{thm:prelim-coverage}
+If $S_0,S_1,\dots,S_n$ are exchangeable then
+\begin{equation}\label{eq:prelim-coverage}
+\Prob(S_0\le\hat q)\;\ge\;\frac{k}{n+1}\;\ge\;1-\alpha .
+\end{equation}
+If in addition the $S_i$ are almost surely distinct, then $\Prob(S_0\le\hat q)=k/(n+1)<1-\alpha+\dfrac1{n+1}$.
+\end{theorem}
+
+\begin{proof}
+If $k=n+1$ the set is the whole line and both statements are trivial, so assume $k\le n$. For $j\in\{0,\dots,n\}$ define the strict rank
+\[
+\rho_j:=1+\#\{i\in\{0,\dots,n\}\setminus\{j\}:\;S_i<S_j\},
+\]
+the position of $S_j$ in the pooled sample when ties are broken in its favour.
+
+\emph{Step 1: the event.} We claim $\{S_0\le S_{(k)}\}=\{\rho_0\le k\}$. If $\rho_0\le k$ then at most $k-1$ of the calibration scores are strictly below $S_0$, so at least $n-k+1$ of them are $\ge S_0$, and the $k$-th smallest, $S_{(k)}$, is therefore $\ge S_0$. Conversely if $S_0\le S_{(k)}$ then every calibration score strictly below $S_0$ is strictly below $S_{(k)}$, and there are at most $k-1$ such scores, so $\rho_0\le k$.
+
+\emph{Step 2: exchangeability of ranks.} The vector $(\rho_0,\dots,\rho_n)$ is a fixed measurable function of $(S_0,\dots,S_n)$ that commutes with permutations: permuting the $S$'s by $\sigma$ permutes the $\rho$'s by $\sigma$. Hence for each $j$, $\rho_j$ has the same law as $\rho_0$, and in particular $\Prob(\rho_j\le k)=\Prob(\rho_0\le k)$ for all $j$.
+
+\emph{Step 3: a deterministic count.} For every realisation, $\sum_{j=0}^n\ind{\rho_j\le k}\ge k$. Indeed, order the $n+1$ values and take the $k$ smallest positions in that ordering, breaking ties arbitrarily; each value $S_j$ in one of these positions has at most $k-1$ values strictly below it, so $\rho_j\le k$. Thus at least $k$ indices satisfy $\rho_j\le k$.
+
+\emph{Step 4: conclusion.} Taking expectations in Step 3 and using Step 2,
+\[
+k\le\E\sum_{j=0}^n\ind{\rho_j\le k}=\sum_{j=0}^n\Prob(\rho_j\le k)=(n+1)\Prob(\rho_0\le k),
+\]
+so $\Prob(S_0\le\hat q)=\Prob(\rho_0\le k)\ge k/(n+1)\ge(1-\alpha)(n+1)/(n+1)=1-\alpha$ by the definition of $k$.
+
+\emph{Upper bound without ties.} If the $S_i$ are almost surely distinct then the strict ranks are almost surely a permutation of $\{1,\dots,n+1\}$, so $\sum_j\ind{\rho_j\le k}=k$ exactly and $\Prob(\rho_0\le k)=k/(n+1)$. Since $k<(1-\alpha)(n+1)+1$, this is less than $1-\alpha+1/(n+1)$.
+\end{proof}
+
+The proof uses only the symmetry of the joint law under permutations; it does not use independence, a density, or any moment. This is why the result survives, with an explicit penalty, when exchangeability is replaced by mixing (Chapter~\ref{ch:certification}) or by a bounded change of law between calibration and deployment \cite{barber2023}. It also shows what the guarantee is about: the probability is over the joint law of $(S_0,S_1,\dots,S_n)$. It is a marginal statement. For a given calibration sample the realised threshold may cover more or less than $1-\alpha$ of the deployment law, and the next theorem describes exactly how much.
+
+\subsection{The Beta law of conditional coverage}
+
+\begin{lemma}[Probability integral transform]\label{lem:prelim-pit}
+Let $S$ have a continuous distribution function $F$. Then $U:=F(S)$ is uniform on $(0,1)$. Conversely if $U$ is uniform on $(0,1)$ and $F^{-1}(u):=\inf\{x:F(x)\ge u\}$ is the quantile function of any distribution function $F$, then $F^{-1}(U)$ has distribution function $F$.
+\end{lemma}
+
+\begin{proof}
+For the converse, we first prove the Galois inequality $F^{-1}(u)\le x\iff u\le F(x)$ for $u\in(0,1)$. If $u\le F(x)$ then $x$ belongs to the set whose infimum defines $F^{-1}(u)$, so $F^{-1}(u)\le x$. If $F^{-1}(u)\le x$, take $x_m\downarrow F^{-1}(u)$ with $F(x_m)\ge u$ (the infimum is approached by points of the set, and by right-continuity of $F$ the infimum itself belongs to the set); then $F(x)\ge F(F^{-1}(u))\ge u$ by monotonicity. Hence $\Prob(F^{-1}(U)\le x)=\Prob(U\le F(x))=F(x)$.
+
+For the direct statement, fix $u\in(0,1)$. Since $F$ is continuous, the set $\{x:F(x)=u\}$ is a non-empty closed interval $[a_u,b_u]$ (possibly a point), and $\{F(S)\le u\}=\{S\le b_u\}$ up to a null set: if $S\le b_u$ then $F(S)\le F(b_u)=u$, and if $F(S)\le u$ then either $S\le b_u$ or $S>b_u$ with $F(S)\le u=F(b_u)$, which forces $F(S)=u$ and $S\in(b_u,\infty)\cap\{F=u\}=\emptyset$. Thus $\Prob(F(S)\le u)=\Prob(S\le b_u)=F(b_u)=u$.
+\end{proof}
+
+\begin{lemma}[Law of a uniform order statistic]\label{lem:prelim-order-stat}
+Let $U_1,\dots,U_n$ be i.i.d.\ uniform on $(0,1)$ with order statistics $U_{(1)}<\dots<U_{(n)}$. Then $U_{(k)}\sim\Beta(k,n+1-k)$, that is, $U_{(k)}$ has density
+\begin{equation}\label{eq:prelim-beta-density}
+f_{k,n}(u)=\frac{n!}{(k-1)!\,(n-k)!}\,u^{k-1}(1-u)^{n-k},\qquad 0<u<1,
+\end{equation}
+with mean $\dfrac{k}{n+1}$ and variance $\dfrac{k(n+1-k)}{(n+1)^2(n+2)}$. Moreover $\Prob(U_{(k)}\le u)=\Prob(\mathrm{Bin}(n,u)\ge k)$.
+\end{lemma}
+
+\begin{proof}
+The event $\{U_{(k)}\le u\}$ is the event that at least $k$ of the $n$ uniforms fall in $[0,u]$, and the number that do is binomial with parameters $(n,u)$: this is the last assertion. Hence
+\[
+G(u):=\Prob(U_{(k)}\le u)=\sum_{j=k}^{n}\binom nj u^j(1-u)^{n-j}.
+\]
+Differentiate term by term:
+\[
+G'(u)=\sum_{j=k}^{n}\binom nj\big[ju^{j-1}(1-u)^{n-j}-(n-j)u^j(1-u)^{n-j-1}\big].
+\]
+Using $j\binom nj=n\binom{n-1}{j-1}$ and $(n-j)\binom nj=n\binom{n-1}{j}$, the sum telescopes: the positive term for index $j$ is $n\binom{n-1}{j-1}u^{j-1}(1-u)^{n-j}$ and the negative term for index $j-1$ is $n\binom{n-1}{j-1}u^{j-1}(1-u)^{n-j}$, so all terms cancel except the positive term for $j=k$ (the negative term for $j=n$ is zero). Therefore $G'(u)=n\binom{n-1}{k-1}u^{k-1}(1-u)^{n-k}=f_{k,n}(u)$, since $n\binom{n-1}{k-1}=n!/((k-1)!(n-k)!)$. The moments follow from $\int_0^1u^{a-1}(1-u)^{b-1}du=\Gamma(a)\Gamma(b)/\Gamma(a+b)$: $\E U_{(k)}=\frac{n!}{(k-1)!(n-k)!}\cdot\frac{k!(n-k)!}{(n+1)!}=\frac{k}{n+1}$, and $\E U_{(k)}^2=\frac{k(k+1)}{(n+1)(n+2)}$, whence the variance.
+\end{proof}
+
+\begin{theorem}[Conditional coverage of split conformal; \cite{vovk2012}]\label{thm:prelim-beta}
+Let $S_1,\dots,S_n$ be i.i.d.\ with continuous distribution function $F_P$, independent of $S_0\sim P$, and let $\hat q=S_{(k)}$ with $k\le n$. Then the conditional coverage
+\[
+C(S_{1:n}):=\Prob\big(S_0\le\hat q\,\big|\,S_1,\dots,S_n\big)=F_P(\hat q)
+\]
+satisfies $C(S_{1:n})\sim\Beta(k,n+1-k)$. In particular $\E\,C=k/(n+1)$, and for every $\delta\in(0,1)$, with probability at least $1-\delta$ over the calibration sample,
+\begin{equation}\label{eq:prelim-beta-quantile}
+C(S_{1:n})\;\ge\;b_{n,k}(\delta):=\Beta^{-1}(\delta;\,k,\,n+1-k),
+\end{equation}
+the $\delta$-quantile of the $\Beta(k,n+1-k)$ law.
+\end{theorem}
+
+\begin{proof}
+By independence of $S_0$ from the calibration sample, $\Prob(S_0\le\hat q\mid S_{1:n})=F_P(\hat q)$. Set $U_i:=F_P(S_i)$; by Lemma~\ref{lem:prelim-pit} the $U_i$ are i.i.d.\ uniform. Since $F_P$ is non-decreasing, $F_P(S_{(k)})$ is the $k$-th smallest of the $U_i$: monotonicity gives $F_P(S_{(1)})\le\dots\le F_P(S_{(n)})$, and these are the values $U_1,\dots,U_n$ in some order, so $F_P(S_{(k)})=U_{(k)}$. Lemma~\ref{lem:prelim-order-stat} gives the law and the mean. Inequality \eqref{eq:prelim-beta-quantile} is the definition of the quantile: $\Prob(U_{(k)}<b_{n,k}(\delta))\le\delta$.
+\end{proof}
+
+The theorem says that the coverage a given calibration sample actually delivers is a $\Beta(k,n+1-k)$ random variable centred at $k/(n+1)\approx1-\alpha$ with standard deviation about $\sqrt{\alpha(1-\alpha)/n}$. For $n=200$ and $\alpha=0.05$ the mean is $0.9502$, the standard deviation $0.0153$, and the $5\%$ quantile $b_{200,191}(0.05)=0.9228$: one calibration sample in twenty delivers a threshold that covers less than $92.3\%$ of the deployment law. Theorem~\ref{thm:prelim-coverage}, which averages over calibration samples, does not see this. Chapter~\ref{ch:certification} states its certificate in both forms, and the conditional form uses \eqref{eq:prelim-beta-quantile}.
+
+\subsection{Explicit bounds on the Beta quantile, and DKW as a corollary}
+
+\begin{lemma}[Chernoff--Hoeffding bound for the binomial]\label{lem:prelim-hoeffding}
+Let $X\sim\mathrm{Bin}(n,u)$ and $k/n>u$. Then
+\[
+\Prob(X\ge k)\le\exp\big(-n\,\mathrm{kl}(k/n,u)\big)\le\exp\big(-2n(k/n-u)^2\big),
+\]
+where $\mathrm{kl}(p,q):=p\log\frac pq+(1-p)\log\frac{1-p}{1-q}$.
+\end{lemma}
+
+\begin{proof}
+For $\lambda>0$, Markov's inequality applied to $e^{\lambda X}$ gives $\Prob(X\ge k)\le e^{-\lambda k}\E e^{\lambda X}=e^{-\lambda k}(1-u+ue^{\lambda})^n$. With $p:=k/n$ the exponent per trial is $\phi(\lambda):=-\lambda p+\log(1-u+ue^{\lambda})$, minimised where $\phi'(\lambda)=0$, that is $ue^\lambda/(1-u+ue^\lambda)=p$, or $e^\lambda=p(1-u)/(u(1-p))$, which is $>1$ because $p>u$. Substituting, $1-u+ue^\lambda=(1-u)/(1-p)$ and
+\[
+\phi(\lambda^*)=-p\log\frac{p(1-u)}{u(1-p)}+\log\frac{1-u}{1-p}=-p\log\frac pu-(1-p)\log\frac{1-p}{1-u}=-\mathrm{kl}(p,u),
+\]
+which gives the first inequality. For the second, fix $p$ and set $h(q):=\mathrm{kl}(p,q)-2(p-q)^2$ for $q\in(0,p]$. Then $h(p)=0$ and
+\[
+h'(q)=-\frac pq+\frac{1-p}{1-q}+4(p-q)=\frac{q-p}{q(1-q)}+4(p-q)=(p-q)\Big(4-\frac1{q(1-q)}\Big)\le0,
+\]
+because $q(1-q)\le1/4$. So $h$ is non-increasing on $(0,p]$ and $h(q)\ge h(p)=0$ for $q\le p$; that is, $\mathrm{kl}(p,q)\ge2(p-q)^2$ (Pinsker's inequality for two Bernoulli laws).
+\end{proof}
+
+\begin{corollary}[Explicit lower bound on the Beta quantile]\label{cor:prelim-beta-bound}
+For $k=\lceil(1-\alpha)(n+1)\rceil\le n$ and $\delta\in(0,1)$,
+\begin{equation}\label{eq:prelim-beta-hoeffding}
+b_{n,k}(\delta)\;\ge\;\frac kn-\sqrt{\frac{\log(1/\delta)}{2n}}\;\ge\;1-\alpha-\sqrt{\frac{\log(1/\delta)}{2n}} .
+\end{equation}
+Moreover, by the normal approximation to the Beta law with the Gaussian tail bound $\Prob(N(0,1)<-z)\le e^{-z^2/2}$,
+\begin{equation}\label{eq:prelim-beta-normal}
+b_{n,k}(\delta)\;\approx\;1-\alpha-\sqrt{\frac{2\alpha(1-\alpha)\log(1/\delta)}{n}},
+\end{equation}
+whose deviation term is smaller than that of \eqref{eq:prelim-beta-hoeffding} by the factor $2\sqrt{\alpha(1-\alpha)}$, equal to $0.436$ at $\alpha=0.05$; that is, the Beta quantile is about $2.3$ times tighter than the Hoeffding form at $\alpha=0.05$.
+\end{corollary}
+
+\begin{proof}
+Let $u:=k/n-\sqrt{\log(1/\delta)/(2n)}$ and suppose $u>0$ (otherwise the bound is vacuous). By Lemma~\ref{lem:prelim-order-stat} and Lemma~\ref{lem:prelim-hoeffding},
+\[
+\Prob(U_{(k)}\le u)=\Prob(\mathrm{Bin}(n,u)\ge k)\le\exp\big(-2n(k/n-u)^2\big)=\exp(-\log(1/\delta))=\delta .
+\]
+Hence the $\delta$-quantile of $U_{(k)}$ is at least $u$. The second inequality in \eqref{eq:prelim-beta-hoeffding} uses $k\ge(1-\alpha)(n+1)\ge(1-\alpha)n$. For \eqref{eq:prelim-beta-normal}, the Beta$(k,n+1-k)$ law has mean $k/(n+1)\approx1-\alpha$ and variance $k(n+1-k)/((n+1)^2(n+2))\approx\alpha(1-\alpha)/n$ by Lemma~\ref{lem:prelim-order-stat}; its $\delta$-quantile is approximately mean minus $z_\delta$ standard deviations, where $z_\delta$ solves $\Prob(N(0,1)<-z_\delta)=\delta$, and the Gaussian tail bound gives $z_\delta\le\sqrt{2\log(1/\delta)}$. The ratio of deviation terms is $\sqrt{2\alpha(1-\alpha)\log(1/\delta)/n}\big/\sqrt{\log(1/\delta)/(2n)}=2\sqrt{\alpha(1-\alpha)}$.
+\end{proof}
+
+\begin{example}[Numerical comparison]\label{ex:prelim-beta-numbers}
+At $\alpha=\delta=0.05$: for $n=200$ ($k=191$) the exact Beta quantile is $0.9228$, the normal approximation \eqref{eq:prelim-beta-normal} gives $0.9123$, and the Hoeffding bound \eqref{eq:prelim-beta-hoeffding} gives $0.8635$; for $n=1000$ ($k=951$) the three values are $0.9382$, $0.9331$ and $0.9113$. The deficits below $0.95$ are $0.027$, $0.038$ and $0.087$ at $n=200$: the Hoeffding form overstates the deficit by a factor of about three at this sample size, and by the asymptotic factor $2.3$ at large $n$. In a certificate the deficit is what is reported, so the choice of bound matters.
+\end{example}
+
+\datanote{Beta quantiles computed by root-finding on the regularised incomplete beta function in arbitrary precision; the normal approximation and Hoeffding values are the closed forms in Corollary~\ref{cor:prelim-beta-bound}.}
+
+\begin{theorem}[Dvoretzky--Kiefer--Wolfowitz inequality; \cite{dkw1956}]\label{thm:prelim-dkw}
+Let $S_1,\dots,S_n$ be i.i.d.\ with distribution function $F$ and empirical distribution function $F_n(x):=n^{-1}\sum_i\ind{S_i\le x}$. Then for every $\varepsilon>0$,
+\[
+\Prob\Big(\sup_{x\in\R}|F_n(x)-F(x)|>\varepsilon\Big)\le2e^{-2n\varepsilon^2}.
+\]
+\end{theorem}
+
+The inequality with the sharp constant $2$ in front is Massart's refinement of the original; \cite{dkw1956} proved it with an unspecified constant. We do not reproduce the proof of the uniform statement here: it is not used in any argument of the thesis. What the thesis uses is the following pointwise consequence, which we derive from the Beta law rather than from Theorem~\ref{thm:prelim-dkw}, and which Theorem~\ref{thm:prelim-dkw} would also deliver, with the constant $2$ inside the logarithm and the same rate.
+
+\begin{corollary}[DKW-type coverage bound]\label{cor:prelim-dkw-cov}
+Under the hypotheses of Theorem~\ref{thm:prelim-beta}, with probability at least $1-\delta$,
+\[
+F_P(\hat q)\;\ge\;1-\alpha-\sqrt{\frac{\log(1/\delta)}{2n}} .
+\]
+\end{corollary}
+
+\begin{proof}
+Combine Theorem~\ref{thm:prelim-beta} with \eqref{eq:prelim-beta-hoeffding}. Alternatively, from Theorem~\ref{thm:prelim-dkw} with $\varepsilon=\sqrt{\log(2/\delta)/(2n)}$: on the event $\sup_x|F_n-F_P|\le\varepsilon$, $F_P(\hat q)\ge F_n(\hat q)-\varepsilon=k/n-\varepsilon\ge1-\alpha-\varepsilon$, which is the same bound with $\log(2/\delta)$ in place of $\log(1/\delta)$.
+\end{proof}
+
+The lesson recorded in the project's lessons file is that the Beta law is the tool and DKW is the corollary: the uniform deviation of the empirical distribution function is more than is needed, because the conformal threshold is a single order statistic, and its exact law is available. The DKW route loses the factor $2\sqrt{\alpha(1-\alpha)}$ in the deviation and the factor $2$ inside the logarithm.
+
+\figplan{Density of the $\Beta(k,n+1-k)$ law of conditional coverage for $\alpha=0.05$ and $n\in\{50,200,1000\}$ on $[0.80,1.00]$, with vertical lines at the exact $5\%$ quantile, the normal approximation \eqref{eq:prelim-beta-normal} and the Hoeffding bound \eqref{eq:prelim-beta-hoeffding} for each $n$.}{Conditional coverage of the split conformal threshold. Each curve is the density of $F_P(\hat q)$ for i.i.d.\ calibration scores (Theorem~\ref{thm:prelim-beta}); the densities concentrate at $k/(n+1)\approx0.95$ as $n$ grows. The vertical lines show, for each $n$, the exact $5\%$ quantile $b_{n,k}(0.05)$ and the two closed-form lower bounds; the figure will show the Hoeffding line lying well to the left of the exact quantile at every $n$, and the normal approximation lying close to it.}
+
+\section{Mixing and blocking}\label{sec:prelim-mixing}
+
+The scores of Chapter~\ref{ch:certification} are not exchangeable: they are computed from consecutive stretches of one financial time series, and consecutive stretches are dependent. The device that recovers a finite-sample guarantee is to measure the dependence between stretches separated by a time gap, to show that it decays with the gap, and to pay for it explicitly with a coupling. This section defines the two dependence coefficients that the thesis uses, gives the examples that justify assuming they decay, proves the coupling lemma, and describes the blocking scheme.
+
+\subsection{Dependence coefficients}
+
+\begin{definition}[$\alpha$- and $\beta$-dependence between $\sigma$-fields]\label{def:prelim-ab-sigma}
+For two sub-$\sigma$-fields $\mathcal A,\mathcal B$ of $\mathcal F$ on a probability space $(\Omega,\mathcal F,\Prob)$,
+\begin{align*}
+\alpha(\mathcal A,\mathcal B)&:=\sup\big\{|\Prob(A\cap B)-\Prob(A)\Prob(B)|:\;A\in\mathcal A,\;B\in\mathcal B\big\},\\
+\beta(\mathcal A,\mathcal B)&:=\sup\Big\{\tfrac12\sum_{i=1}^{I}\sum_{j=1}^{J}|\Prob(A_i\cap B_j)-\Prob(A_i)\Prob(B_j)|\Big\},
+\end{align*}
+the second supremum over all finite partitions $\{A_i\}\subseteq\mathcal A$ and $\{B_j\}\subseteq\mathcal B$ of $\Omega$.
+\end{definition}
+
+\begin{lemma}[$\beta$ as a total-variation distance]\label{lem:prelim-beta-tv}
+Let $X,Y$ be random elements of Polish spaces $E_X,E_Y$ with joint law $P_{XY}$ and marginals $P_X,P_Y$, and let $\mathcal A=\sigma(X)$, $\mathcal B=\sigma(Y)$. Then
+\[
+\beta(\mathcal A,\mathcal B)=\dTV\big(P_{XY},\,P_X\otimes P_Y\big)=\E\big[\dTV\big(P_{Y|X},\,P_Y\big)\big],
+\]
+where $\dTV(\mu,\nu):=\sup_C|\mu(C)-\nu(C)|$ over measurable $C$ and $P_{Y|X}$ is a regular conditional law of $Y$ given $X$. Moreover $\alpha(\mathcal A,\mathcal B)\le\beta(\mathcal A,\mathcal B)$.
+\end{lemma}
+
+\begin{proof}
+Write $\mu:=P_{XY}$ and $\pi:=P_X\otimes P_Y$ on $E_X\times E_Y$. For a finite partition $\{A_i\}$ of $E_X$ and $\{B_j\}$ of $E_Y$, the sum $\tfrac12\sum_{i,j}|\mu(A_i\times B_j)-\pi(A_i\times B_j)|$ is $\tfrac12$ of the $\ell^1$ distance between the two laws restricted to the finite algebra generated by the rectangles; its supremum over partitions equals $\tfrac12\|\mu-\pi\|$, the total variation norm of the signed measure $\mu-\pi$, because the rectangles generate the product $\sigma$-field and the total variation norm of a finite signed measure is the supremum of its $\ell^1$ norm over finite measurable partitions of any generating algebra (approximate the Hahn decomposition sets by sets in the algebra). And $\tfrac12\|\mu-\pi\|=\sup_C|\mu(C)-\pi(C)|=\dTV(\mu,\pi)$, the supremum attained at a Hahn set. This is the first equality.
+
+For the second, disintegrate: for measurable $C\subseteq E_X\times E_Y$ with sections $C_x:=\{y:(x,y)\in C\}$,
+\[
+\mu(C)-\pi(C)=\int_{E_X}\big[P_{Y|X=x}(C_x)-P_Y(C_x)\big]P_X(dx)\le\int_{E_X}\dTV\big(P_{Y|X=x},P_Y\big)P_X(dx),
+\]
+giving $\dTV(\mu,\pi)\le\E\,\dTV(P_{Y|X},P_Y)$. For the reverse inequality let $m_x:=\tfrac12(P_{Y|X=x}+P_Y)$, with densities $p_x:=dP_{Y|X=x}/dm_x$ and $\bar p_x:=dP_Y/dm_x$, chosen jointly measurable in $(x,y)$, and set $C:=\{(x,y):p_x(y)>\bar p_x(y)\}$. Then $P_{Y|X=x}(C_x)-P_Y(C_x)=\int(p_x-\bar p_x)^+dm_x=\dTV(P_{Y|X=x},P_Y)$ for every $x$, and integrating gives equality.
+
+Finally $\alpha\le\beta$: for $A\in\sigma(X)$, $B\in\sigma(Y)$, write $A=\{X\in A'\}$, $B=\{Y\in B'\}$; then $|\Prob(A\cap B)-\Prob(A)\Prob(B)|=|\mu(A'\times B')-\pi(A'\times B')|\le\dTV(\mu,\pi)$.
+\end{proof}
+
+\begin{definition}[Mixing coefficients of a process]\label{def:prelim-mixing}
+For a process $(X_t)_{t\in\mathbb Z}$ (or $t\in\N$) let $\mathcal F_{-\infty}^{t}:=\sigma(X_s:s\le t)$ and $\mathcal F_{t}^{\infty}:=\sigma(X_s:s\ge t)$. The $\alpha$- and $\beta$-mixing coefficients at lag $k\ge1$ are
+\[
+\alpha(k):=\sup_{t}\alpha\big(\mathcal F_{-\infty}^{t},\mathcal F_{t+k}^{\infty}\big),\qquad
+\beta(k):=\sup_{t}\beta\big(\mathcal F_{-\infty}^{t},\mathcal F_{t+k}^{\infty}\big).
+\]
+The process is $\alpha$-mixing (strongly mixing) if $\alpha(k)\to0$ and $\beta$-mixing (absolutely regular) if $\beta(k)\to0$. The supremum over $t$ makes the definition applicable to non-stationary processes; for a stationary process the coefficients do not depend on $t$.
+\end{definition}
+
+Both coefficients are non-increasing in $k$, since the $\sigma$-fields $\mathcal F_{t+k}^{\infty}$ shrink as $k$ grows, and $\alpha(k)\le\beta(k)$ by Lemma~\ref{lem:prelim-beta-tv}. The thesis works with $\beta$-mixing because the coupling of Lemma~\ref{lem:prelim-berbee} needs the total-variation form; $\alpha$-mixing is too weak for a coupling with a total-variation bound. The general reference is \cite{doukhan1994}.
+
+\begin{lemma}[Inheritance by functionals]\label{lem:prelim-inherit}
+Let $(X_t)$ have $\beta$-mixing coefficients $\beta(k)$. If $Y_t:=h_t(X_{t-\ell+1},\dots,X_t)$ for measurable $h_t$ and a fixed window length $\ell$, then the $\beta$-mixing coefficients of $(Y_t)$ satisfy $\beta_Y(k)\le\beta(k-\ell+1)$ for $k\ge\ell$. More generally, if $\mathcal A'\subseteq\mathcal A$ and $\mathcal B'\subseteq\mathcal B$ then $\beta(\mathcal A',\mathcal B')\le\beta(\mathcal A,\mathcal B)$.
+\end{lemma}
+
+\begin{proof}
+The second statement is immediate from Definition~\ref{def:prelim-ab-sigma}: a partition measurable for a smaller $\sigma$-field is measurable for the larger one, so the supremum is over a smaller set. For the first, $\sigma(Y_s:s\le t)\subseteq\mathcal F_{-\infty}^{t}$ and $\sigma(Y_s:s\ge t+k)\subseteq\mathcal F_{t+k-\ell+1}^{\infty}$, and the two $X$-$\sigma$-fields are separated by lag $k-\ell+1$.
+\end{proof}
+
+The lemma is what allows the thesis to assume mixing for the underlying rate process and conclude it for the per-period hedging errors of a fixed policy, which are measurable functions of a fixed number of consecutive rate observations, and then for block scores, which are functions of $b$ consecutive per-period errors.
+
+\subsection{Examples}
+
+\begin{lemma}[Markov reduction]\label{lem:prelim-markov}
+Let $(X_t)$ be a Markov chain on a Polish space with transition kernels $K_{t,t+1}$. Then for all $t$ and $k\ge1$,
+\[
+\beta\big(\mathcal F_{-\infty}^{t},\mathcal F_{t+k}^{\infty}\big)=\E\Big[\dTV\Big(\mathrm{Law}(X_{t+k}\mid X_t),\;\mathrm{Law}(X_{t+k})\Big)\Big].
+\]
+\end{lemma}
+
+\begin{proof}
+By the Markov property, the conditional law of the future $(X_s)_{s\ge t+k}$ given $\mathcal F_{-\infty}^{t}$ equals its conditional law given $X_t$, so by Lemma~\ref{lem:prelim-beta-tv}, $\beta(\mathcal F_{-\infty}^{t},\mathcal F_{t+k}^{\infty})=\E\,\dTV(\mathrm{Law}((X_s)_{s\ge t+k}\mid X_t),\mathrm{Law}((X_s)_{s\ge t+k}))$. Both path laws have the form $\lambda(dx)\,\mathcal K(x,\cdot)$, where $\lambda$ is the law of $X_{t+k}$ (conditional or unconditional) and $\mathcal K(x,\cdot)$ is the law of the path from $t+k$ onwards started at $x$, the same kernel in both cases. For such laws $\dTV(\lambda_1\mathcal K,\lambda_2\mathcal K)=\dTV(\lambda_1,\lambda_2)$: the inequality $\le$ is $|\int\mathcal K(x,C)(\lambda_1-\lambda_2)(dx)|\le\dTV(\lambda_1,\lambda_2)$ since $0\le\mathcal K(x,C)\le1$, and $\ge$ follows by taking $C$ to depend only on the first coordinate.
+\end{proof}
+
+\begin{proposition}[Gaussian AR(1)]\label{prop:prelim-ar1}
+Let $X_t=\phi X_{t-1}+\varepsilon_t$ with $|\phi|<1$ and i.i.d.\ $\varepsilon_t\sim N(0,\sigma_\varepsilon^2)$, started in its stationary law $N(0,s^2)$, $s^2=\sigma_\varepsilon^2/(1-\phi^2)$. Then for every $k$ with $\phi^{2k}\le\tfrac12$,
+\[
+\beta(k)\;\le\;\frac{|\phi|^k}{\sqrt2}\;\le\;|\phi|^k .
+\]
+In particular the process is geometrically $\beta$-mixing.
+\end{proposition}
+
+\begin{proof}
+The chain is Markov and stationary, so Lemma~\ref{lem:prelim-markov} applies with $\mathrm{Law}(X_{t+k}\mid X_t=x)=N(\phi^kx,\,s_k^2)$, $s_k^2:=s^2(1-\phi^{2k})$, and $\mathrm{Law}(X_{t+k})=N(0,s^2)$. Pinsker's inequality $\dTV(\mu,\nu)\le\sqrt{\mathrm{KL}(\mu\|\nu)/2}$ \cite[Lemma~2.5]{tsybakov2009} and the Kullback--Leibler divergence between Gaussians,
+\[
+\mathrm{KL}\big(N(m,s_1^2)\,\big\|\,N(0,s^2)\big)=\log\frac{s}{s_1}+\frac{s_1^2+m^2}{2s^2}-\frac12,
+\]
+give, with $y:=\phi^{2k}$ so that $s_1^2/s^2=1-y$ and $m^2=yx^2$,
+\[
+\mathrm{KL}=\tfrac12\big[-\log(1-y)-y\big]+\frac{y\,x^2}{2s^2}\;\le\;\tfrac12y^2+\frac{y\,x^2}{2s^2},
+\]
+using $-\log(1-y)=\sum_{j\ge1}y^j/j\le y+y^2\sum_{j\ge0}y^j/2\le y+y^2$ for $y\le\tfrac12$. Hence, by Jensen's inequality for the concave square root and $\E[X_t^2]=s^2$,
+\[
+\beta(k)=\E\,\dTV\le\E\sqrt{\mathrm{KL}/2}\le\sqrt{\E\,\mathrm{KL}/2}=\sqrt{\tfrac14y^2+\tfrac14y}\le\sqrt{\tfrac12y}=\frac{|\phi|^k}{\sqrt2},
+\]
+where $y^2\le y$ was used.
+\end{proof}
+
+\begin{remark}[GARCH and rate processes]\label{rem:prelim-garch}
+The AR(1) example is the template: a Markov structure plus a smoothing transition kernel gives geometric $\beta$-mixing. GARCH(1,1) processes with an innovation density that is positive on $\R$ and a strict-stationarity condition on the coefficients are geometrically $\beta$-mixing; the proof uses drift and minorisation conditions for the Markov chain of the conditional variance, the general technique being set out in \cite{doukhan1994}. Diffusion models for rates, such as the SABR model of Section~\ref{sec:prelim-sabr} sampled at a fixed frequency, are Markov in their state vector and, when they are ergodic, geometrically $\beta$-mixing by the same route; the SABR volatility process is a geometric Brownian motion and is not ergodic, so in that model mixing must be argued for the increments rather than the levels. The thesis does not assume any particular model for the rate process. It assumes, in Chapter~\ref{ch:certification}, that the per-period hedging-error process of the fixed policy is $\beta$-mixing with coefficients in a polynomial class $\Bclass{r}=\{\beta(k)\le Ck^{-r}\}$, $r>1$, and it states in the same place that this assumption cannot be verified from data: the impossibility of estimating mixing rates from a single realisation is the content of \cite{adams2010}. The examples above are the reason the assumption is plausible, not a proof that it holds.
+\end{remark}
+
+\subsection{Berbee's coupling lemma}
+
+\begin{lemma}[Berbee's coupling; \cite{berbee1979}, see also \cite{doukhan1994}]\label{lem:prelim-berbee}
+Let $X$ and $Y$ be random elements of Polish spaces $E_X$ and $E_Y$ on $(\Omega,\mathcal F,\Prob)$, and let $\beta:=\beta(\sigma(X),\sigma(Y))$. On an enlargement of the probability space carrying a uniform random variable $U$ independent of $(X,Y)$, there exists a random element $Y^*$ of $E_Y$ such that
+\begin{enumerate}[nosep,label=(\roman*)]
+\item $Y^*$ has the same law as $Y$;
+\item $Y^*$ is independent of $X$;
+\item $\Prob(Y\ne Y^*)=\beta$.
+\end{enumerate}
+\end{lemma}
+
+\begin{proof}
+Let $P_{Y|X=x}$ be a regular conditional law of $Y$ given $X=x$, which exists because $E_Y$ is Polish, and let $P_Y$ be the law of $Y$. As in the proof of Lemma~\ref{lem:prelim-beta-tv} put $m_x:=\tfrac12(P_{Y|X=x}+P_Y)$, $p_x:=dP_{Y|X=x}/dm_x$, $\bar p_x:=dP_Y/dm_x$, jointly measurable in $(x,y)$ and bounded by $2$, and let $t(x):=\dTV(P_{Y|X=x},P_Y)=\int(\bar p_x-p_x)^+dm_x=\int(p_x-\bar p_x)^+dm_x$, the two integrals being equal because both densities integrate to $1$. Lemma~\ref{lem:prelim-beta-tv} gives $\E\,t(X)=\beta$.
+
+Define the acceptance probability $a(x,y):=\min\{1,\bar p_x(y)/p_x(y)\}$ on $\{p_x>0\}$, which is where $Y$ lives given $X=x$, and the excess law $\mathcal E_x(dy):=(\bar p_x(y)-p_x(y))^+m_x(dy)/t(x)$ when $t(x)>0$, an arbitrary fixed law otherwise. Write $U=(U_1,U_2)$ for two independent uniforms extracted from the binary digits of $U$, and let $\psi:[0,1]\times E_X\to E_Y$ be a measurable map with $\psi(U_2,x)\sim\mathcal E_x$ for each $x$, which exists by the Borel isomorphism theorem (a Polish space is Borel-isomorphic to a Borel subset of $[0,1]$, on which the quantile transform applies) together with measurability of $x\mapsto\mathcal E_x$. Set
+\[
+Y^*:=\begin{cases}Y,&U_1\le a(X,Y),\\ \psi(U_2,X),&U_1>a(X,Y).\end{cases}
+\]
+
+(i)--(ii) Condition on $X=x$. For measurable $A\subseteq E_Y$,
+\begin{align*}
+\Prob(Y^*\in A\mid X=x)&=\int_A a(x,y)\,p_x(y)\,m_x(dy)+\Prob(U_1>a(x,Y)\mid X=x)\,\mathcal E_x(A)\\
+&=\int_A\min\{p_x,\bar p_x\}\,dm_x+\Big(\int(p_x-\bar p_x)^+dm_x\Big)\frac{\int_A(\bar p_x-p_x)^+dm_x}{t(x)}\\
+&=\int_A\big[\min\{p_x,\bar p_x\}+(\bar p_x-p_x)^+\big]dm_x=\int_A\bar p_x\,dm_x=P_Y(A),
+\end{align*}
+where $\Prob(U_1>a(x,Y)\mid X=x)=\int(1-a(x,y))p_x(y)m_x(dy)=\int(p_x-\bar p_x)^+dm_x=t(x)$ was used. The conditional law of $Y^*$ given $X=x$ is $P_Y$ for every $x$: $Y^*$ has law $P_Y$ and is independent of $X$.
+
+(iii) $\{Y\ne Y^*\}\subseteq\{U_1>a(X,Y)\}$, so $\Prob(Y\ne Y^*)\le\E\,t(X)=\beta$. Conversely, for any random element $Y'$ independent of $X$ with law $P_Y$ and any measurable $C\subseteq E_X\times E_Y$,
+\[
+\big|\Prob((X,Y)\in C)-(P_X\otimes P_Y)(C)\big|=\big|\Prob((X,Y)\in C)-\Prob((X,Y')\in C)\big|\le\Prob(Y\ne Y'),
+\]
+so $\Prob(Y\ne Y')\ge\dTV(P_{XY},P_X\otimes P_Y)=\beta$ by Lemma~\ref{lem:prelim-beta-tv}. Hence $\Prob(Y\ne Y^*)=\beta$, and no coupling does better.
+\end{proof}
+
+With $X$ constant the construction gives the maximal coupling of two laws: for laws $\mu,\nu$ on a Polish space there exist $V\sim\mu$ and $V^*\sim\nu$ on a common space with $\Prob(V\ne V^*)=\dTV(\mu,\nu)$. We use this form in the next lemma.
+
+\begin{lemma}[Sequential coupling; \cite{yu1994}, Lemma 4.1]\label{lem:prelim-yu}
+Let $X_1,\dots,X_m$ be random elements of Polish spaces such that, for each $j=2,\dots,m$, $\beta\big(\sigma(X_1,\dots,X_{j-1}),\sigma(X_j)\big)\le\beta_j$. Then
+\begin{equation}\label{eq:prelim-yu-tv}
+\dTV\Big(\mathrm{Law}(X_1,\dots,X_m),\;\bigotimes_{j=1}^m\mathrm{Law}(X_j)\Big)\le\sum_{j=2}^m\beta_j,
+\end{equation}
+and on an enlarged space there exist independent $X_1^*,\dots,X_m^*$ with $X_j^*\overset{d}{=}X_j$ and
+\begin{equation}\label{eq:prelim-yu-coupling}
+\Prob\big(X_j\ne X_j^*\text{ for some }j\big)\le\sum_{j=2}^m\beta_j .
+\end{equation}
+If the $X_j$ are blocks of a $\beta$-mixing process separated pairwise by time gaps of at least $b$, then $\beta_j\le\beta(b)$ for every $j$ and the bounds read $(m-1)\beta(b)$.
+\end{lemma}
+
+\begin{proof}
+Write $\mu_j$ for the law of $(X_1,\dots,X_j)$ and $\lambda_j$ for the law of $X_j$. We prove \eqref{eq:prelim-yu-tv} by induction on $m$; for $m=1$ both sides are $0$. For the step, insert the intermediate law $\mu_{m-1}\otimes\lambda_m$ and use the triangle inequality:
+\[
+\dTV\Big(\mu_m,\bigotimes_{j\le m}\lambda_j\Big)\le\dTV\big(\mu_m,\mu_{m-1}\otimes\lambda_m\big)+\dTV\Big(\mu_{m-1}\otimes\lambda_m,\Big(\bigotimes_{j<m}\lambda_j\Big)\otimes\lambda_m\Big).
+\]
+The first term is $\beta(\sigma(X_1,\dots,X_{m-1}),\sigma(X_m))\le\beta_m$ by Lemma~\ref{lem:prelim-beta-tv}. For the second we use that total variation is unchanged by tensoring with a common factor: for laws $\mu,\nu$ on $E$ and $\lambda$ on $E'$, $\dTV(\mu\otimes\lambda,\nu\otimes\lambda)=\dTV(\mu,\nu)$. Indeed, for measurable $C\subseteq E\times E'$, $(\mu\otimes\lambda)(C)-(\nu\otimes\lambda)(C)=\int_{E'}[\mu(C^{z})-\nu(C^{z})]\lambda(dz)\le\dTV(\mu,\nu)$ with $C^z:=\{x:(x,z)\in C\}$, and taking $C=A\times E'$ gives the reverse inequality. So the second term is $\dTV(\mu_{m-1},\bigotimes_{j<m}\lambda_j)\le\sum_{j=2}^{m-1}\beta_j$ by the induction hypothesis, and \eqref{eq:prelim-yu-tv} follows.
+
+For \eqref{eq:prelim-yu-coupling}, apply the maximal coupling to the two laws in \eqref{eq:prelim-yu-tv} on the product space $E_1\times\dots\times E_m$: there is $(X_1^*,\dots,X_m^*)$ with law $\bigotimes_j\lambda_j$, so the $X_j^*$ are independent with the right marginals, and $\Prob((X_1,\dots,X_m)\ne(X_1^*,\dots,X_m^*))=\dTV\le\sum_{j\ge2}\beta_j$. The event that some coordinate differs is exactly the event that the vectors differ.
+
+For blocks of a $\beta$-mixing process, if the block $X_j$ occupies times in $[u_j,v_j]$ and the earlier blocks lie in $(-\infty,u_j-b-1]$, then $\sigma(X_1,\dots,X_{j-1})\subseteq\mathcal F_{-\infty}^{u_j-b-1}$ and $\sigma(X_j)\subseteq\mathcal F_{u_j}^{\infty}$, whose separation is $b+1$; Lemma~\ref{lem:prelim-inherit} and monotonicity of $\beta(\cdot)$ give $\beta_j\le\beta(b+1)\le\beta(b)$.
+\end{proof}
+
+\begin{remark}[The proof in \cite{yu1994}]\label{rem:prelim-yu-original}
+Yu's Lemma 4.1 states \eqref{eq:prelim-yu-tv} for blocks of a stationary $\beta$-mixing sequence and proves it by the same induction; the passage to the coupling statement \eqref{eq:prelim-yu-coupling} through the maximal coupling is standard and is how the lemma is used in \cite{oliveira2024}. An alternative proof constructs the $X_j^*$ one at a time with Lemma~\ref{lem:prelim-berbee}, coupling $X_j$ to a copy independent of $(X_1,\dots,X_{j-1})$ and hence of the previously constructed $(X_1^*,\dots,X_{j-1}^*)$, which are functions of the earlier $X$'s and of independent randomisation; the union bound over the $m-1$ coupling failures gives the same total. The cost is $(m-1)\beta(b)$, not $2(m-1)\beta(b)$ or $m\beta(b)$: the first block needs no coupling. In Chapter~\ref{ch:certification} the coupled objects are the fitting sample $\Dfit$, the $n$ calibration blocks and the deployment block, $m=n+2$ objects, so the cost is $(n+1)\beta(b)$. This is the number the ground-truth document records, and the lesson in the lessons file.
+\end{remark}
+
+\subsection{The blocking construction with gaps}
+
+\begin{algorithmenv}[Blocking with gaps]\label{alg:prelim-blocking}
+Input: a record of per-period hedging errors $e_1,\dots,e_N$ of the fixed policy $\pi$; the fitting sample $\Dfit$ on which $\pi$ was fixed, occupying periods before period $1-b$; a block length $b\ge1$; a score functional $h:\R^b\to\R$ (for example the block sum, the block maximum or the block root-mean-square of the errors).
+\begin{enumerate}[nosep,label=\arabic*.]
+\item Set $n:=\lfloor N/(2b)\rfloor$.
+\item For $j=1,\dots,n$, let block $j$ be the periods $I_j:=\{(2j-2)b+1,\dots,(2j-1)b\}$ and let gap $j$ be the periods $\{(2j-1)b+1,\dots,2jb\}$. Compute the calibration score $S_j:=h(e_i:i\in I_j)$.
+\item Discard the gap periods and any periods after $2nb$.
+\item The deployment block is $I_0:=\{N+b+1,\dots,N+2b\}$, the first $b$ periods that begin at least $b$ periods after the end of the record; its score is $S_0:=h(e_i:i\in I_0)$.
+\item Output the calibration scores $S_1,\dots,S_n$ and the threshold $\hat q:=S_{(k)}$, $k=\lceil(1-\alpha)(n+1)\rceil$, to be compared with $S_0$.
+\end{enumerate}
+\end{algorithmenv}
+
+The construction has three properties that the certificate of Chapter~\ref{ch:certification} needs. First, any two of the $n+2$ objects $\Dfit,I_1,\dots,I_n,I_0$ are separated by at least $b$ periods: the calibration blocks by the gaps, $\Dfit$ from $I_1$ by the hypothesis on the fitting sample, and $I_0$ from $I_n$ by the $b$ periods $N+1,\dots,N+b$ together with the discarded tail. Second, if the per-period errors are $\beta$-mixing, then by Lemma~\ref{lem:prelim-yu} all $n+2$ objects can be replaced by independent copies at a total-variation cost of $(n+1)\beta(b)$. Third, the calibration scores are identically distributed if the error process is stationary on the record, so that after coupling they are i.i.d.\ with a common law $P$, which is what Theorems~\ref{thm:prelim-coverage} and~\ref{thm:prelim-beta} require.
+
+The gap before the deployment block is not a technicality. Without it, $S_0$ and $S_n$ are computed from adjacent periods and their dependence is measured by $\beta(1)$, not $\beta(b)$, so the coupling cost would not decay with the block length. The ground-truth document records this as a council correction: the deployment block must be gap-separated, else $S_0$ is not controlled at all. In practice the gap means that the certificate for a deployment period beginning today is computed from a record that ends $b$ periods ago.
+
+The construction throws away half the record and produces $n\approx N/(2b)$ blocks. The coverage deficit then has two terms that move in opposite directions in $b$: the coupling cost $(n+1)\beta(b)\approx N\beta(b)/(2b)$, which falls as $b$ grows, and the finite-sample term of Corollary~\ref{cor:prelim-beta-bound}, of order $\sqrt{1/n}\approx\sqrt{2b/N}$, which rises. For $\beta(b)\le Cb^{-r}$ the balance is at $b^*\asymp N^{3/(2r+3)}$. This trade-off, its optimum, and the question whether the optimum is the best any procedure can do, are the subject of Chapter~\ref{ch:sharpness}.
+
+\figplan{Schematic of Algorithm~\ref{alg:prelim-blocking} on a time axis: the fitting sample $\Dfit$ on the left, a gap of length $b$, then alternating calibration blocks $I_1,\dots,I_n$ (shaded) and gaps (unshaded) of length $b$ each, the discarded tail, a final gap of length $b$, and the deployment block $I_0$ on the right; braces marking the $n+2$ objects that Lemma~\ref{lem:prelim-yu} couples and an annotation ``$(n+1)\beta(b)$'' for the total coupling cost.}{The blocking construction with gaps. Every pair of the $n+2$ objects that enter the certificate, the fitting sample, the $n$ calibration blocks and the deployment block, is separated by at least $b$ periods, so that the sequential coupling of Lemma~\ref{lem:prelim-yu} replaces them by independent copies at total-variation cost $(n+1)\beta(b)$. Half the record is discarded into gaps; the block length trades coupling cost against the number of blocks.}
+
+\section{Distances between one-dimensional laws}\label{sec:prelim-distances}
+
+The certificate of Chapter~\ref{ch:certification} pays for the difference between the calibration law $P$ and the deployment law $Q$ of the scores with a distance between the two laws. Which distance is a matter of what the certificate evaluates: it evaluates the probability of a half-line, so the natural distance is the Kolmogorov distance, and other distances enter only through their relation to it. This section defines the four distances used in the thesis, all for laws on $\R$, and proves the relations among them that are needed.
+
+\subsection{Definitions}
+
+\begin{definition}[Kolmogorov and total-variation distances]\label{def:prelim-dK-dTV}
+For probability laws $P,Q$ on $\R$ with distribution functions $F_P,F_Q$,
+\[
+\dK(P,Q):=\sup_{x\in\R}|F_P(x)-F_Q(x)|,\qquad
+\dTV(P,Q):=\sup_{A\in\mathcal B(\R)}|P(A)-Q(A)| .
+\]
+If $P$ and $Q$ have densities $p,q$ with respect to a common measure $m$, then $\dTV(P,Q)=\tfrac12\int|p-q|\,dm=\int(p-q)^+dm$.
+\end{definition}
+
+The density formula follows from the Hahn decomposition: the supremum is attained at $A=\{p>q\}$, where $P(A)-Q(A)=\int(p-q)^+dm$, and $\int(p-q)^+dm=\int(q-p)^+dm$ because both densities integrate to $1$, so $\int|p-q|\,dm=2\int(p-q)^+dm$. The total-variation distance of Definition~\ref{def:prelim-dK-dTV} is the one used in Lemma~\ref{lem:prelim-beta-tv}; some authors use $\int|p-q|$ without the factor $\tfrac12$, which doubles every bound in Section~\ref{sec:prelim-mixing}. The thesis uses the normalisation in which $\dTV\le1$ and $\dTV(\mu,\nu)=\min\Prob(V\ne V^*)$ over couplings.
+
+\begin{definition}[Wasserstein distances]\label{def:prelim-W}
+For laws $P,Q$ on $\R$ with finite first moments,
+\[
+\Wone(P,Q):=\inf_{(X,Y)}\E|X-Y|,\qquad \Winf(P,Q):=\inf_{(X,Y)}\esssup|X-Y|,
+\]
+the infima over all couplings, that is all pairs $(X,Y)$ on a common probability space with $X\sim P$ and $Y\sim Q$.
+\end{definition}
+
+\begin{proposition}[Kantorovich--Rubinstein duality in one dimension]\label{prop:prelim-kr}
+$\Wone(P,Q)=\sup\{\int f\,dP-\int f\,dQ:\;f\text{ 1-Lipschitz}\}$.
+\end{proposition}
+
+We use the duality only as a way of reading $\Wone$; the identity of Theorem~\ref{thm:prelim-w1-identity} is what the proofs use, and it is proved without duality. The duality itself is proved in \cite{bobkov2019} for the one-dimensional case and is classical in general. One direction is immediate and we record it: for a 1-Lipschitz $f$ and any coupling, $|\int f\,dP-\int f\,dQ|=|\E[f(X)-f(Y)]|\le\E|X-Y|$, so the supremum is at most $\Wone$.
+
+\subsection{Elementary relations}
+
+\begin{proposition}[Kolmogorov is dominated by total variation]\label{prop:prelim-dK-le-dTV}
+For all $P,Q$ on $\R$, $\dK(P,Q)\le\dTV(P,Q)\le1$. The inequality is strict in general: for $P=\delta_0$ and $Q=\tfrac12(\delta_{-1}+\delta_1)$, $\dK=\tfrac12$ and $\dTV=1$.
+\end{proposition}
+
+\begin{proof}
+For every $x$ the half-line $(-\infty,x]$ is a Borel set, so $|F_P(x)-F_Q(x)|=|P((-\infty,x])-Q((-\infty,x])|\le\dTV(P,Q)$; take the supremum over $x$. For the example, $F_P-F_Q$ equals $-\tfrac12$ on $[-1,0)$, $\tfrac12$ on $[0,1)$ and $0$ elsewhere, while $P(\{0\})-Q(\{0\})=1$.
+\end{proof}
+
+The thesis uses Kolmogorov distance for the drift penalty precisely because the certificate is a statement about a half-line: bounding the penalty by $\dTV$ would be correct but weaker, and the ground-truth Theorem~8 (Chapter~\ref{ch:sharpness}) shows that the constant $1$ in front of $\dK$ cannot be improved, whereas the example above shows that $\dTV$ can exceed $\dK$ by a factor of two.
+
+\begin{proposition}[Total variation controls $\Wone$ on bounded ranges]\label{prop:prelim-tv-w1}
+If $P$ and $Q$ are supported in an interval of length $D$, then $\Wone(P,Q)\le D\,\dTV(P,Q)$.
+\end{proposition}
+
+\begin{proof}
+Take the maximal coupling $(X,Y)$ with $\Prob(X\ne Y)=\dTV(P,Q)$ from the remark after Lemma~\ref{lem:prelim-berbee}. Then $|X-Y|\le D\ind{X\ne Y}$ almost surely and $\E|X-Y|\le D\,\dTV(P,Q)$.
+\end{proof}
+
+No inequality in the other direction holds without further assumptions, and this is the point of the example below, which is the lesson recorded for Chapter~\ref{ch:certification}.
+
+\begin{example}[Small $\Wone$, large $\dK$]\label{ex:prelim-w1-dk}
+Let $L>0$, $P=\delta_0$ and $Q$ the uniform law on $[0,1/L]$, whose density is bounded by $L$. Then $\Wone(P,Q)=\E|0-Y|=\E Y=1/(2L)$ under the only coupling of a point mass, while $F_P(0)-F_Q(0)=1-0=1$, so $\dK(P,Q)=\dTV(P,Q)=1$. Hence no inequality of the form $\dK\le c\,L\,\Wone$ can hold: it would give $1\le c/2$ for every $c<2$, and with $Q$ uniform on $[0,\varepsilon/L]$ the same computation gives $\Wone=\varepsilon/(2L)$ against $\dK=1$, so no constant works. What does hold, under a density bound on $Q$ alone, is $F_P(x)-F_Q(x)\le\sqrt{2L\,\Wone(P,Q)}$; this is ground-truth Proposition~7, proved in Chapter~\ref{ch:certification}, and the example shows that the square root is the right power: $\sqrt{2L\cdot1/(2L)}=1$, attained.
+\end{example}
+
+\begin{proposition}[Monotone shift under $\Winf$]\label{prop:prelim-winf-shift}
+For all $P,Q$ on $\R$ and all $x$, $F_P(x)\le F_Q(x+\Winf(P,Q))$ and $F_Q(x)\le F_P(x+\Winf(P,Q))$.
+\end{proposition}
+
+\begin{proof}
+Let $w>\Winf(P,Q)$. There is a coupling with $|X-Y|\le w$ almost surely, and on it $\{X\le x\}\subseteq\{Y\le x+w\}$, so $F_P(x)\le F_Q(x+w)$. Let $w\downarrow\Winf$ and use right-continuity of $F_Q$. The second inequality is the first with the roles exchanged.
+\end{proof}
+
+If $Q$ has a density bounded by $L$, the proposition gives $F_P(x)-F_Q(x)\le F_Q(x+\Winf)-F_Q(x)\le L\,\Winf(P,Q)$, the $\Winf$ bound in ground-truth Proposition~7.
+
+\subsection{The one-dimensional $\Wone$ identity}
+
+\begin{theorem}[$\Wone$ as the area between distribution functions]\label{thm:prelim-w1-identity}
+For laws $P,Q$ on $\R$ with finite first moments,
+\begin{equation}\label{eq:prelim-w1-identity}
+\Wone(P,Q)=\int_{-\infty}^{\infty}|F_P(x)-F_Q(x)|\,dx=\int_0^1|F_P^{-1}(u)-F_Q^{-1}(u)|\,du,
+\end{equation}
+and the infimum in Definition~\ref{def:prelim-W} is attained by the quantile coupling $(F_P^{-1}(U),F_Q^{-1}(U))$ with $U$ uniform on $(0,1)$.
+\end{theorem}
+
+\begin{proof}
+\emph{Lower bound for every coupling.} For real $a,b$, $|a-b|=\int_{\R}|\ind{a\le x}-\ind{b\le x}|\,dx$: the integrand is $1$ exactly when $x$ lies in $[\min(a,b),\max(a,b))$, an interval of length $|a-b|$. Let $(X,Y)$ be any coupling. By Tonelli's theorem, since the integrand is non-negative,
+\[
+\E|X-Y|=\int_{\R}\E\big|\ind{X\le x}-\ind{Y\le x}\big|\,dx\;\ge\;\int_{\R}\big|\E\ind{X\le x}-\E\ind{Y\le x}\big|\,dx=\int_{\R}|F_P(x)-F_Q(x)|\,dx,
+\]
+using $|\E Z|\le\E|Z|$ pointwise in $x$. Hence $\Wone(P,Q)\ge\int|F_P-F_Q|$.
+
+\emph{The quantile coupling attains it.} Let $X:=F_P^{-1}(U)$ and $Y:=F_Q^{-1}(U)$; by Lemma~\ref{lem:prelim-pit} this is a coupling of $P$ and $Q$. By the Galois inequality in the proof of that lemma, $\{X\le x\}=\{U\le F_P(x)\}$ and $\{Y\le x\}=\{U\le F_Q(x)\}$. For fixed $x$ these two events are nested: if $F_P(x)\le F_Q(x)$ then $\{U\le F_P(x)\}\subseteq\{U\le F_Q(x)\}$, and the other way round otherwise. For nested events the indicator difference has constant sign, so $\E|\ind{X\le x}-\ind{Y\le x}|=|\Prob(X\le x)-\Prob(Y\le x)|=|F_P(x)-F_Q(x)|$. Integrating over $x$ with Tonelli as before, $\E|X-Y|=\int|F_P-F_Q|\,dx$, so the lower bound is attained and the first equality of \eqref{eq:prelim-w1-identity} holds.
+
+\emph{The quantile form.} $\E|F_P^{-1}(U)-F_Q^{-1}(U)|=\int_0^1|F_P^{-1}(u)-F_Q^{-1}(u)|\,du$ is the same expectation written out, which gives the second equality. Finiteness of all three quantities follows from the finite first moments: $\int|F_P-F_Q|\le\int(1-F_P)+\int(1-F_Q)$ over $[0,\infty)$ plus the analogous integrals of $F_P,F_Q$ over $(-\infty,0]$, each equal to a partial first absolute moment.
+\end{proof}
+
+The identity converts every statement about $\Wone$ between one-dimensional laws into a statement about the $L^1$ distance between their distribution functions, and it is why one-dimensional Wasserstein theory is so much more explicit than the general case. Ground-truth Proposition~7, proved in Chapter~\ref{ch:certification}, is a two-line consequence: a Kolmogorov gap of size $d$ at a point forces, when $F_Q$ is $L$-Lipschitz, a triangle of area $d^2/(2L)$ under $|F_P-F_Q|$.
+
+\subsection{The empirical $\Wone$ distance in one dimension}
+
+\begin{theorem}[Bobkov--Ledoux upper bound; \cite{bobkov2019}]\label{thm:prelim-bobkov}
+Let $S_1,\dots,S_n$ be i.i.d.\ with law $P$ on $\R$, empirical law $P_n:=n^{-1}\sum_i\delta_{S_i}$ and distribution function $F$. Then
+\begin{equation}\label{eq:prelim-bobkov}
+\E\,\Wone(P_n,P)\;\le\;\frac{J_1(P)}{\sqrt n},\qquad J_1(P):=\int_{-\infty}^{\infty}\sqrt{F(x)(1-F(x))}\,dx .
+\end{equation}
+The functional $J_1(P)$ is finite whenever $\E|S|^{2+\delta}<\infty$ for some $\delta>0$, and infinite when $P$ has only a finite second moment in general; when $J_1(P)<\infty$ the rate $n^{-1/2}$ is attained, in the sense that $\E\Wone(P_n,P)\ge c\,J_1(P)/\sqrt n$ for a universal $c>0$ and all $n$.
+\end{theorem}
+
+\begin{proof}
+By Theorem~\ref{thm:prelim-w1-identity}, $\Wone(P_n,P)=\int|F_n(x)-F(x)|\,dx$ with $F_n$ the empirical distribution function. Taking expectations and using Tonelli,
+\[
+\E\,\Wone(P_n,P)=\int_{\R}\E|F_n(x)-F(x)|\,dx\le\int_{\R}\sqrt{\E(F_n(x)-F(x))^2}\,dx=\int_{\R}\sqrt{\frac{F(x)(1-F(x))}{n}}\,dx,
+\]
+where the inequality is Jensen's for the concave square root and the last step uses that $nF_n(x)\sim\mathrm{Bin}(n,F(x))$ has variance $nF(x)(1-F(x))$. This is \eqref{eq:prelim-bobkov}.
+
+Finiteness of $J_1$: since $\sqrt{F(1-F)}\le\sqrt{\min(F,1-F)}$, it suffices that $\int_0^\infty\sqrt{1-F(x)}\,dx<\infty$ and $\int_{-\infty}^0\sqrt{F(x)}\,dx<\infty$. By Markov's inequality $1-F(x)\le\E|S|^{2+\delta}x^{-(2+\delta)}$ for $x>0$, so $\sqrt{1-F(x)}\le Cx^{-1-\delta/2}$, which is integrable on $[1,\infty)$; on $[0,1]$ the integrand is bounded by $1$. The negative half-line is symmetric. The statement that a finite second moment does not suffice is shown in \cite{bobkov2019} by laws with $1-F(x)\asymp x^{-2}/\log^2x$, for which $\sqrt{1-F}\asymp x^{-1}/\log x$ is not integrable; the matching lower bound is their Theorem~3.5, which we cite and do not reproduce, since the thesis uses only the upper bound.
+\end{proof}
+
+The theorem is the i.i.d.\ input to the plug-in drift penalty of Chapter~\ref{ch:certification}: if the deployment law $Q$ is estimated by the empirical law $Q_m$ of $m$ observed deployment scores, the penalty $\sqrt{2L\,\Wone(P,Q)}$ is estimated by $\sqrt{2L\,\Wone(P,Q_m)}$ with an error controlled by $\sqrt{2L\,\Wone(Q_m,Q)}$, whose expectation is at most $\sqrt{2L\,J_1(Q)}\,m^{-1/4}$ by \eqref{eq:prelim-bobkov} and Jensen. The rate $m^{-1/4}$, not $m^{-1/2}$, is the price of the square root in ground-truth Proposition~7. Deployment scores are dependent, so \eqref{eq:prelim-bobkov} does not apply to them directly; the $\beta$-mixing version, in the spirit of \cite{dedecker2017}, is part (iii) of the doctoral theorem in Chapter~\ref{ch:sharpness}, and this chapter supplies its i.i.d.\ template together with the coupling of Lemma~\ref{lem:prelim-yu} through which the template is transferred to blocked sums.
+
+\section{Discussion}\label{sec:prelim-discussion}
+
+\subsection{What the chapter has established}
+
+Every result stated in this chapter, with two exceptions, has been proved in full from the definitions. The exceptions are Theorem~\ref{thm:prelim-hagan}, the Hagan approximation, for which a derivation sketch and a citation are given because the full singular-perturbation computation is not the thesis's concern and is treated as the market's quoting convention; and the uniform DKW inequality, Theorem~\ref{thm:prelim-dkw}, which is stated and cited but not used, the thesis needing only the pointwise Corollary~\ref{cor:prelim-dkw-cov} that it proves from the Beta law. The two results carried over from the ground-truth document are in different states. Lemma~\ref{lem:prelim-tc} is now proved, including the time-change lemmas it depends on, and the proof confirms the council's remark that the same-$g$ condition rather than a Dambis--Dubins--Schwarz argument is its substance. Proposition~\ref{prop:prelim-novol} is derived as stated, and the derivation exposes a step that the statement takes for granted: that smile curvature is proportional to total vol-of-vol variance. Proposition~\ref{prop:prelim-nueff} shows that the effective-parameter theory the proposition invokes weights vol-of-vol variance by the square of the remaining clock, under which the two variants of the model are indistinguishable at the accuracy of the Hagan expansion. The statement has been kept and the doubt boxed.
+
+On the finance side the chapter fixes three conventions that the later chapters inherit without restating them. The payment date decides the measure: both caplets pay at $T+\Delta$, both are priced under $\Q^{T+\Delta}$, and both forwards and the basis are $\Q^{T+\Delta}$-martingales (Propositions~\ref{prop:prelim-F-bond}, \ref{prop:prelim-L-mart}, \ref{prop:prelim-B-mart}). The compounded caplet depends on the law of $F$ alone while the JIBAR caplet depends on the law of $L=F+B+s$; the basis therefore contaminates the observed smile, not the target smile, and this direction is the one Chapter~\ref{ch:identifiability} follows. The linear decay and the clock value $T+\Delta/3$ are assumptions (Assumption~\ref{ass:prelim-linear}, Remark~\ref{rem:prelim-linear-status}), exact only for a flat forward-rate volatility in a model whose diffusion coefficient is not SABR's, and Proposition~\ref{prop:prelim-flat} quantifies how far from $\Delta/3$ a mean-reverting volatility moves the clock: for typical mean-reversion speeds, very little.
+
+On the statistics side the chapter establishes the exact tools in the form the certificate uses. Coverage under exchangeability is a statement about ranks and needs nothing else (Theorem~\ref{thm:prelim-coverage}). Conditional coverage under i.i.d.\ sampling has an exact Beta law (Theorem~\ref{thm:prelim-beta}), from which the closed-form Hoeffding bound follows and which is about $2.3$ times tighter than that bound at $\alpha=0.05$. Dependence is paid for by Berbee coupling at the rate $(n+1)\beta(b)$ for $n+2$ gap-separated objects (Lemmas~\ref{lem:prelim-berbee}, \ref{lem:prelim-yu}), and the blocking construction that produces those objects throws away half the record (Algorithm~\ref{alg:prelim-blocking}). Drift between calibration and deployment is measured on half-lines by the Kolmogorov distance, which is dominated by total variation (Proposition~\ref{prop:prelim-dK-le-dTV}) but not by any multiple of $\Wone$ (Example~\ref{ex:prelim-w1-dk}); and $\Wone$ in one dimension is the area between distribution functions (Theorem~\ref{thm:prelim-w1-identity}), which gives the $n^{-1/2}$ rate for the empirical $\Wone$ distance in two lines (Theorem~\ref{thm:prelim-bobkov}).
+
+\subsection{Limitations}
+
+The chapter is one-dimensional throughout. Scores are scalars, laws are on $\R$, distances are between one-dimensional laws. This is a choice, not a restriction of the method: the certificate concerns one hedging-error statistic at a time, and the finance chapters concern one accrual window at a time. Multi-window consistency is the subject of Appendix~\ref{app:tenor}. The Hagan formula is taken as the pricing convention rather than approximated further; where the thesis reports smile parameters they are Hagan parameters, and no claim is made about the exact SABR density. The mixing assumption is not verifiable from data, as Remark~\ref{rem:prelim-garch} records, and the examples given are reasons to find it plausible, not evidence that any particular rate series satisfies it. The uniform DKW inequality is cited, not proved; if an examiner wishes to see its proof, it belongs in Appendix~\ref{app:proofs} and would not change any statement in the thesis.
+
+\subsection{Connection to the next chapters}
+
+Chapter~\ref{ch:certification} takes Theorems~\ref{thm:prelim-coverage} and~\ref{thm:prelim-beta}, Lemma~\ref{lem:prelim-yu}, Algorithm~\ref{alg:prelim-blocking} and Proposition~\ref{prop:prelim-dK-le-dTV}, and assembles them into the certificate: coverage at least $1-\alpha-\dK(P,Q)-(n+1)\beta(b)$ marginally, and at least $b_{n,k}(\delta)-\dK(P,Q)-\beta(b)/\delta'$ conditionally, together with the $\sqrt{2L\Wone}$ bound on the drift penalty whose one-dimensional ingredients are Theorem~\ref{thm:prelim-w1-identity} and Example~\ref{ex:prelim-w1-dk}. Chapter~\ref{ch:sharpness} shows the constant on $\dK$ is sharp and optimises the block length of Algorithm~\ref{alg:prelim-blocking} over the class $\Bclass{r}$, with the dependent version of Theorem~\ref{thm:prelim-bobkov} as its third part. Chapter~\ref{ch:identifiability} takes Propositions~\ref{prop:prelim-B-mart} and~\ref{prop:prelim-lsc}, Lemma~\ref{lem:prelim-tc} and Corollary~\ref{cor:prelim-quoted}, and expands the JIBAR caplet in the basis scale $\varepsilon$ to separate the identified map $\Phi_0$ from the unidentified level and skew shifts. Chapters~\ref{ch:usd} and~\ref{ch:zar} calibrate \eqref{eq:prelim-hagan-N0} at the clock of Corollary~\ref{cor:prelim-quoted} to USD and ZAR data, using Lemma~\ref{lem:prelim-tc} rather than Proposition~\ref{prop:prelim-novol}, a choice that the gap box in Section~\ref{sec:prelim-tcsabr} shows to be immaterial for pricing at the order of the Hagan expansion.
+
+\subsection*{Chapter notes}
+
+The change-of-num\'eraire theorem is due to Geman, El Karoui and Rochet; the presentation follows \cite{brigo2006}. The extended-bond formalism for backward-looking rates is from \cite{lyashenko2019}, with the SABR specialisation in \cite{willems2020}; \cite{lyashenko2020} extends the framework and \cite{brace2024} studies the dynamics of SOFR term structures with the same run-off structure. The observation that the multi-curve JIBAR forward is a $\Q^{T+\Delta}$-martingale by definition, with no replication argument, follows \cite{henrard2014}. The Hagan formulas are from \cite{hagan2002}, and the observation that the fallback is a strike shift for normal SABR is in \cite{piterbarg2020}. Split conformal prediction and its exchangeability proof are from \cite{vovk2005}; the Beta law of conditional coverage is \cite{vovk2012}; the extension beyond exchangeability with a total-variation penalty is \cite{barber2023}, and the blocked version under mixing is \cite{oliveira2024}. Berbee's lemma is from \cite{berbee1979}; the sequential form is Lemma~4.1 of \cite{yu1994}; the general mixing reference is \cite{doukhan1994}, and the impossibility of estimating mixing rates is \cite{adams2010}. The one-dimensional Wasserstein theory is \cite{bobkov2019}, with the dependent case in \cite{dedecker2017}. DKW is \cite{dkw1956} and the empirical-process background is \cite{vdv1996}. Pinsker's inequality and the two-point method that Chapter~\ref{ch:sharpness} uses are in \cite{tsybakov2009}.

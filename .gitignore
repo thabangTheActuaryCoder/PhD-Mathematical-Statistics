@@ -1,0 +1,26 @@
+.DS_Store
+*.aux
+*.log
+*.out
+*.toc
+*.lof
+*.lot
+*.fls
+*.fdb_latexmk
+*.synctex.gz
+*.bbl
+*.blg
+*.acn
+*.acr
+*.alg
+*.glg
+*.glo
+*.gls
+*.ist
+*.pyc
+__pycache__/
+.env
+*.pdf
+!Offer/*.pdf
+!Research Proposal/*.pdf
+!Thesis/Cover Page/src/*.pdf
