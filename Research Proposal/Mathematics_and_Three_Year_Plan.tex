@@ -171,7 +171,7 @@ exactly; the clocks compose.
 \section{Statistics results}
 
 \begin{assumption}[Mixing and separation]\label{ass:mix}
-The per-period hedging-error process of the fixed policy $\pi$ is $\beta$-mixing with coefficients $\beta(k)$ (non-stationary definition: supremum over time origins) and stationary on the calibration window. The fitting sample $\mathcal D_{\mathrm{fit}}$, the $n$ calibration blocks of length $b$, and the deployment block are pairwise separated by gaps of length at least $b$. \corr{the deployment gap is required; without it $S_0$ is not controlled at all}
+The market state process that generates both the fitting sample and the per-period hedging errors of the fixed policy $\pi$ is $\beta$-mixing (the error process of a policy fitted on a random sample does not inherit the coefficients of the state process by itself; the assumption is placed on the state process) with coefficients $\beta(k)$ (non-stationary definition: supremum over time origins) and stationary on the calibration window. The fitting sample $\mathcal D_{\mathrm{fit}}$, the $n$ calibration blocks of length $b$, and the deployment block are pairwise separated by gaps of length at least $b$. \corr{the deployment gap is required; without it $S_0$ is not controlled at all}
 \end{assumption}
 
 Let $k:=\lceil(1-\alpha)(n+1)\rceil$, $\hat q:=S_{(k)}$ the $k$-th order statistic of the calibration scores, and $b_{n,k}(\delta):=\Beta^{-1}(\delta;\,k,\,n+1-k)$ the $\delta$-quantile of the $\Beta(k,n+1-k)$ law.
@@ -184,7 +184,7 @@ Under Assumption~\ref{ass:mix}, with calibration scores $S_1,\dots,S_n\sim P$ ma
 \[
 \Prob\big(S_0\le\hat q\;\big|\;\mathcal D_{\mathrm{fit}},S_{1:n}\big)\;\ge\;b_{n,k}(\delta)-\dK(P,Q)-\beta(b)/\delta',
 \]
-the last term holding on an event of probability at least $1-\delta'$. Moreover $b_{n,k}(\delta)\ge1-\alpha-\sqrt{\log(1/\delta)/(2n)}$, and $b_{n,k}(\delta)\approx1-\alpha-\sqrt{2\alpha(1-\alpha)\log(1/\delta)/n}$, which is about $2.3$ times tighter than the DKW form at $\alpha=0.05$.
+the last term holding on an event of probability at least $1-\delta'$. Moreover $b_{n,k}(\delta)\ge1-\alpha-\sqrt{\log(1/\delta)/(2n)}$. (The normal approximation $b_{n,k}(\delta)\approx1-\alpha-\sqrt{2\alpha(1-\alpha)\log(1/\delta)/n}$ is a large-$n$ heuristic that bounds in neither direction; at $n=25$, $\alpha=0.1$, $\delta=0.05$ the exact quantile is $0.8239$ against $0.7531$ for the Gaussian tail and $0.8387$ for the moment-matched normal. It is not part of the statement.)
 \end{enumerate}
 No assumption is made that the model underlying $\pi$ is correct.
 \end{theorem}

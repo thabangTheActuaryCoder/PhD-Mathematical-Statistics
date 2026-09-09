@@ -1,0 +1,17 @@
+# References index — batch 2 (thesis-reference-librarian, 2026-09-09)
+
+key | title | status | file | highlights note
+---|---|---|---|---
+doukhan1994 | Mixing: Properties and Examples (LNS 85) | book, not downloaded; ISBN 978-0-387-94214-8 / 978-1-4612-2642-0, DOI 10.1007/978-1-4612-2642-0; chapter pages verified (Crossref), section numbers inferred | — | References/Highlights/doukhan1994.md
+dkw1956 | Asymptotic minimax character of the sample distribution function… (Ann. Math. Statist. 27) | downloaded (Project Euclid OA via Wayback capture); scanned, no text layer, no highlighted copy | References/PDF/dkw1956.pdf | References/Highlights/dkw1956.md
+filipovic2009 | Term-Structure Models: A Graduate Course | book, not downloaded; ISBN 978-3-540-09726-6 / 978-3-540-68015-4, DOI 10.1007/978-3-540-68015-4; chapter pages verified (Crossref) | — | References/Highlights/filipovic2009.md
+fournier2015 | On the rate of convergence in Wasserstein distance of the empirical measure (PTRF 162) | downloaded (arXiv:1312.2128v1; journal paywalled, DOI 10.1007/s00440-014-0583-7); arXiv numbering | References/PDF/fournier2015.pdf, fournier2015.highlighted.pdf | References/Highlights/fournier2015.md
+frey1999 | Bounds on European option prices under stochastic volatility (Math. Finance 9(2)) | paywalled: obtain via institutional library; DOI 10.1111/1467-9965.00064; no OA copy found | — | References/Highlights/frey1999.md
+gibbs2021 | Adaptive conformal inference under distribution shift (NeurIPS 34) | downloaded (arXiv:2106.00170v3) | References/PDF/gibbs2021.pdf, gibbs2021.highlighted.pdf | References/Highlights/gibbs2021.md
+gibbs2025 | Conformal prediction with conditional guarantees (JRSS B 87(4)) | downloaded (arXiv:2305.12616v4; journal DOI 10.1093/jrsssb/qkaf008); arXiv numbering | References/PDF/gibbs2025.pdf, gibbs2025.highlighted.pdf | References/Highlights/gibbs2025.md
+hagan2002 | Managing smile risk (Wilmott, Sept 2002, 84–108) | downloaded (author-homepage copy via Wayback; publisher copy login-only); PDF page = Wilmott page − 83 | References/PDF/hagan2002.pdf, hagan2002.highlighted.pdf | References/Highlights/hagan2002.md
+halkiewicz2026 | Rolling-origin conformal prediction under local stationarity and weak dependence (arXiv:2605.08422) | downloaded (arXiv v1, 8 May 2026) | References/PDF/halkiewicz2026.pdf, halkiewicz2026.highlighted.pdf | References/Highlights/halkiewicz2026.md
+henrard2014 | Interest Rate Modelling in the Multi-Curve Framework | book, not downloaded; ISBN 978-1-137-37466-0 / 978-1-349-47704-3, DOI 10.1057/9781137374660; chapter pages verified (Crossref) | — | References/Highlights/henrard2014.md
+isda2025 | Future Cessation Guidance – 2021 ISDA IRD Definitions and 2006 ISDA Definitions: JIBAR (19 Dec 2025) | primary document (isda.org) | References/PDF/isda2025.pdf, isda2025.highlighted.pdf | References/Highlights/isda2025.md
+karatzas1991 | Brownian Motion and Stochastic Calculus, 2nd ed. (GTM 113) | book, not downloaded; ISBN 978-0-387-97655-6 / 978-1-4612-0949-2, DOI 10.1007/978-1-4612-0949-2; theorem numbers verified via Google Books preview: Itô Thm 3.3.6 p.153, Lévy Thm 3.3.16 p.157, DDS Thm 3.4.6 p.174, time-change of integrals Prop 3.4.8 p.176, Girsanov Thm 3.5.1 p.191 | — | References/Highlights/karatzas1991.md
+kunsch1989 | The jackknife and the bootstrap for general stationary observations (Ann. Statist. 17(3)) | downloaded (Project Euclid OA via Wayback capture); scanned, no text layer, no highlighted copy | References/PDF/kunsch1989.pdf | References/Highlights/kunsch1989.md
