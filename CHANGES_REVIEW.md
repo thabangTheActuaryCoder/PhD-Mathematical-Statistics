@@ -48,3 +48,8 @@ Running record of the write, review, revise, compile loop. One entry per round. 
 - Sharpness and optimal blocking written at about 13,300 words in twelve sections, absorbing the block-length sweep staged out of Chapter 3 and defining the sweep figure the data appendix points at.
 - Structural check clean: environments balanced, all fourteen citation keys present, three gap boxes and seven data notes.
 - The manuscript now compiles at 263 pages with Chapters 2 to 5 and Appendices A to C drafted.
+
+## 2026-09-10 - Round one closed for Chapter 5
+- All twenty-three items applied, none declined. The chapter grows from about 10,300 to 13,600 words; every addition is content the review demanded and nothing was cut to make room.
+- The intermediate case of the two-model theorem is now proved rather than restricted, by an explicit one-parameter family that solves the inverse map by construction, so no fixed point has to be argued for. The chapter also explains why the earlier convexity argument cannot be repaired.
+- Three review items were themselves corrected: the deviation of the quoted half-width does not vanish as the basis volatility goes to zero and is given in exact closed form, reproducing the worked example to six figures; the closing family leaves the basis partly driven by the second Brownian motion away from its endpoints; and the portfolio reserve is a sum of suprema rather than a root-sum-square, since a root-sum-square would presuppose a probability on the identified set that the thesis does not supply.
