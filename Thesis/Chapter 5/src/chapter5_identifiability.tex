@@ -359,7 +359,7 @@ with $\alpha_0^{\pm}=a\mp\eta$, $\rho^{\pm}=r$ and $\nu^{\pm}=na/(a\mp\eta)$. He
 \begin{equation}\label{eq:ident-twodiff}
 \sigma^{N,-v}_F(K',T+\Delta)-\sigma^{N,+v}_F(K',T+\Delta)=2v_1\Phi_1(K')+2v_2\,\nu\,\Phi_2(K')+O(\varepsilon^2).
 \end{equation}
-Their at-the-money volatilities differ by $2v_1\,q\,c^*$ and their skews by $q\,c^*\,(\nu/\alpha_0)(v_2-2\rho v_1)$; the ranges of these two quantities over $E_\eta$ have half-widths $\eta\,qc^*$ and $\eta\,qc^*\nu/(2\alpha_0)$ respectively.
+Their at-the-money volatilities differ by $2v_1\,q\,c^*$ and their skews by $q\,c^*\,(\nu/\alpha_0)(v_2-2\rho v_1)$; over $E_\eta$ the first ranges over $[-2\eta qc^*,\,2\eta qc^*]$ and the second over $[-\eta qc^*\nu/\alpha_0,\,\eta qc^*\nu/\alpha_0]$, so each successor quantity is identified within an interval of half-width $\eta\,qc^*$ and $\eta\,qc^*\nu/(2\alpha_0)$ respectively.
 \item (Rank.) The re-solve in (ii) is possible because the Jacobian of the observed level, skew and curvature with respect to $(\alpha_0,\rho,\nu)$ is non-singular whenever $\nu\neq0$ and $|\rho|\neq\sqrt{2/3}$.
 \end{enumerate}
 \end{theorem}
@@ -569,7 +569,7 @@ attained by the two explicit models
 \]
 Quoting each against $T+\Delta$ with its own correction bracket gives successor at-the-money volatilities of $46.18$ bp and $83.04$ bp, an interval of half-width $18.43$ bp. The truth, $56.62$ bp, and the naive analyst's answer, $61.87$ bp, both lie inside it, as they must.
 
-The interval is $18.43/61.87=30\%$ of the level around which it is centred. Expressed in price, the Bachelier at-the-money price is $0.39894\,\sigma\sqrt{t}$ per unit notional and accrual, so the identified interval on the caplet premium runs from $0.39894\times0.004618\times\sqrt{1.25}=0.002060$ to $0.39894\times0.008304\times\sqrt{1.25}=0.003704$, a factor of $1.80$ between the cheapest and dearest admissible mark.
+The interval is $18.43/64.61=29\%$ of its own midpoint of $64.61$ bp, and $18.43/61.87=30\%$ of the naive mark; the interval is not centred on the naive mark, and its midpoint agrees with $\Phi_0(F_0)=64.56$ bp to within $0.05$ bp. Expressed in price, the Bachelier at-the-money price is $0.39894\,\sigma\sqrt{t}$ per unit notional and accrual, so the identified interval on the caplet premium runs from $0.39894\times0.004618\times\sqrt{1.25}=0.002060$ to $0.39894\times0.008304\times\sqrt{1.25}=0.003704$, a factor of $1.80$ between the cheapest and dearest admissible mark.
 
 \subsection{Step 5: the skew tilt}
 
@@ -583,7 +583,7 @@ that is $5.25$ bp per $100$ bp of strike, where $(\alpha_0,\nu)$ are taken at th
 \]
 It contains zero. At these parameters the sign of the successor skew is not identified: there is an admissible model, consistent with every JIBAR quote and with both curves, whose successor smile is flat at the money, and another whose successor smile is more than twice as skewed as the naive mark. The ratio of the half-width to the naive skew is
 \[
-\frac{q c\,\nu\eta/(2\alpha_0)}{|{\rho\nu c q}/2|}=\frac{\eta}{\alpha_0|\rho|}=\frac{20}{60\times0.2434}=1.25,
+\frac{q c\,\nu\eta/(2\alpha_0)}{|{\rho\nu c q}/2|}=\frac{\eta}{\alpha_0|\rho|}=\frac{20}{65.73\times0.2434}=1.25,
 \]
 which shows what drives the failure: a basis volatility that is a third of the rate volatility, against a rate--volatility correlation of only a fifth.
 

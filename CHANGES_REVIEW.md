@@ -43,3 +43,8 @@ Running record of the write, review, revise, compile loop. One entry per round. 
 - Three results are stronger than the plan assumed. The admissible correlations lie on a Schur-complement ellipse; the at-the-money identified interval is exactly the level plus or minus the basis volatility, with both endpoints attained, so the result is exact rather than first order; and the identified region in the level-skew plane is an ellipse rather than a rectangle.
 - At the worked-example parameters the skew interval contains zero, so the sign of the successor skew is not identified at all.
 - Two errors in the plan were corrected: the curvature does move at first order, and the earlier expressions for the fitted correlation and for the skew difference between the two matching models were dimensionally inconsistent.
+
+## 2026-09-10 - Chapter 4 drafted
+- Sharpness and optimal blocking written at about 13,300 words in twelve sections, absorbing the block-length sweep staged out of Chapter 3 and defining the sweep figure the data appendix points at.
+- Structural check clean: environments balanced, all fourteen citation keys present, three gap boxes and seven data notes.
+- The manuscript now compiles at 263 pages with Chapters 2 to 5 and Appendices A to C drafted.
