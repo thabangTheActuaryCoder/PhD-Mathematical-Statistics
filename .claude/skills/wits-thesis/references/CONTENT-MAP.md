@@ -214,6 +214,32 @@
 | subsec:appC-checklist | section | Terminal session checklist | Appendix C (app:data) |
 | tab:appC-seeds | float |  | Appendix C (app:data) |
 
+| def:usd-policy | definition | The certified policy (the market convention) | Chapter 6 (ch:usd) |
+| def:usd-stats | definition | Containment rate, normalised excess, relative half-width | Chapter 6 (ch:usd) |
+| rem:usd-b | remark | The block length is chosen by feasibility, not by optimality | Chapter 6 (ch:usd) |
+| rem:usd-notscp | remark | What the comparison is not (block-permutation conformal; the factor two) | Chapter 6 (ch:usd) |
+| it:H1--it:H4 | list items | The four hiding rules of the protocol | Chapter 6 (ch:usd) |
+| tab:usd-ident-summary | table | Identification-test summary specification (V1, V2, V3) | Chapter 6 (ch:usd) |
+| tab:usd-ident-excess | table | Failure-diagnosis specification (normalised excess by expiry and quarter) | Chapter 6 (ch:usd) |
+| tab:usd-ident-rhobf | table | Nuisance-parameter specification (V4, V5, V6) | Chapter 6 (ch:usd) |
+| tab:usd-cert | table | Certificate specification; the three deficit terms reported separately | Chapter 6 (ch:usd) |
+| tab:usd-routes | table | Route-comparison specification on equal footing | Chapter 6 (ch:usd) |
+| fig:usd-band | figure | Predicted smile, identified band and observed successor smile at one date | Chapter 6 (ch:usd) |
+| fig:usd-containment | figure | Containment through time, by expiry | Chapter 6 (ch:usd) |
+| fig:usd-excess | figure | Failure magnitude and its relation to interval width | Chapter 6 (ch:usd) |
+| fig:usd-eta | figure | Basis volatility estimate and the implied correlation series | Chapter 6 (ch:usd) |
+| fig:usd-cert | figure | The certificate on the deployment window and where its level goes | Chapter 6 (ch:usd) |
+| fig:usd-routes | figure | Blocked and unblocked deficits at the record lengths available | Chapter 6 (ch:usd) |
+| sec:usd-experiment | section | The transition of 2021 to 2023 as a natural experiment | Chapter 6 (ch:usd) |
+| sec:usd-protocol | section | Protocol: information set, windows, reporting rules | Chapter 6 (ch:usd) |
+| sec:usd-ident | section | The identification test (criteria V1--V6 inherited from Chapter 5) | Chapter 6 (ch:usd) |
+| sec:usd-cert | section | The certificate test (criteria C1--C5) | Chapter 6 (ch:usd) |
+| sec:usd-methods | section | Methods compared: block bootstraps, breach counts, regulatory backtests | Chapter 6 (ch:usd) |
+| sec:usd-routes | section | The blocked and unblocked routes on equal footing (criteria R1--R3) | Chapter 6 (ch:usd) |
+| sec:usd-falsify | section | What would falsify each result (F1--F10) | Chapter 6 (ch:usd) |
+| sec:usd-threats | section | Threats to validity | Chapter 6 (ch:usd) |
+| sec:usd-discussion | section | Discussion | Chapter 6 (ch:usd) |
+
 ## Reserved homes
 | Object | Home |
 |---|---|
