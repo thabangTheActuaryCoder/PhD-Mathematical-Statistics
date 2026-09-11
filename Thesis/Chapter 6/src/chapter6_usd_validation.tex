@@ -1,2 +1,474 @@
 \chapter{Validation on the USD LIBOR-to-SOFR Transition}\label{ch6-usd-validation}\label{ch:usd}
-\gap{Chapter not yet drafted; scheduled in the loop order of LOOP.md.}
+
+\begin{quote}\itshape
+This chapter specifies the empirical test of the two theoretical results of the thesis on the one transition for which the answer is already known. The identification result of Chapter~\ref{ch:identifiability} is applied on dates before the successor rate had an options market, using only the predecessor smile, the basis and the fixed spread, and the predicted successor smile and its identified interval are compared with the successor smile once it became observable. The certificate of Chapter~\ref{ch:certification} is deployed with the policy fixed at the market convention, calibrated on 2021 and 2022 and tested on 2023, with realised coverage reported against the certified level and against each of the three deficit terms separately. The blocked and unblocked routes of Chapter~\ref{ch:sharpness} are compared on equal footing at the record lengths this transition affords, which straddle the crossover the theory locates. Every acceptance criterion is stated before the data are pulled, every dataset is a pointer to Appendix~\ref{app:data}, and every figure and table is specified with the claim it tests. No number in this chapter is reported as computed: the analysis is designed here and the data have not been pulled.
+\end{quote}
+
+\section{The transition of 2021 to 2023 as a natural experiment}\label{sec:usd-experiment}
+
+\subsection{The design in one paragraph}
+
+Chapter~\ref{ch:identifiability} makes a prediction that can be checked only where a predecessor benchmark has been replaced by a successor and where both have had an options market, one after the other. The transition from three-month \gls{libor} in United States dollars to compounded \gls{sofr} plus a fixed spread is such a case, and it is the only one available at the scale the thesis needs. The spread was fixed on a single date, 5~March 2021, and was constant from then on; the predecessor option market was deep and continuously quoted until the end of 2021 and was extinguished with the panel on 30~June 2023; the successor option market did not exist at the start of that interval and was quoted by the end of it. On any date in between, an analyst could form the prediction of Chapter~\ref{ch:identifiability} from the predecessor smile, the two curves and the published spread, and could not have formed it from successor quotes because there were none. The successor smile then became observable. The comparison of the prediction with the observation is the experiment.
+
+What makes it an experiment rather than an in-sample exercise is that the concealment was not the analyst's choice. In a backtest one withholds data that exist; here the data did not exist. The date on which the successor surface began to be quoted was set by dealer behaviour, clearing-house rules and a regulatory timetable, none of which was responsive to any prediction of the kind this thesis makes. That exogeneity is the whole of the design; it is a natural experiment in the weak sense of an exogenous timing of observability, not in the strong sense of an assignment mechanism with treated and untreated units.
+
+\subsection{What the experiment can settle}
+
+Four questions are answerable on this record.
+
+First, whether the identified interval of Theorem~\ref{thm:ident-two} contains the successor at-the-money volatility that the market subsequently quoted. This is criterion~V1 of Section~\ref{sec:ident-validation}, fixed in advance in Chapter~\ref{ch:identifiability}. A containment rate far below the pre-registered level would say that either the model class is wrong or the basis volatility that sets the width of the interval has been underestimated, and criterion~V5 separates those two readings.
+
+Second, whether the interval is narrow enough to be of use. An interval that contains everything contains the truth trivially. Criterion~V3 fixes a threshold on the half-width as a fraction of the level, and Chapter~\ref{ch:identifiability} records that its own illustrative parameters fail that threshold, so the criterion is not one that the chapter has arranged to pass.
+
+Third, whether the market convention's own answer -- shift the strike by the spread, apply the volatility decay, quote the result -- is systematically wrong in the direction and by the magnitude the theory predicts. This is criterion~V4, and it is the only criterion that compares the thesis's construction with what a desk would otherwise do.
+
+Fourth, whether the finite-sample certificate of Chapter~\ref{ch:certification} delivers, out of sample, the coverage it states. The policy is fixed on the earlier part of the record, the threshold is computed on the calibration part, and the breaches are counted on a part of the record that entered neither. The realised breach frequency is compared with the certified level and with each of its three deficit terms separately, so that a failure can be attributed.
+
+\subsection{What the experiment cannot settle}
+
+Six things are outside its reach, and each of them is a limit of the design and not of the execution.
+
+It cannot settle the coverage probability of the identified interval, because the interval has none. Theorem~\ref{thm:ident-two} produces a set of parameter values consistent with the observables, not a confidence region; the containment rates reported in Section~\ref{sec:usd-ident} are descriptive frequencies over a single realised path and are not estimates of a coverage probability. Chapter~\ref{ch:identifiability} states this and it is restated here because the temptation to read a containment rate as a coverage is strong.
+
+It cannot settle whether the basis carries a volatility risk premium. The nuisance parameters of Theorem~\ref{thm:ident} are objects under the pricing measure and every estimate of them available here is an object under the physical measure. Criterion~V5 measures the agreement of the two; disagreement is evidence of a premium and is reported as such, and no lengthening of any window reduces it.
+
+It cannot distinguish an interval that is correct from an interval that is too wide, on containment evidence alone. That is what criterion~V3 is for, and V3 is a judgement against a fixed threshold rather than a test.
+
+It cannot settle anything about the South African market by transport. The tests here are tests of the mathematics on a market whose predecessor was liquid; Section~\ref{sec:usd-threats} sets out why the parameter estimates do not carry over, and Chapter~\ref{ch:zar} treats the converted South African book on its own data.
+
+It cannot separate the two directions in which the vendor surfaces are circular. Before the successor surface was genuinely quoted it was the predecessor surface shifted by the spread; after the end of 2021 the predecessor surface was increasingly the successor surface shifted back. Section~\ref{sec:usd-protocol} chooses the windows so that neither direction contaminates the comparison, but the choice rests on a vendor flag, and where the flag is absent the contamination cannot be ruled out from the data.
+
+It cannot, with one transition, establish that any of this generalises. The unit of replication is the transition, and there is one. Within it, the unit is the observation-date-and-expiry pair, of which there are many but which are strongly dependent; every interval and every test statistic in this chapter therefore carries a dependence correction, and the corrections are stated with the statistics they modify.
+
+\subsection{Map of the chapter}
+
+Section~\ref{sec:usd-protocol} fixes the protocol: what is hidden on each date, what is used, and the windows with their justification from the cessation calendar. Section~\ref{sec:usd-ident} specifies the identification test, the statistic, and the acceptance criteria inherited from Chapter~\ref{ch:identifiability}. Section~\ref{sec:usd-cert} specifies the certificate test with the policy fixed at the market convention and reports the three deficit terms separately. Section~\ref{sec:usd-methods} describes the comparison methods -- the block bootstraps, the breach-count tests and the regulatory backtests -- and states plainly that no theorem ranks them. Section~\ref{sec:usd-routes} compares the blocked and unblocked routes of Chapter~\ref{ch:sharpness} on equal footing. Section~\ref{sec:usd-falsify} lists what would falsify each result. Section~\ref{sec:usd-threats} sets out the threats to validity. Section~\ref{sec:usd-discussion} discusses what the chapter will and will not have shown.
+
+Every dataset named below is described in Appendix~\ref{app:data} and nowhere else; this chapter gives only the analysis and, with each dataset, a note saying what must be pulled and from where.
+
+\section{Protocol}\label{sec:usd-protocol}
+
+\subsection{The information set on each date}
+
+Fix an observation date $t$. The \emph{analyst's information set} $\mathcal I_t$ is declared to consist of exactly the following, and of nothing else:
+\begin{enumerate}[nosep,label=(\alph*)]
+\item the quoted predecessor caplet smile on three-month \gls{libor}, at every expiry in the grid of Section~\ref{sec:usd-ident}, as of the close of date $t$, together with the vendor's quoted-or-derived flag for each point;
+\item the \gls{libor} forward curve and the \gls{sofr} \gls{ois} discount and forward curves as of the close of date $t$, from which the forward basis $B_0(t)=L_0(t)-F_0(t)-s$ is read;
+\item the fallback spread $s$, a constant fixed on 5~March 2021 and taking the value recorded for the three-month tenor in Appendix~\ref{app:data};
+\item the realised basis series -- the \gls{libor} fixing minus compounded \gls{sofr} over the matching period minus $s$ -- for every value date up to and including $t-1$;
+\item the calendar of scheduled Federal Open Market Committee meeting dates, which is published in advance.
+\end{enumerate}
+
+The following are \emph{hidden} and may not enter any quantity computed at date $t$:
+\begin{enumerate}[nosep,label=(H\arabic*)]
+\item\label{it:H1} every \gls{sofr} option quote, at date $t$ and at every other date, whether from the vendor cube or from the exchange;
+\item\label{it:H2} every observation dated later than $t$, of any series, including the realised basis;
+\item\label{it:H3} the outcome of any test in this chapter, which is why every threshold is fixed in Chapter~\ref{ch:identifiability} or in this section and none is revised afterwards;
+\item\label{it:H4} the identity of the first month in which the vendor marks the successor surface as quoted, when that month is used to define a window: the month is taken from the vendor's own flag as recorded in the terminal session of Appendix~\ref{app:data} and is not chosen by inspection of the predictions.
+\end{enumerate}
+
+Restriction~\ref{it:H1} is what makes the exercise a prediction rather than a fit, and it is also the second of the two non-negotiable design constraints stated in Section~\ref{sec:ident-validation}: the basis volatility that sets the width of the interval is estimated from the basis record alone. Restriction~\ref{it:H2} is enforced mechanically by computing every trailing statistic on a window that ends at $t-1$, one business day before the observation, which also accommodates the one-business-day lag with which the compounded rate over a period ending at $t-1$ becomes known.
+
+\subsection{The windows}
+
+Five windows are fixed. Each is justified from the cessation calendar and from the data constraints of Appendix~\ref{app:data}, and from nothing else. In particular no window boundary is placed to include or to exclude any episode of market stress; where such an episode falls inside a window, that is a property of the window and is reported in the diagnostics, not a reason to move it.
+
+\paragraph{$W_{\mathrm{pred}}$, the prediction window.} From 5~March 2021, the date on which the spread was fixed and after which $s$ is a constant, to 31~December 2021, the last date on which the predecessor surface is quoted under the ``no new \gls{libor}'' guidance rather than increasingly derived from the successor surface. Before the spread fixing, $s$ was a forecast and the strike shift of Definition~\ref{def:ident-observable} would carry the analyst's own estimate of it; after the end of 2021 the predecessor surface is contaminated in the reverse direction. Both boundaries come from the calendar.
+
+\paragraph{$W_{\mathrm{obs}}$, the observation window.} From $m^*$, the first month in which the vendor marks the successor cap-and-floor surface as quoted rather than derived, to 31~December 2024. The lower endpoint is not known at the time of writing and is not chosen here; Appendix~\ref{app:data} records it as an item of the terminal checklist, with the constraint that it is not earlier than November 2021. The upper endpoint is the end of the data range requested.
+
+\paragraph{$W_{\mathrm{ident}}$, the identification-test window.} The intersection $W_{\mathrm{pred}}\cap W_{\mathrm{obs}}$, on which both the predecessor smile is quoted and the successor smile is quoted. It is the strict arm of the test, and it may be short: if $m^*$ falls in November 2021 it is about six weeks of business days. Its length is a finding about the transition, not a defect of the design, and it is reported as such.
+
+\paragraph{$W_{\mathrm{ex}}$, the exchange arm.} The whole of $W_{\mathrm{pred}}$, with the observed successor smile taken from settlement prices of listed options on three-month \gls{sofr} futures rather than from the vendor cube. These are exchange settlement prices on a market that is quoted by construction and whose history begins before $m^*$, so this arm extends the comparison backwards at the cost of a shorter expiry reach and of an exercise-style conversion. It is reported separately from the strict arm and never pooled with it.
+
+\paragraph{$W_{\mathrm{cert}}$, the certificate windows.} The fitting sample $\Dfit$ is the business days of calendar 2021, on which the policy of Section~\ref{sec:usd-cert} is fixed. The calibration record is the business days of calendar 2022, separated from $\Dfit$ by a gap of $b$ periods at the start. The deployment window is the business days of calendar 2023, separated from the calibration record by a gap of $b$ periods, and it is extended through 2024 where the data range allows, which increases the number of deployment blocks and therefore the precision of the realised breach frequency without changing the threshold.
+
+\paragraph{$W_\eta$, the basis-volatility window.} A trailing window of $252$ business days of the \emph{realised} basis, ending at $t-1$. The quoted basis-swap series is not used for this purpose at any date: quoted spreads compress mechanically toward $s$ in the final year before June 2023, because cleared contracts were converted at the fixed spread, so the last part of that series measures a convergence trade rather than a market price of basis risk. The realised basis carries no such artefact and is available for the whole period. The quoted series is used only as a check on the drift of $B_t$, over the sub-period ending in mid-2022, and that check is reported as a diagnostic.
+
+\datanote{Series to be pulled for the windows of this section, all described in Appendix~\ref{app:data} and none of them here: the daily three-month \gls{libor} fixing from 2~January 2018 to 30~June 2023 (terminal export; no public history exists, so the reproducibility package reads a user-supplied file); the New York Fed \gls{sofr} series from 2~April 2018 to 31~December 2024, from which the compounded rate over each accrual period is recomputed in the package; the five fallback spread adjustments as enacted in the United States, of which only the three-month value is used; the daily predecessor cap-and-floor volatility strip from 2~January 2019 to 30~June 2023 with the vendor quoted-or-derived flag on every point; the same strip on compounded \gls{sofr} from $m^*$ to 31~December 2024; and the daily settlement prices and implied volatilities of listed options on three-month \gls{sofr} futures for the first eight quarterly contracts. The one item that has no substitute is the predecessor volatility strip: without it the first half of this chapter cannot be run at all.}
+
+\gap{Citation needed: the announcement of 5~March 2021 fixing the spread adjustments and triggering the cessation timetable; the confirmation that the panel ended on 30~June 2023; the ``no new \gls{libor}'' supervisory guidance that bounds $W_{\mathrm{pred}}$ at the end of 2021; and the industry initiative that moved non-linear trading to the successor rate on 8~November 2021, which is the reason $m^*$ cannot be earlier than that month. None of these documents has been obtained and none has a bibliography entry, so the four dates above stand as unverified and are used only to place window boundaries, never as inputs to a computation.}
+
+\subsection{Reporting rules fixed in advance}
+
+\paragraph{Quoted before derived.} A point enters any computation only if the vendor flags it as quoted. Where the vendor exposes no flag, the rule of Appendix~\ref{app:data} applies and strikes beyond one hundred basis points from the money are treated as unquoted. The count of points discarded by this rule is reported by window and by expiry, because a rule that discards most of the grid changes what the containment rates mean.
+
+\paragraph{Observation dates and expiries.} The observation dates are the Wednesday marks of each week within the window, or the preceding business day where a Wednesday is a holiday, and the expiry grid is $\{1,2,3,5,7,10\}$ years. Both are fixed in Section~\ref{sec:ident-validation} and are repeated here only because they determine the denominators of every rate reported below. If the available data support only caplet expiries out to two years, the grid truncates to $\{1,2\}$ years and the truncation is reported with the result; the criteria are then evaluated on the truncated grid and no criterion is restated at a new threshold.
+
+\paragraph{Scheduled policy dates.} Forward rates on the successor benchmark move in steps at scheduled monetary-policy dates and diffuse between them, a feature the continuous-forward description of Chapter~\ref{ch:prelim} does not carry \citep{brace2024}. The rule fixed here is that the identification test uses expiries of one year and longer only, so that every accrual window in the test contains several scheduled dates and the step component is absorbed into the fitted volatility on both the predecessor and the successor side. That this absorption is common to the two sides, and therefore cancels at the order of the expansion, is an assumption and not a result.
+
+\gap{Not established here: that a jump component at scheduled policy dates, present in both the predecessor and the successor rate with the same timing, leaves the contamination map of Chapter~\ref{ch:identifiability} unchanged at first order in the basis scale. Chapter~\ref{ch:identifiability} already records that a jumping basis would add a third-cumulant term proportional to neither of the two contamination directions; the present statement is the weaker one that a jump in the \emph{rate} common to both benchmarks is absorbed by the fit. Neither is proved.}
+
+\paragraph{Exchange-arm conversion.} Settlement prices of listed options are converted to normal implied volatilities on the compounded rate with the contract's own settlement convention, and, if the listed options are American-style, with an early-exercise adjustment whose size is reported for every point rather than assumed negligible. The exchange arm is reported separately throughout.
+
+\gap{Citation needed: the contract specification of the listed three-month successor-rate futures and of the options on them, for the settlement formula, the exercise style and the listing dates. No primary document has been obtained; until one is, the exchange arm is specified but its conversion step is not fixed.}
+
+\section{The identification test}\label{sec:usd-ident}
+
+\subsection{The quantities, defined precisely}
+
+Fix an observation date $t\in W_{\mathrm{ident}}$ and an expiry $T$ in the grid. Write $\Delta$ for the three-month accrual length, $\tau^*=T+\Delta/3$ for the clock of Chapter~\ref{ch:prelim} and $q=\sqrt{\tau^*/(T+\Delta)}$ for the quoting factor of Chapter~\ref{ch:identifiability}.
+
+\paragraph{Step 1: the fitted predecessor triple.} Let $\mathcal K_t$ be the set of strikes at expiry $T$ that the vendor flags as quoted on date $t$, and let $\sigma^{N,\mathrm{obs}}_L(K)$ be the quoted normal implied volatility at each. The fitted triple is
+\[
+(a,r,n)(t,T):=\arg\min_{(a',r',n')}\ \sum_{K\in\mathcal K_t}w_K\Big(\sigma^{N,\mathrm{obs}}_L(K)-\sigma^{N,\mathrm{SABR}}(K;a',r',n',T)\Big)^2 ,
+\]
+where $\sigma^{N,\mathrm{SABR}}$ is the normal \gls{sabr} implied volatility of Chapter~\ref{ch:prelim} at expiry $T$ with $\beta=0$, and the weights are fixed in advance as $w_K\equiv1$, that is, an unweighted least-squares fit in volatility units over the quoted strikes. The minimisation is over $a'>0$, $|r'|<1$, $n'>0$. The fit residual in basis points is recorded for every $(t,T)$ and is reported as a diagnostic; it is not an acceptance criterion, and Chapter~\ref{ch:identifiability} explains why a small residual is not evidence that the triple is the successor's triple.
+
+\paragraph{Step 2: the strike shift and the time change.} The predicted successor smile is the map
+\[
+\Phi_0(K'):=\sigma^{N,\mathrm{SABR}}\big(K'; \alpha_0,\rho,\nu,\tau^*\big)\cdot q ,\qquad K'=K-s-B_0(t),
+\]
+with $(\alpha_0,\rho,\nu)$ the observable-based values of Section~\ref{sec:ident-validation}, namely $\alpha_0=\sqrt{a^2-\hat\eta^2}$, $\nu=na^2/\alpha_0^2$ and $\rho$ from \eqref{eq:ident-inverse} at $p=0$. The factor $q$ is the conversion from the clock to the quoted convention of Chapter~\ref{ch:prelim}. The \emph{naive mark} is the same construction with $\hat\eta$ set to zero, which is the market convention: fit, shift the strike, apply the decay, quote.
+
+\paragraph{Step 3: the basis volatility.} Let $B^{\mathrm{real}}_u$ denote the realised basis at value date $u$. The estimator is the trailing realised volatility
+\[
+\hat\eta(t):=\sqrt{\frac{252}{N_w}\sum_{i=1}^{N_w}\big(B^{\mathrm{real}}_{u_i}-B^{\mathrm{real}}_{u_{i-1}}\big)^2},\qquad N_w=252,
+\]
+over the window $W_\eta$ ending at $t-1$, with no mean removed, the basis being a martingale under the pricing measure. Its relative standard error is approximately $1/\sqrt{2N_w}$ for a driftless series of constant volatility, which Section~\ref{sec:ident-validation} converts one-for-one into a relative standard error on the half-width; the band it produces is reported beside every containment rate and is not folded into any criterion.
+
+\paragraph{Step 4: the identified interval.} The endpoints are those fixed in criterion~V1,
+\[
+\Sigma^{\pm}(t,T)=(a\mp\hat\eta(t))\,q\Big[1+\tfrac1{24}(2-3r^2)\Big(\frac{na}{a\mp\hat\eta(t)}\Big)^{2}\tau^*\Big],
+\]
+each extreme model carried through its own Hagan bracket, so that $\Sigma^+\le\Sigma^-$ and the interval is $[\Sigma^+,\Sigma^-]$. The symmetric interval $\Phi_0(F_0)\pm\hat\eta qc^*$ is not used, being wider by the factor recorded in \eqref{eq:ident-quotedhw}; both are tabulated so that the difference is visible, and only the first enters the criterion.
+
+\paragraph{Step 5: the observation.} Let $\Sigma^{\mathrm{obs}}(t,T)$ be the quoted successor at-the-money normal volatility at the same date and expiry, taken from the vendor cube in the strict arm and from exchange settlements in the exchange arm. The quoted successor skew $\varsigma^{\mathrm{obs}}(t,T)$ is the slope at the money of the ordinary least-squares line fitted to the quoted successor normal volatilities over the strikes within fifty basis points of the money, a definition fixed here in advance because the criterion of Section~\ref{sec:ident-validation} refers to ``the quoted successor skew'' without fixing an estimator. Its predicted counterpart is $\Phi_0'(F_0)$, the analytic slope of the predicted smile at the money.
+
+\subsection{The statistics}
+
+Three statistics carry the test. Write $\mathcal P$ for the set of observation-date-and-expiry pairs in the window, $|\mathcal P|=M_{\mathcal P}$.
+
+\begin{definition}[Containment rate, normalised excess, relative half-width]\label{def:usd-stats}
+For $(t,T)\in\mathcal P$ set
+\[
+C_{t,T}:=\ind{\Sigma^{\mathrm{obs}}(t,T)\in[\Sigma^+(t,T),\Sigma^-(t,T)]},\qquad
+w_{t,T}:=\tfrac12\big(\Sigma^-(t,T)-\Sigma^+(t,T)\big),
+\]
+and define the \emph{signed normalised excess}
+\[
+D_{t,T}:=\frac{\big(\Sigma^{\mathrm{obs}}-\Sigma^-\big)^+-\big(\Sigma^+-\Sigma^{\mathrm{obs}}\big)^+}{w_{t,T}} ,
+\]
+which is zero exactly when the pair is contained, positive when the market quoted above the interval and negative when below, and measured in units of the half-width. The \emph{containment rate} is $\bar C:=M_{\mathcal P}^{-1}\sum_{\mathcal P}C_{t,T}$, computed overall and separately by expiry. The \emph{relative half-width} is $w_{t,T}/\Phi_0(F_0)(t,T)$.
+\end{definition}
+
+The normalised excess is the statistic that distinguishes a test that fails narrowly from one that fails grossly, and it is the reason the chapter does not report $\bar C$ alone. A containment rate of $0.85$ with $|D|$ below $0.1$ on the failures is a different finding from the same rate with $|D|$ above $2$, and only the second is evidence against the model class.
+
+\paragraph{Dependence correction.} The pairs are strongly dependent: consecutive Wednesday marks share almost all of their information, and the expiries at a single date share the fitted triple. Every rate and every test statistic below is therefore accompanied by a moving-block bootstrap interval, resampling whole observation dates -- all expiries of a date move together -- with block length $b^*$ evaluated by Theorem~\ref{thm:block-b} at the record length in dates and at $r=2$, and with $R=2000$ replications under the seed recorded in Table~\ref{tab:appC-seeds} of Appendix~\ref{app:data}. The bootstrap interval is a precision statement placed beside each criterion. It does not replace the criterion: the criteria of Section~\ref{sec:ident-validation} are stated as raw proportions and as fixed-level tests, and they are evaluated exactly as stated there.
+
+\subsection{Acceptance criteria, inherited}
+
+The six criteria V1 to V6 are fixed in Section~\ref{sec:ident-validation} of Chapter~\ref{ch:identifiability}, before any data were pulled, and this chapter changes none of them. They are reported in full, each with its verdict, and the count of criteria passed is reported as a single line so that a reader cannot assemble a favourable subset. Two points of execution need fixing here, and both are matters of computation rather than of threshold.
+
+First, V4 is a paired sign test over pairs that are serially dependent, so its nominal five per cent level is not its true level. The criterion is evaluated exactly as written, and the block-bootstrap $p$-value for the same null is reported beside it; where the two disagree, the finding is recorded as inconclusive rather than resolved in either direction.
+
+Second, V5 requires the implied $\rho_{BF}$, which is defined there as the realised deviation divided by $-\hat\eta qc^*$. That quantity is undefined when $\hat\eta$ is zero and is unstable when $\hat\eta$ is small; the rule fixed here is that a pair is excluded from V5 when $\hat\eta(t)$ falls below one basis point, and the count of exclusions is reported. The implied value is truncated to $[-1,1]$ before any correlation is computed, because values outside that range are not correlations, and the count and the magnitude of the truncations are reported. A high truncation count is itself evidence, and Section~\ref{sec:usd-falsify} says what of.
+
+\subsection{Tables and figures the test produces}
+
+\begin{table}[htbp]
+\centering\small
+\caption{Specification of the identification-test summary table, one row per expiry in $\{1,2,3,5,7,10\}$ years and a pooled row, produced separately for the strict arm and the exchange arm. It serves criteria V1, V2 and V3 directly and reports the precision of each. No entry is filled here: the data have not been pulled.}
+\label{tab:usd-ident-summary}
+\begin{tabular}{@{}ll@{}}
+\toprule
+Column & Content \\
+\midrule
+Expiry & years; pooled row last \\
+$M_{\mathcal P}$ & number of observation-date pairs after the quoted-only rule \\
+Discarded & points discarded as derived or unflagged, per cent of grid \\
+Fit residual & median across pairs of the root-mean-square fit residual, bp \\
+$\bar C$ (V1) & containment rate of $\Sigma^{\mathrm{obs}}$ in $[\Sigma^+,\Sigma^-]$ \\
+$\bar C$ interval & block-bootstrap $95\%$ interval for $\bar C$ \\
+V1 verdict & pass if $\bar C\ge0.90$ \\
+$\bar C_{\varsigma}$ (V2) & containment rate of the quoted skew in its interval \\
+V2 verdict & pass if $\bar C_\varsigma\ge0.90$ \\
+Median $w$ & median half-width, bp \\
+Median $w/\Phi_0$ & median relative half-width, per cent \\
+V3 verdict & informative if median $w/\Phi_0\le0.25$ \\
+$\hat\eta$ band & median $\hat\eta$ and its relative standard error, bp \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[htbp]
+\centering\small
+\caption{Specification of the failure-diagnosis table. Rows are expiries as in Table~\ref{tab:usd-ident-summary}, crossed with calendar quarters of the window. It serves the interpretation of a V1 or V2 failure, distinguishing narrow from gross failure and clustered from dispersed failure, and it is the evidence base for the attribution rules of Section~\ref{sec:usd-falsify}.}
+\label{tab:usd-ident-excess}
+\begin{tabular}{@{}ll@{}}
+\toprule
+Column & Content \\
+\midrule
+Cell & expiry $\times$ calendar quarter \\
+$M_{\mathcal P}$ & pairs in the cell \\
+$\bar C$ & containment rate in the cell \\
+$D$ quantiles & $5$th, $25$th, $50$th, $75$th, $95$th percentiles of the signed normalised excess \\
+$\Prob(D>0\mid D\ne0)$ & share of failures above the interval \\
+Max $|D|$ & largest normalised excess in the cell \\
+Naive error & median $|\Sigma^{\mathrm{obs}}-\Phi_0(F_0)|_{\hat\eta=0}$, bp \\
+Midpoint error & median $|\Sigma^{\mathrm{obs}}-\tfrac12(\Sigma^++\Sigma^-)|$, bp \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[htbp]
+\centering\small
+\caption{Specification of the nuisance-parameter table, one row per expiry. It serves criteria V4, V5 and V6, and it is the only place where a statement about the pricing measure is compared with a statement about the physical measure.}
+\label{tab:usd-ident-rhobf}
+\begin{tabular}{@{}ll@{}}
+\toprule
+Column & Content \\
+\midrule
+Expiry & years \\
+Sign-test $p$ (V4) & one-sided paired sign test, midpoint against naive mark \\
+Bootstrap $p$ (V4) & block-bootstrap $p$-value for the same null \\
+Ties discarded & pairs tied to $0.01$ bp \\
+Implied $\rho_{BF}$ & median and interquartile range across dates \\
+Truncated & pairs with implied value outside $[-1,1]$, and median excess \\
+Realised $\rho_{BF}$ & median trailing correlation of the basis with the compounded forward \\
+Pearson $\rho$ & correlation of the two series across dates \\
+Bootstrap $p$ (V5) & moving-block bootstrap $p$-value against zero \\
+Sign agreement & whether implied and realised agree in sign \\
+IQR (V6) & interquartile range of the implied series \\
+Slope on $B_0$ (V6) & ordinary least-squares slope and its bootstrap $p$-value \\
+V6 verdict & stable / moves with the level / neither \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\figplan{Four panels, one per expiry in $\{1,2,5,10\}$ years, on a single representative observation date drawn from the middle of $W_{\mathrm{ident}}$. Horizontal axis: strike offset from the successor forward, in basis points, over $[-150,150]$. Vertical axis: normal implied volatility, in basis points. Series in each panel: the predicted midpoint smile $\Phi_0$ as a solid line; the two endpoint smiles of the extreme models as dashed lines with the region between them shaded; the naive mark, computed with the basis volatility set to zero, as a dotted line; the quoted successor smile as filled markers, one per quoted strike, with open markers for points the vendor flags as derived; and a vertical rule at the money.}{The predicted successor smile, its identified band and the observed successor smile at one date. The figure tests, at a single date and by eye, the claim that criterion~V1 measures over the whole window: that the quoted successor smile lies inside the band produced from the predecessor smile, the two curves and the fixed spread alone. It also shows the width of the band against the distance between the naive mark and the observation, which is the quantity criterion~V4 tests. Data as specified in Appendix~\ref{app:data}; the date is fixed in advance as the first Wednesday of the second month of $W_{\mathrm{ident}}$.\label{fig:usd-band}}
+
+\figplan{Six panels, one per expiry in the grid. Horizontal axis: observation date across $W_{\mathrm{ident}}$, with the exchange arm shown on the wider axis of $W_{\mathrm{pred}}$ in a second figure of identical construction. Vertical axis: at-the-money normal implied volatility, in basis points. Series: the shaded band between $\Sigma^+$ and $\Sigma^-$; the predicted midpoint as a solid line; the naive mark as a dotted line; the quoted successor at-the-money volatility as a solid line with markers; breaches of the band marked. A rug along the bottom axis marks dates on which more than half the grid was discarded by the quoted-only rule.}{Containment through time, by expiry. The figure tests whether failures of criterion~V1 are dispersed or clustered in time, which is what distinguishes a mis-specified model class from an episode in which the basis volatility estimate was stale. The rug shows where the quoted-only rule has thinned the evidence, so that a run of containment on a thin grid is not read as a run of containment.\label{fig:usd-containment}}
+
+\figplan{Two panels. Left: empirical distribution functions of the signed normalised excess $D$, one curve per expiry, horizontal axis $D$ over $[-3,3]$, vertical axis the empirical distribution function, with vertical rules at $-1$ and $+1$ marking the band edges in normalised units. Right: the same quantity as a scatter against the relative half-width $w/\Phi_0$, horizontal axis relative half-width in per cent with a vertical rule at the criterion-V3 threshold of twenty-five per cent, vertical axis $D$, points coloured by expiry.}{Failure magnitude and its relation to interval width. The left panel tests whether failures of criterion~V1 are narrow or gross; the right panel tests the joint hypothesis that the interval is simultaneously informative and containing, which is the pair of criteria V1 and V3 read together and the only reading under which the identification result is operationally useful.\label{fig:usd-excess}}
+
+\figplan{Two panels sharing a horizontal date axis over the whole of $W_{\mathrm{pred}}$ and $W_{\mathrm{obs}}$. Upper panel, vertical axis in basis points: the trailing realised basis volatility $\hat\eta(t)$ with a shaded band of one relative standard error, $\hat\eta(t)/\sqrt{2N_w}$; the resulting median half-width across expiries on a secondary axis. Lower panel, vertical axis in units of correlation over $[-1,1]$: the implied $\rho_{BF}$ series of criterion~V5, one line per expiry, with the trailing realised correlation of the basis with the compounded forward overlaid as a heavy line, and markers where the implied value has been truncated to the admissible range.}{The one estimated input and the one testable nuisance parameter. The upper panel tests how much of the width of the identified interval is driven by movement in the basis volatility estimate rather than by the fitted predecessor smile. The lower panel is criterion~V5 and criterion~V6 in one picture: agreement in sign and in level between the option-implied and the historically estimated basis-rate correlation, and the stability of the implied series across expiries and through time. Data as specified in Appendix~\ref{app:data}; the correlation window is the same $252$-business-day trailing window as $\hat\eta$.\label{fig:usd-eta}}
+
+\datanote{Every quantity in this section is computed from four inputs and no others: the quoted predecessor smile with its quoted-or-derived flags, the two curves, the constant spread, and the realised basis series. The realised basis is computed inside the reproducibility package from the daily overnight fixings published by the central bank, compounded over each accrual period with the conventions recorded in Appendix~\ref{app:data}, minus the predecessor fixing from the terminal export, minus the constant spread; only the predecessor fixing is not redistributable. The fit of Step~1 is a three-parameter least-squares problem solved by the module described in Appendix~\ref{app:data}; the starting values, the tolerance and the treatment of non-convergence are recorded there, and any pair for which the fit does not converge is excluded and counted.}
+
+\section{The certificate test}\label{sec:usd-cert}
+
+\subsection{The policy, and why it is the market convention}
+
+Theorem~\ref{thm:cov} requires only that the valuation-and-hedging policy be fixed on the fitting sample; it makes no assumption that the model underlying the policy is correct. That licence is used here in the strongest way available: the policy is the market convention, exactly as a desk would implement it, with no use of anything proved in this thesis.
+
+\begin{definition}[The certified policy]\label{def:usd-policy}
+The policy $\pi$ is: on each date, fit a normal \gls{sabr} triple to the quoted predecessor caplet smile by the unweighted least-squares fit of Step~1 of Section~\ref{sec:usd-ident}; shift the strike by the spread plus the forward basis; apply the linear volatility decay with the $\Delta/3$ effective maturity; value each successor caplet in the book at the resulting normal volatility; and hedge with a delta in the successor forward and a vega in the at-the-money successor volatility, both computed from the same fitted triple, rebalanced at each daily close. The parameters of the decay convention and the hedge ratios are functions of $\Dfit$ only through the fit on the last date of $\Dfit$, and are frozen thereafter for the purposes of the certificate.
+\end{definition}
+
+Two features of this choice matter. It is not the thesis's own policy: no identified interval, no midpoint and no reserve enters it. And it is not a good policy in any sense the thesis defends; it is the policy whose hedging error the thesis exists to bound. The certificate is indifferent to which fixed policy is certified, which is precisely why the market convention is the informative choice: a certificate that only works on a policy the thesis also designed would establish much less.
+
+\paragraph{The book.} The hedged portfolio is a fixed notional of successor caplets at each expiry in the grid, struck at the money on the first date of $\Dfit$ and held to the end of the deployment window, with no re-striking and no roll. The per-period hedging error $e_t$ is the daily change in the value of the portfolio and its hedges, marked at the policy's own volatilities, with the sign convention of Chapter~\ref{ch:certification} that positive values are losses. The block score is the cumulative block shortfall, $\phi(p,x)=\sum_i x_i$, which is the default of Definition~\ref{def:score} and is the quantity a reserve is held against; the absolute cumulative error is reported as a check, as Chapter~\ref{ch:certification} recommends.
+
+\datanote{The book is synthetic and its composition is declared here rather than taken from any institution: equal vega at each expiry in $\{1,2,3,5,7,10\}$ years on the first date of $\Dfit$, long only. Nothing in the certificate depends on the composition, which enters only through the law of the score; the composition is stated so that the reported thresholds are reproducible in currency units. The daily marks require the successor volatility surface over the whole of $\Dfit$ and the calibration and deployment windows, so on dates before $m^*$ the book is marked at the policy's own volatilities, which is what the policy prescribes and is not a use of hidden data. The realised profit and loss, by contrast, requires observed successor prices and is therefore available only from $m^*$; the deployment window lies entirely after $m^*$ by construction, and the calibration window is reported with the count of dates on which the realised leg rests on a derived surface.}
+
+\gap{Not established here: that a calibration record whose realised profit and loss rests in part on a vendor-derived successor surface satisfies the common-law requirement of Assumption~\ref{ass:mix}. If the count of such dates is material, the calibration window is shortened to begin at $m^*$ and the resulting loss of blocks is reported; that shortening is the only window revision this chapter permits, it is triggered by a data property rather than by a result, and the trigger is fixed here in advance at more than one quarter of the calibration dates.}
+
+\subsection{Blocks, and a block length the record cannot supply}
+
+The layout is that of Chapter~\ref{ch:certification}: the fitting sample, a gap of $b$ periods, $n=\lfloor N/(2b)\rfloor$ calibration blocks alternating with gaps of $b$, a trailing gap, then the deployment blocks. With the calibration window a calendar year of daily observations, $N$ is about $250$.
+
+The feasibility constraint on $n$ recorded in Appendix~\ref{app:data} bites at once. At $\alpha=0.1$ and $N=250$ the block length $b=13$ gives $n=9$ and $k=9$, so the threshold is the largest of nine calibration scores and $k/(n+1)$ is exactly $0.9$; at $b=14$ the threshold is infinite and the certificate is vacuous. The admissible range is therefore $b\le13$. Against that, the block length that minimises the expected calibration-conditional shortfall of Chapter~\ref{ch:sharpness}, $b^*=(2(r+1))^{2/(2r+3)}N^{3/(2r+3)}$, is about $17.8$ at $N=250$ and $r=2$, and Chapter~\ref{ch:sharpness} records that keeping the discarded constants moves the minimiser further up. The record is too short to carry the block length the certificate bound prefers.
+
+This is reported as a finding and not repaired. The chapter therefore evaluates the certificate at $b\in\{1,2,5,10,13\}$, giving $n=125,62,25,12,9$ and $k/(n+1)=0.905,0.905,0.923,0.923,0.900$ respectively, and reports every deficit term at each. The gap between $1-\alpha$ and $k/(n+1)$ is a visible finite-$n$ effect at these block counts and is tabulated beside the nominal level, because a reader who compares a realised breach frequency of seven per cent with a nominal ten per cent should be told that the ceiling in $k$ has already moved the target to seven and a half.
+
+\begin{remark}[The block length is chosen by feasibility, not by optimality]\label{rem:usd-b}
+Chapter~\ref{ch:sharpness} is explicit that $b^*$ minimises an upper bound on the certificate's own shortfall and that no lower bound is proved for the blocked route, so $b^*$ is optimal for the bound and not for the problem. On this record the question does not arise: the admissible set of block lengths does not contain $b^*$, and the choice is made by the feasibility of a finite threshold at the stated level. The sweep over $b$ is reported in full so that the sensitivity of every conclusion to that choice is visible.
+\end{remark}
+
+\subsection{The three deficit terms, reported separately}
+
+Theorem~\ref{thm:cov}(i) certifies the level $1-\alpha-\dK(P,Q)-(n+1)\beta(b)$ and part~(ii) the conditional level $b_{n,k}(\delta)-\dK(P,Q)-\beta(b)/\delta'$ at confidence $1-\delta-\delta'-n\beta(b)$. Three quantities are subtracted, they have different statuses, and the chapter reports each on its own line.
+
+\paragraph{The finite-sample term.} The gap $1-\alpha-b_{n,k}(\delta)$ between the nominal level and the Beta quantile is computed exactly, by bisection on the binomial tail as in Algorithm~\ref{alg:cert}, at $\delta=0.05$. Nothing is assumed for it and the Gaussian approximation to the Beta quantile is not used anywhere, being poor at these block counts. This is the only one of the three that shrinks with the record.
+
+\paragraph{The coupling term.} The terms $(n+1)\beta(b)$ and $\beta(b)/\delta'$ are computed from an assumed mixing class, $\beta(b)\le Cb^{-r}$, at $\delta'=0.05$. The coefficient is not estimable distribution-free, as Chapter~\ref{ch:certification} establishes by construction, so $(C,r)$ is an input and never an output. The pre-registered grid is $C\in\{0.5,1,2\}$ and $r\in\{1.5,2,3\}$, and the certified levels are reported over the whole grid rather than at a preferred point.
+
+\paragraph{The drift term.} The Kolmogorov distance $\dK(P,Q)$ is charged in two ways, both reported. As a stress input, at the pre-registered values $\varepsilon\in\{0,0.02,0.05,0.10\}$, the first of which is the no-drift reference and is not a claim. As a plug-in, by Corollary~\ref{cor:plugin}, from the deployment scores and an assumed density bound $L$ on the deployment score law, at $L\in\{L_0/2,L_0,2L_0\}$ where $L_0$ is the reciprocal of the interquartile range of the calibration scores, a reference value declared here in advance. Chapter~\ref{ch:certification} certifies the calibration side of that plug-in and not the deployment side, and the table says so on the face of it. The $n^{-1/4}$ rate at which the plug-in converges is a consequence of the square root in Proposition~\ref{prop:w1}, and at $n$ of a few tens the plug-in is a coarse instrument; that is a reason to report the stress form beside it, not a reason to omit either.
+
+\subsection{Acceptance criteria, stated in advance}
+
+\begin{enumerate}[label=\textbf{C\arabic*.},leftmargin=2.2\parindent]
+\item \textbf{Marginal coverage.} Over the $M$ deployment blocks, the realised breach frequency $\hat\alpha:=M^{-1}\sum_{i}\ind{S_0^{(i)}>\hat q}$ does not exceed the certified marginal deficit $\alpha+\hat\varepsilon+(n+1)\bar\beta$. The criterion is evaluated at $b=10$ as the primary case, at $C=1$, $r=2$, $\varepsilon=0.05$, all fixed here, and at every other cell of the grid as a sensitivity. It is passed if the one-sided binomial test of $\hat\alpha$ against that bound, at the five per cent level, does not reject in the direction of under-coverage; the block-bootstrap $p$-value for the same null is reported beside the binomial one, and where they disagree the finding is inconclusive.
+\item \textbf{Non-vacuity.} The certified marginal level $1-\alpha-\hat\varepsilon-(n+1)\bar\beta$ must be at least $0.5$ in the primary case. A certificate whose stated level is below a coin toss is recorded as vacuous at that block length and mixing class, and the smallest $b$ at which the level clears $0.5$ is reported. This criterion can fail: at $b=1$ and $C=1$, $r=2$ the coupling term alone is $(n+1)C b^{-r}=126$, so the certificate is vacuous at the shortest block length before any drift is charged, and the criterion exists to make that visible rather than to be passed.
+\item \textbf{Two-sided error.} The realised breach frequency is also compared with the over-coverage bound of Proposition~\ref{prop:twosided}(a): $\hat\alpha$ below $\alpha-1/(n+1)-\hat\varepsilon-(n+1)\bar\beta$ is a failure of the two-sided statement and is reported as such. Systematic over-coverage is a finding about the threshold's conservatism and is the quantity Chapter~\ref{ch:sharpness} optimises.
+\item \textbf{Conditional coverage.} With the calibration sample at its single realised value, the deployment breach frequency is the natural estimate of the calibration-conditional coverage, and it is compared with the certified conditional level $b_{n,k}(0.05)-\hat\varepsilon-\bar\beta/0.05$. The comparison is reported with the explicit caveat that a single calibration draw gives one realisation of an event that holds with probability $1-\delta-\delta'-n\bar\beta$, so a single failure is not evidence against the theorem and a single success is not evidence for it; what the comparison measures is whether the certificate was conservative on this record.
+\item \textbf{Assumption dependence.} The verdicts of C1 to C4 are recomputed over the full grid $b\in\{1,2,5,10,13\}$, $C\in\{0.5,1,2\}$, $r\in\{1.5,2,3\}$, $\varepsilon\in\{0,0.02,0.05,0.10\}$, $L\in\{L_0/2,L_0,2L_0\}$. If the verdict of C1 is not constant over that grid, the certificate is recorded as assumption-driven on this record, and the sub-grid on which it passes is reported. This is a criterion about the chapter's own honesty rather than about the theorem, and it is expected to bind.
+\end{enumerate}
+
+\begin{table}[htbp]
+\centering\small
+\caption{Specification of the certificate table. One block of rows per block length $b\in\{1,2,5,10,13\}$, each repeated over the mixing grid $(C,r)$ and the drift grid. It serves criteria C1 to C4 and is the place where the three deficit terms are reported separately, as the second, third and fourth of the deficit columns. No entry is filled here.}
+\label{tab:usd-cert}
+\begin{tabular}{@{}ll@{}}
+\toprule
+Column & Content \\
+\midrule
+$b$; $n$; $k$; $k/(n+1)$ & block layout and the realised nominal level \\
+$\hat q$ & threshold, currency units per block, and as a multiple of the block score standard deviation \\
+$1-\alpha-b_{n,k}(0.05)$ & finite-sample deficit, computed exactly \\
+$(n+1)\bar\beta$; $\bar\beta/\delta'$ & coupling deficits, marginal and conditional, at the stated $(C,r)$ \\
+$\hat\varepsilon$ & drift deficit: assumed value, or plug-in with its $L$ \\
+Certified marginal & $1-\alpha-\hat\varepsilon-(n+1)\bar\beta$ \\
+Certified conditional & $b_{n,k}(0.05)-\hat\varepsilon-\bar\beta/0.05$, with confidence $1-\delta-\delta'-n\bar\beta$ \\
+$M$; breaches; $\hat\alpha$ & deployment blocks, breach count, realised frequency \\
+Binomial $p$; bootstrap $p$ & one-sided tests of C1 \\
+C1--C4 verdicts & one column per criterion \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\figplan{Two panels sharing a horizontal date axis over the calibration and deployment windows. Upper panel, vertical axis in currency units per block: the block scores, plotted as points at the end date of each block, with calibration blocks and deployment blocks distinguished; the threshold $\hat q$ as a horizontal line beginning at the first deployment block; breaches marked; and the gaps shown as shaded vertical strips so that the half of the record spent on gaps is visible. Lower panel, vertical axis in units of probability: the three deficit terms as a stacked area against block length $b$ on a secondary horizontal axis, at $C=1$, $r=2$ and the primary drift value, with the certified marginal level as the residual at the top and a horizontal rule at one half marking criterion~C2.}{The certificate on the deployment window, and where its level goes. The upper panel tests criterion~C1 by eye and shows whether breaches cluster. The lower panel is the decomposition criterion~C5 examines: it shows that at short block lengths the coupling term consumes the whole level, that at long block lengths the finite-sample term does, and that the drift term is the only one whose size the chapter estimates rather than assumes. Data as specified in Appendix~\ref{app:data}; the deficit panel uses no data at all beyond $n$ and the assumed class.\label{fig:usd-cert}}
+
+\section{Methods compared}\label{sec:usd-methods}
+
+The certificate is one way of turning a record of hedging errors into a threshold. Three others are in use, and this section defines them in the form the comparison of Section~\ref{sec:usd-routes} needs. No theorem in this thesis ranks any of them against the certificate under Assumption~\ref{ass:mix}; the comparison is empirical, and the honest content of it is a table of stated levels beside realised breach frequencies.
+
+\subsection{Block bootstraps}
+
+The moving block bootstrap of \citet{kunsch1989} resamples the record $e_{1:N}$ in blocks of a fixed length $\ell$: draw $\lceil N/\ell\rceil$ starting indices uniformly from $\{1,\dots,N-\ell+1\}$ with replacement, concatenate the corresponding blocks, and truncate to length $N$ \citep[\S2.3, eq.~(2.7)]{kunsch1989}. The stationary bootstrap of \citet{politis1994} replaces the fixed length by independent geometric lengths with mean $1/p$ and wraps the record circularly, so that the resampled series is stationary conditionally on the data. In either case a statistic of interest, here the $(1-\alpha)$-quantile of the block score, is recomputed on each pseudo-series and the bootstrap distribution of the statistic is used to form a percentile interval or to inflate the threshold.
+
+For definiteness, the stationary-bootstrap threshold used in this chapter is computed as follows. Given block scores $S_1,\dots,S_{n'}$ from contiguous, unseparated blocks of the record ($n'=\lfloor N/b\rfloor$, twice the certificate's $n$), and a mean resampling length $1/p$: draw a start $I_1$ uniformly from $\{1,\dots,n'\}$ and a length $L_1\sim\mathrm{Geometric}(p)$; append $S_{I_1},S_{I_1+1},\dots,S_{I_1+L_1-1}$ with indices taken modulo $n'$; repeat with independent $(I_2,L_2),\dots$ until $n'$ values have been appended, and truncate. Compute the $(1-\alpha)$ empirical quantile $\hat q^{\,\flat}$ of the pseudo-sample. Repeat $R$ times and report the median of the $R$ values as the bootstrap threshold and their $[\alpha/2,1-\alpha/2]$ percentiles as its uncertainty. The choice $p\asymp n'^{-1/3}$ is the mean-optimal rate of \citet{politis1994} and is used for want of a quantile-optimal rule with known constants.
+
+Two constants are fixed here in advance, since the staged form of this comparison left them open. The replication count is $R=2000$, which puts the Monte Carlo standard error of a median quantile below a tenth of the spacing between adjacent order statistics of the pseudo-sample at every block length in the sweep, and the seed is the one recorded in Table~\ref{tab:appC-seeds} of Appendix~\ref{app:data}. The mean resampling length is $1/p=\lceil n'^{1/3}\rceil$ at each block length, evaluated at the $n'$ that block length produces, so that the rule is a function of the record and not a choice; at $b=10$ and a calibration year, $n'=25$ and $1/p=3$. The bootstrap is run on the calibration window only, so that its threshold and the certificate's threshold see exactly the same data, which is the condition under which the comparison of Section~\ref{sec:usd-routes} is on equal footing.
+
+The theory of these methods is asymptotic and is developed in \citet{lahiri2003}. For smooth functionals of means of a $\beta$-mixing sequence, the block bootstrap is consistent when $\ell\to\infty$ with $\ell/N\to0$, and with $\ell\asymp N^{1/3}$ it is second-order accurate, with a coverage error of order $N^{-1/2}$ or better. For a quantile of the block score, the relevant statistic is an order statistic of a dependent sequence. Its Edgeworth expansion involves the density of the score law at the quantile and the long-run variance of the indicator process $\ind{S\le q}$, both unknown, and the coefficients of the correction terms depend on the mixing rate through constants that are not available. A statement of the form ``the bootstrap threshold covers the next block with probability at least $1-\alpha-\eta_N$'' with an explicit $\eta_N$ and explicit constants is therefore not available under Assumption~\ref{ass:mix}, and none is claimed here or in Chapter~\ref{ch:certification}. No theorem ranks the two methods under that assumption: the comparison below is empirical.
+
+\gap{Citation locator needed: a chapter or theorem in \citet{lahiri2003} for the consistency of the block bootstrap under $\ell\to\infty$, $\ell/N\to0$ and for second-order accuracy at $\ell\asymp N^{1/3}$. The book has not been read and no locator is recorded for it; \citet{politis1994} and \citet{kunsch1989} likewise carry no page locator beyond the definitional one quoted above.}
+
+What can be said is this. The certificate's level is a proved finite-sample statement under stated assumptions. The bootstrap's level is an asymptotic statement whose finite-sample accuracy is unknown, but the bootstrap uses the whole record rather than half of it, does not require gaps, and adapts to the dependence structure through $\ell$ or $p$ without an assumed class. In a regime where $N$ is large and the mixing is fast, the bootstrap threshold may well be tighter than $\hat q$ with no worse realised coverage. Which regime this record is in is an empirical question and is treated as one.
+
+\begin{remark}[What the comparison is not]\label{rem:usd-notscp}
+A negative finding in the literature concerns split block-\emph{permutation} conformal prediction, which \citet[p.~15]{stocker2025} report as failing to provide valid coverage even in simple stationary settings. That procedure is not the one certified here: it permutes blocks to construct a reference distribution, whereas the construction of Chapter~\ref{ch:certification} takes the order statistic of gap-separated block scores and pays for the dependence with an explicit coupling term. The negative finding does not transfer, and it is recorded here so that a reader does not import it. The nearest application of a conformal coverage bound in finance is \citet[Thm.~1]{schmitt2026}, whose coverage gap carries an unremovable factor two on a total-variation distance; the route of Chapter~\ref{ch:certification} carries the constant one on a Kolmogorov distance, and Chapter~\ref{ch:sharpness} shows that constant to be sharp. Table~1 of that paper reports regulatory breach-count statistics beside conformal coverage, which is the form Table~\ref{tab:usd-routes} follows.
+\end{remark}
+
+\subsection{Breach-count tests}
+
+A threshold, however obtained, can be tested after the fact by counting breaches. Let $I_t:=\ind{S_t>q_t}$ be the breach indicator over $M$ deployment blocks with nominal breach probability $\alpha$, and $x:=\sum_tI_t$.
+
+The proportion-of-failures test of \citet{kupiec1995} is the likelihood-ratio test of $H_0:\Prob(I_t=1)=\alpha$ against the unrestricted Bernoulli alternative,
+\[
+\mathrm{LR}_{\mathrm{uc}}:=-2\log\frac{(1-\alpha)^{M-x}\alpha^{x}}{(1-\hat\alpha)^{M-x}\hat\alpha^{x}},\qquad\hat\alpha:=x/M ,
+\]
+asymptotically $\chi^2_1$ under $H_0$ when the $I_t$ are independent. The test of \citet{christoffersen1998} adds a test of independence: with $n_{ij}$ the number of transitions from $I_{t-1}=i$ to $I_t=j$, and $\hat\pi_i:=n_{i1}/(n_{i0}+n_{i1})$, $\hat\pi:=(n_{01}+n_{11})/M$,
+\[
+\mathrm{LR}_{\mathrm{ind}}:=-2\log\frac{(1-\hat\pi)^{n_{00}+n_{10}}\hat\pi^{n_{01}+n_{11}}}{(1-\hat\pi_0)^{n_{00}}\hat\pi_0^{n_{01}}(1-\hat\pi_1)^{n_{10}}\hat\pi_1^{n_{11}}}\ \sim\ \chi^2_1 ,
+\]
+and the conditional-coverage statistic $\mathrm{LR}_{\mathrm{cc}}:=\mathrm{LR}_{\mathrm{uc}}+\mathrm{LR}_{\mathrm{ind}}$ is asymptotically $\chi^2_2$. Both are asymptotic in $M$, both assume at most first-order Markov dependence in the breach sequence under the alternative, and both are diagnostics of a threshold already in use, not constructions of one. They are applied in Section~\ref{sec:usd-routes} to the certificate threshold and to the bootstrap threshold alike, on the same deployment blocks, so that the two can be compared on realised breaches. With $M$ of the order of a few tens of blocks, the asymptotic critical values are not to be trusted, and the tests are reported with a finite-sample $p$-value obtained by enumerating the exact binomial distribution for the unconditional part and by the block bootstrap of Section~\ref{sec:usd-ident} for the conditional part.
+
+\gap{Citation locator needed: no page, equation or section locator may be quoted from \citet{kupiec1995} or \citet{christoffersen1998}, neither text having been obtained; the two statistics are stated above in the form in which they are used and are cited to the articles as wholes.}
+
+\subsection{Regulatory backtests}
+
+The Basel market-risk framework \citep{bcbs2019} contains two backtests relevant here. The first is the traffic-light count of value-at-risk exceptions over $250$ trading days at the $99\%$ level, with zones green, amber and red by exception count, each carrying a capital multiplier. The second is the profit-and-loss attribution test of the internal-models approach, which compares the risk-theoretical profit and loss produced by the desk's pricing model with the hypothetical profit and loss produced by the front-office system, over the same days, by a Spearman rank correlation and a Kolmogorov--Smirnov distance between the two empirical distributions, with green, amber and red zones defined by thresholds on the two statistics. The attribution test is the regulatory analogue of the certificate's question, since a systematic hedging error is exactly a gap between model profit and loss and realised profit and loss, but it is a two-sample comparison at a fixed sample size with asymptotic critical values, and it says nothing about the next block.
+
+The chapter reports both statistics, and reports the zone only as read from the text at the time of the run. Nothing in this chapter's conclusions depends on where the zone boundaries fall: the comparison of interest is between the attribution statistics computed for the certified policy and the same statistics computed for the alternatives of Section~\ref{sec:usd-routes}, which is a within-record ranking and is invariant to the boundaries.
+
+\gap{Citation locator needed: the paragraph numbers of \citet{bcbs2019} for the traffic-light zones and for the profit-and-loss attribution thresholds, and the numerical zone boundaries themselves. No reading note exists for that document and no boundary value is asserted in this chapter; the two statistics are reported and the zone is read from the January 2019 text and the consolidated framework at the time of the run.}
+
+\section{The blocked and unblocked routes on equal footing}\label{sec:usd-routes}
+
+\subsection{What equal footing requires}
+
+Chapter~\ref{ch:sharpness} establishes that blocking costs a factor $\sqrt b$ in effective sample size and that the blocked calibration-conditional rate is not minimax in any coverage formulation; what blocking buys is the exact $\Beta(k,n+1-k)$ law and a failure probability whose only dependence on the mixing class is one term, not a better rate. It also establishes, in Remark~\ref{rem:sharp-constants}, that the practical ordering of the two routes at a given record length turns on which inequality is used on the unblocked side, and that on the printed accounting the crossover sits near two thousand two hundred periods, moving down to about seven hundred under the refined variance proxy. Since a record of a few hundred to a few thousand daily observations is exactly what this transition affords, the comparison is not settled by the theory at these lengths and must be run.
+
+Three conditions make the comparison fair, and all three are fixed here.
+
+\paragraph{Same object.} Every route produces a threshold for the same block score at the same block length $b$ on the same deployment blocks. The routes differ only in how the calibration record is turned into a threshold: the certificate takes the $k$-th order statistic of $n=\lfloor N/(2b)\rfloor$ gap-separated block scores; the unblocked route takes the empirical $(1-\alpha)$-quantile of the $n'=\lfloor N/b\rfloor$ contiguous block scores, using the whole record and no gaps; the stationary bootstrap takes the median of $R$ pseudo-sample quantiles from the same $n'$ scores.
+
+\paragraph{Same cost accounting.} The blocked deficit $(n+1)\beta(b)$ already contains the coupling that decouples the deployment block from the threshold, and the unblocked route pays nothing for that decoupling. Comparing them as printed would credit the unblocked route with something it has not bought. Following the rule of Chapter~\ref{ch:sharpness}, the comparison is made with the deployment coupling removed from the blocked side, so that every stated deficit is a calibration-side quantity, and the charge $\beta(b_g)/\delta'$ that the unblocked route would have to pay to make the same deployment statement is displayed in its own column rather than silently omitted.
+
+\paragraph{Same sharpness of inequality, or an explicit note that it is not.} The blocked level rests on an exact Beta quantile; the unblocked level, in the form Chapter~\ref{ch:sharpness} proves, rests on Chebyshev. These are not of comparable sharpness, and a conclusion drawn from putting them side by side is an artefact of the inequalities and not a finding about the routes. The table therefore carries three unblocked columns: the Chebyshev bound, which is proved; the sub-Gaussian size an exponential inequality of Fuk--Nagaev type would deliver, which Chapter~\ref{ch:sharpness} reports as an estimate and not as a proved bound; and the realised breach frequency, which is neither. Each is labelled with its status on the face of the table.
+
+\subsection{The record lengths this transition affords}
+
+Three record lengths are available and all are reported. The calibration year gives $N$ of about $250$ daily periods. The whole predecessor record, from the start of 2019 to the end of the panel, gives about eleven hundred. Extending the deployment side into 2024 on successor data alone gives about seventeen hundred. Against the two crossings Chapter~\ref{ch:sharpness} computes -- about two thousand two hundred periods on the printed accounting and about seven hundred on the refined one -- the shortest of these lies below both, the longest lies above one and below the other, and none lies clearly on either side. That is the honest statement of the position, and it is why the comparison here is reported as a measurement rather than as a recommendation.
+
+\subsection{Acceptance criteria, stated in advance}
+
+\begin{enumerate}[label=\textbf{R\arabic*.},leftmargin=2.2\parindent]
+\item \textbf{Reporting.} For each route, the threshold in currency units per block, the stated level with its status (proved finite-sample, proved asymptotic, estimated, or none), the realised breach frequency over the deployment blocks, and the two breach-count statistics with their finite-sample $p$-values. No route is declared to dominate. The criterion is satisfied by completeness of the report, and it is stated as a criterion so that a selective report is a visible failure.
+\item \textbf{Ordering against the theory.} At each of the three record lengths, the ordering of the certified blocked deficit and the unblocked deficit is compared with the ordering the crossover predicts under each of the two unblocked accountings. Agreement is recorded; disagreement is recorded as evidence about the constants in those inequalities and not about the theorem, because neither the Chebyshev bound nor the sub-Gaussian estimate is claimed to be tight.
+\item \textbf{Realised coverage is not a bound.} The realised breach frequency of any route is reported without being compared with that route's stated level as if a match confirmed it. A bootstrap threshold with realised coverage at the nominal level has not thereby acquired a finite-sample guarantee, and a certificate with realised coverage far above its stated level has not thereby been shown loose on the next record. The criterion is the absence of such inferences from the text.
+\end{enumerate}
+
+\begin{table}[htbp]
+\centering\small
+\caption{Specification of the route-comparison table. Rows are the four routes crossed with the three record lengths and the block lengths $b\in\{5,10,13\}$; the deployment blocks are common to every row. It serves criteria R1 and R2 and is the empirical content of the comparison Chapter~\ref{ch:sharpness} leaves open. No entry is filled here.}
+\label{tab:usd-routes}
+\begin{tabular}{@{}ll@{}}
+\toprule
+Column & Content \\
+\midrule
+Route & certificate (blocked, gaps); sample quantile (unblocked); stationary bootstrap; certificate at $b^*$ where feasible \\
+$N$; $b$; $n$ or $n'$ & record length, block length, number of calibration scores \\
+$\hat q$ & threshold, currency units per block \\
+$\hat q$ ratio & threshold as a multiple of the certificate's threshold at the same $b$ \\
+Stated level & the level the route states \\
+Status & proved finite-sample / proved asymptotic / estimated / none \\
+Calibration deficit & blocked: $1-\alpha-b_{n,k}(\delta)+n\bar\beta$; unblocked: Chebyshev, and sub-Gaussian estimate \\
+Deployment charge & $\beta(b_g)/\delta'$, shown for the unblocked routes, zero for the certificate \\
+$M$; breaches; $\hat\alpha$ & deployment blocks, breach count, realised frequency \\
+$\mathrm{LR}_{\mathrm{uc}}$; exact $p$ & proportion-of-failures test with the exact binomial $p$-value \\
+$\mathrm{LR}_{\mathrm{cc}}$; bootstrap $p$ & conditional-coverage test with a block-bootstrap $p$-value \\
+Attribution & Spearman correlation and Kolmogorov--Smirnov distance of the attribution test, with the zone \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\figplan{Two panels. Left, vertical axis a deficit in units of probability on a logarithmic scale and horizontal axis the record length $N$ on a logarithmic scale from $10^2$ to $10^6$: three curves, the blocked calibration-side deficit minimised over admissible $b$, the unblocked Chebyshev bound, and the unblocked sub-Gaussian estimate, at $C=1$, $r=2$, $\delta=0.05$, with the two crossings marked and with vertical rules at the three record lengths this transition affords. Right, vertical axis the threshold in currency units per block and horizontal axis the block length $b$ over the admissible range: the certificate threshold, the unblocked sample quantile and the median stationary-bootstrap threshold with its percentile band, all on the calibration year, with a horizontal rule at the largest realised deployment block score.}{The two routes at the record lengths this transition affords. The left panel carries no data: it is the comparison of Chapter~\ref{ch:sharpness} evaluated at the record lengths available here, and it tests criterion~R2 by showing which side of each crossing the record falls on. The right panel is the empirical counterpart and tests whether the ordering of stated deficits is reproduced in the ordering of thresholds, which it need not be, since a deficit is a statement about coverage and a threshold is a statement about currency.\label{fig:usd-routes}}
+
+\datanote{The left panel of Figure~\ref{fig:usd-routes} uses no market data: it evaluates $g_{\mathrm{cal}}(b)=1/(2\sqrt{n+2})+nCb^{-r}$ with $n=\lfloor N/(2b)\rfloor$, the Chebyshev form $\sqrt{(\tfrac12+4C\zeta(r))/(N\delta)}$, and the sub-Gaussian size $\sqrt{2\sigma_r^2\log(2/\delta)/N}$ with $\sigma_r^2=\tfrac14+2C\zeta(r)$, all at $C=1$, $r=2$, $\delta=0.05$, exactly as Chapter~\ref{ch:sharpness} specifies them; the third of these is an estimate and not a proved bound and the figure legend says so. The right panel requires the block scores of the certified policy over the calibration year, and therefore the whole of the data chain of Section~\ref{sec:usd-cert}.}
+
+\section{What would falsify each result}\label{sec:usd-falsify}
+
+A test is worth running only if some outcome would be taken as refuting the claim. The list below fixes those outcomes in advance, one entry per claim, and is deliberately separated from the criteria so that the criteria cannot be reinterpreted after the fact.
+
+\begin{enumerate}[label=\textbf{F\arabic*.},leftmargin=2.2\parindent]
+\item \textbf{The decomposition.} Theorem~\ref{thm:ident} says the transition map is a strike shift by the spread plus the forward basis, followed by the time change, followed by a perturbation in a two-dimensional family. It is falsified on this record by a containment rate that fails criterion~V1 with the failures \emph{gross} -- a median absolute normalised excess above one, so that the observation sits more than a full half-width outside the interval -- and \emph{dispersed} across expiries and quarters rather than concentrated in one episode. Gross dispersed failure cannot be attributed to a stale basis-volatility estimate or to a single stressed quarter, and would say that the contamination does not lie where the theorem puts it.
+\item \textbf{The exactness at the money.} Theorem~\ref{thm:ident-two}(i) says the interval half-width is exactly the basis volatility at the clock, with both endpoints attained. It is not falsifiable by containment evidence, being an identity in the basis scale rather than a prediction; what containment evidence can falsify is the \emph{input}, namely that the pricing-measure basis volatility is well proxied by the trailing realised volatility. A containment rate that fails V1 with the failures narrow -- median absolute normalised excess below one -- and with the implied basis volatility that would have been needed for containment systematically larger than $\hat\eta$, is evidence that the proxy is too small, not that the theorem is wrong. That reading is available only because criterion~V5 measures the same gap independently.
+\item \textbf{The skew statement.} The first-order skew statement of Theorem~\ref{thm:ident} is falsified by a failure of criterion~V2 accompanied by a pass of criterion~V1, provided the fitted basis scale is small on the record. If the basis scale is not small -- and Chapter~\ref{ch:identifiability} records that at plausible parameters the second-order term in the skew entry is of the same size as the first, and can reverse its sign -- then a V2 failure is evidence about the size of the remainder and not about the theorem, which is asymptotic in that scale. The chapter therefore reports the realised basis scale $\hat\eta/a$ by expiry and by quarter, and the falsification reading of a V2 failure is available only on the pairs where that ratio is below one fifth.
+\item \textbf{The usefulness claim.} The claim that the identified interval is operationally useful is falsified by a failure of criterion~V3: a median relative half-width above one quarter on the majority of expiries. This outcome is compatible with every theorem in Chapter~\ref{ch:identifiability} being true, and it is the outcome Chapter~\ref{ch:identifiability}'s own illustrative parameters would produce. It would falsify the thesis's practical claim and not its mathematical one, and the distinction is maintained in the reporting.
+\item \textbf{The improvement claim.} The claim that the construction of Chapter~\ref{ch:identifiability} beats the market convention is falsified by a failure of criterion~V4 on the long-expiry arm, where the theory predicts the gain, with the block-bootstrap $p$-value agreeing with the sign test. A failure on the pooled arm alone is not decisive, because the short expiries carry the smallest contamination and the least room for improvement.
+\item \textbf{The shared-basis assumption.} The assumption that one basis vector serves every expiry, which is what makes the identifiability deficit three rather than three per expiry and what makes the book reserve additive in the form of Corollary~\ref{cor:ident-book}, is falsified by criterion~V6 recording a per-expiry implied series with interquartile range above the stated threshold or with medians differing across expiries by more than it. That outcome does not falsify Theorem~\ref{thm:ident}; it selects the per-expiry variant, changes the deficit count and changes the reserve of Chapter~\ref{ch:zar} from a net sum to a sum of absolute values.
+\item \textbf{The certificate.} Theorem~\ref{thm:cov}(i) is falsified on this record by a realised breach frequency significantly above the certified marginal deficit, at the primary cell and over a majority of the assumption grid, with the excess not attributable to a single deployment block. Because the theorem is a statement about a probability and the record supplies one path, a single breach above the bound is not a refutation; the criterion is the binomial test of C1 and its bootstrap counterpart, and the requirement that the verdict survive the grid is criterion~C5.
+\item \textbf{The certificate's assumptions.} Separately from the theorem, the \emph{applicability} of the certificate to this kind of record is falsified by criterion~C2: if the certified level is below one half at every feasible block length and at every cell of the mixing grid, then the certificate says nothing usable about a record of this length, whatever its realised coverage. That is a finding about record lengths and mixing classes and it is reported as one.
+\item \textbf{The blocking comparison.} No claim of this chapter is falsified by the unblocked route producing a tighter threshold or better realised coverage than the certificate; Chapter~\ref{ch:sharpness} predicts exactly that beyond the crossover. What would be evidence against the accounting of Chapter~\ref{ch:sharpness} is the blocked deficit exceeding the unblocked Chebyshev bound at a record length well below the crossing computed there, or falling below the unblocked sub-Gaussian estimate at a record length well above it, in either case by a factor that the stated constants cannot absorb.
+\item \textbf{The design itself.} The experiment is invalidated, rather than any claim falsified, if the count of points discarded by the quoted-only rule leaves a grid too thin to support the stated denominators, or if the first quoted month $m^*$ turns out to lie outside the predecessor's quoted window so that $W_{\mathrm{ident}}$ is empty. In that event the strict arm is not run, the exchange arm is reported alone, and the chapter says so in place of a result.
+\end{enumerate}
+
+Three outcomes are named here as \emph{not} falsifying anything, because each is easily mistaken for a refutation. A disagreement in sign between the option-implied and the historically estimated basis-rate correlation is evidence of a risk premium on basis volatility, which the theory of Chapter~\ref{ch:identifiability} neither asserts nor denies. A high containment rate on wide intervals is not confirmation, which is why criterion~V3 is stated. And a realised breach frequency far below the certified level is not evidence that the certificate is correct; it is evidence that it is conservative on this path, which is the quantity Chapter~\ref{ch:sharpness} treats.
+
+\section{Threats to validity}\label{sec:usd-threats}
+
+\subsection{The predecessor market was liquid; the South African one is not}
+
+The dominant threat is external. This chapter tests the mathematics on a transition whose predecessor was one of the deepest option markets in the world, quoted continuously across a wide strike grid and a long expiry grid by many dealers. The South African predecessor market is not comparable in depth, its inter-dealer quotes are set against a collateral convention in a foreign currency, and the successor market did not exist at all at the time of the survey recorded in Chapter~\ref{ch:intro}. Three consequences follow and each is carried into Chapter~\ref{ch:zar} rather than assumed away.
+
+The sampling error of the fitted predecessor triple is larger in a thin market, so the same theorem delivers a wider effective interval there even at the same basis volatility, and none of the fit-residual diagnostics reported here transfer as magnitudes. The quoted-or-derived distinction, which is the defence against circularity in this chapter, may not exist as a vendor flag in a thin market, in which case the corresponding test cannot be run at all. And the basis dynamics themselves differ: the one published dynamic study of the South African spread models it with jumps at monetary-policy dates, and Chapter~\ref{ch:identifiability} records that a jumping basis would break the cumulant computation at third order. A pass of every criterion here is therefore evidence that the construction is sound and is not evidence that the numbers transport. Chapter~\ref{ch:zar} states its own inputs and does not borrow any estimate from this chapter.
+
+\subsection{Circularity in both directions}
+
+A vendor successor surface before it is genuinely quoted is the predecessor surface shifted by the spread, and a vendor predecessor surface after trading has moved is the successor surface shifted back. Testing a prediction against either would be circular, and in opposite directions. The window construction of Section~\ref{sec:usd-protocol} excludes both, at the cost of a short strict arm, and the exchange arm exists precisely because it rests on settlement prices from a market that is quoted by construction. The residual threat is that the vendor flag is itself unreliable: a point flagged as quoted may rest on a single stale contribution. Nothing in the data resolves this, and the count of discarded points, reported by window and expiry, is the only visibility the chapter has.
+
+\subsection{Composite surfaces, grids that move, and conventions that change}
+
+Composite volatility cubes interpolate and extrapolate where no broker quoted, so a downloaded smile may in part be model output; absolute strike grids are re-centred as rates move, so the strikes available in one year need not be available in another; and in the years when the predecessor forward was near zero, shifted-lognormal quotes may sit beside normal quotes. Each of these is handled by the conventions recorded in Appendix~\ref{app:data}: the quoted-or-derived rule, interpolation in strike only within the quoted range, and export of the quoting convention with every value. Each leaves a residue that the chapter cannot remove, and the residue is largest exactly where the smile is most informative, in the wings.
+
+A related threat is the change of definitions partway through the record. The successor contract conventions changed on a known weekend during the window, and quotes straddling it may differ in day count or payment lag. The rule is to export the settlement type and the convention with every quote and to report the count of quotes on either side of the change; the alternative, excluding the transition period, would remove observations for a reason that is not a data-quality reason.
+
+\subsection{The estimated input, and the measure it lives under}
+
+The whole width of the identified interval rests on one estimated number, the basis volatility, and that number is estimated under the physical measure while the theorem needs it under the pricing measure. The sampling error is small and is reported. The measure gap is not a sampling error, has no standard error, and is not reduced by any window length. Criterion~V5 is the only instrument the chapter has for it, and criterion~V5 measures a correlation rather than a volatility, so the gap in the level of the basis volatility remains unmeasured. This is the single largest threat to the quantitative content of Section~\ref{sec:usd-ident}, and it is the reason the identified set is described throughout as an ambiguity set rather than as an estimate with an error bar.
+
+\subsection{Jumps at scheduled policy dates}
+
+Successor forwards move in steps at scheduled policy dates. The chapter's rule -- expiries of one year and longer only, so that the step component is absorbed by the fit on both sides -- is an assumption and is gap-boxed in Section~\ref{sec:usd-protocol}. If the absorption is imperfect and asymmetric between the two benchmarks, the fitted triple carries a bias that the identification test would attribute to the basis. The diagnostic available is the fit residual by expiry: a residual that rises systematically at the shortest expiries in the grid is the signature of an unabsorbed step component, and it is reported for that purpose.
+
+\subsection{Multiplicity, and the single path}
+
+Six identification criteria, five certificate criteria and three route criteria are evaluated, several of them per expiry. No multiplicity correction is applied, and none is claimed: the criteria are reported jointly with the count passed, and no subset is presented as the result. The deeper limitation is that all of them are computed on one path of one market. The block bootstrap supplies a dependence-aware measure of the sampling variability along that path; it supplies nothing about the variability across paths that were not realised, and no procedure can.
+
+\subsection{The policy is a convention, not a book}
+
+The certified policy is the market convention applied to a declared synthetic portfolio, not the policy of any institution applied to its real book. The certificate is indifferent to this, since it requires only that the policy be fixed. The economic interpretation of the threshold is not indifferent: the currency units in which $\hat q$ is reported are those of the declared portfolio, and they scale with its declared vega. Every threshold is therefore reported both in currency units and as a multiple of the block score standard deviation, and only the second is comparable across books.

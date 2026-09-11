@@ -1,6 +1,4 @@
-# CONTENT-MAP — the single home of every object (rebuilt 2026-09-10)
-
-Rebuilt from the files themselves after the Chapter 2 and Chapter 3 revisions moved proofs into Appendix B and deleted duplicates.
+# CONTENT-MAP — the single home of every object (rebuilt 2026-09-11)
 
 | Label | Kind | Title / note | Home |
 |---|---|---|---|
@@ -98,6 +96,69 @@ Rebuilt from the files themselves after the Chapter 2 and Chapter 3 revisions mo
 | sec:cert-algorithm | section | Algorithm | Chapter 3 (ch:certification) |
 | sec:cert-example | section | Worked example | Chapter 3 (ch:certification) |
 | sec:cert-discussion | section | Discussion | Chapter 3 (ch:certification) |
+| tab:example | float |  | Chapter 3 (ch:certification) |
+| def:sharp-proc | definition | Threshold procedure and its coverage | Chapter 4 (ch:sharpness) |
+| def:sharp-transport | definition | Bottom-mass transport | Chapter 4 (ch:sharpness) |
+| lem:sharp-dist | lemma | Distances to the transported law | Chapter 4 (ch:sharpness) |
+| thm:sharp | theorem | Sharpness of the drift penalty | Chapter 4 (ch:sharpness) |
+| ex:sharp-corr | example | Size of the corrections at the parameters of Chapter~\ref{ch:certifica | Chapter 4 (ch:sharpness) |
+| def:sharp-error | definition | Calibration-conditional coverage error | Chapter 4 (ch:sharpness) |
+| thm:block-b | theorem | The block length that minimises the certified shortfall of the blocked | Chapter 4 (ch:sharpness) |
+| ex:sharp-bstar | example | The minimiser at polynomial rate two and record length five hundred | Chapter 4 (ch:sharpness) |
+| lem:sharp-cov | lemma | Covariance of half-line indicators | Chapter 4 (ch:sharpness) |
+| lem:sharp-var | lemma | Variance of the empirical distribution function | Chapter 4 (ch:sharpness) |
+| thm:block-rate | theorem | The blocked rate is not minimax | Chapter 4 (ch:sharpness) |
+| thm:block-lower | theorem | Mixing-driven lower bound at high confidence | Chapter 4 (ch:sharpness) |
+| def:sharp-renewal | definition | Regime-renewal process | Chapter 4 (ch:sharpness) |
+| lem:sharp-renewal-beta | lemma | Mixing of the regime-renewal process | Chapter 4 (ch:sharpness) |
+| thm:block-drift | theorem | Minimax certifiable deficit under partially observed drift | Chapter 4 (ch:sharpness) |
+| prop:block-w1 | proposition | Dependent empirical Wasserstein rate over $\Bclass{r}$; specialised, n | Chapter 4 (ch:sharpness) |
+| ex:sharp-w1-size | example | Size of the constant | Chapter 4 (ch:sharpness) |
+| sec:sharp-thm8 | section | Sharpness of the drift penalty | Chapter 4 (ch:sharpness) |
+| sec:sharp-functional | section | The conditional coverage error and why it must be two-sided | Chapter 4 (ch:sharpness) |
+| sec:sharp-block | section | The block length that minimises the certified shortfall | Chapter 4 (ch:sharpness) |
+| sec:sharp-notminimax | section | The blocked rate is not minimax | Chapter 4 (ch:sharpness) |
+| sec:sharp-lower | section | The mixing-driven lower bound at high confidence | Chapter 4 (ch:sharpness) |
+| sec:sharp-drift | section | Partially observed drift | Chapter 4 (ch:sharpness) |
+| sec:sharp-w1 | section | The dependent empirical Wasserstein rate | Chapter 4 (ch:sharpness) |
+| sec:sharp-positioning | section | Positioning | Chapter 4 (ch:sharpness) |
+| sec:sharp-example | section | Numerical illustration | Chapter 4 (ch:sharpness) |
+| sec:sharp-discussion | section | Discussion | Chapter 4 (ch:sharpness) |
+| sec:sharp-notes | section | Chapter notes | Chapter 4 (ch:sharpness) |
+| def:ident-identified | definition | Identified functional and identified set | Chapter 5 (ch:identifiability) |
+| def:ident-observable | definition | Observable set | Chapter 5 (ch:identifiability) |
+| lem:ident-psd | lemma | Admissible correlation triples | Chapter 5 (ch:identifiability) |
+| lem:ident-cumulants | lemma | Cumulants of the JIBAR forward at expiry | Chapter 5 (ch:identifiability) |
+| prop:ident-map | proposition | Contamination map | Chapter 5 (ch:identifiability) |
+| thm:ident | theorem | Identified and unidentified components of the smile map | Chapter 5 (ch:identifiability) |
+| prop:ident-termstructure | proposition | Basis with a deterministic volatility profile: the level shift | Chapter 5 (ch:identifiability) |
+| prop:ident-inverse | proposition | Inverse of the contamination map | Chapter 5 (ch:identifiability) |
+| thm:ident-two | theorem | Two models | Chapter 5 (ch:identifiability) |
+| prop:ident-consistent | proposition | Consistent set | Chapter 5 (ch:identifiability) |
+| cor:ident-book | corollary | Identified intervals add across a book | Chapter 5 (ch:identifiability) |
+| sec:ident-question | section | The question, and why it is identifiability and not calibration | Chapter 5 (ch:identifiability) |
+| sec:ident-model | section | Model, observables and admissible parameters | Chapter 5 (ch:identifiability) |
+| sec:ident-expansion | section | The expansion in the basis scale | Chapter 5 (ch:identifiability) |
+| sec:ident-thm3 | section | The decomposition theorem | Chapter 5 (ch:identifiability) |
+| sec:ident-thm4 | section | Two observationally equivalent models | Chapter 5 (ch:identifiability) |
+| sec:ident-count | section | Parameter count and the dimension of the consistent set | Chapter 5 (ch:identifiability) |
+| subsec:ident-book | section | The book-level consequence: the intervals add | Chapter 5 (ch:identifiability) |
+| sec:ident-example | section | Worked example | Chapter 5 (ch:identifiability) |
+| sec:ident-validation | section | What the validation will test | Chapter 5 (ch:identifiability) |
+| sec:ident-discussion | section | Discussion | Chapter 5 (ch:identifiability) |
+| tab:ident-count | float |  | Chapter 5 (ch:identifiability) |
+| tab:ident-example | float |  | Chapter 5 (ch:identifiability) |
+| def:usd-stats | definition | Containment rate, normalised excess, relative half-width | Chapter 6 (ch:usd) |
+| def:usd-policy | definition | The certified policy | Chapter 6 (ch:usd) |
+| sec:usd-experiment | section | The transition of 2021 to 2023 as a natural experiment | Chapter 6 (ch:usd) |
+| sec:usd-protocol | section | Protocol | Chapter 6 (ch:usd) |
+| sec:usd-ident | section | The identification test | Chapter 6 (ch:usd) |
+| sec:usd-cert | section | The certificate test | Chapter 6 (ch:usd) |
+| sec:usd-methods | section | Methods compared | Chapter 6 (ch:usd) |
+| sec:usd-routes | section | The blocked and unblocked routes on equal footing | Chapter 6 (ch:usd) |
+| sec:usd-falsify | section | What would falsify each result | Chapter 6 (ch:usd) |
+| sec:usd-threats | section | Threats to validity | Chapter 6 (ch:usd) |
+| tab:usd-ident-rhobf | float |  | Chapter 6 (ch:usd) |
 | prop:appA-identity | proposition | Exact identity for nested windows; ground-truth Proposition~5, preambl | Appendix A (app:tenor) |
 | cor:appA-function | corollary |  | Appendix A (app:tenor) |
 | lem:appA-profiles | lemma | Linear profiles compose | Appendix A (app:tenor) |
@@ -151,33 +212,7 @@ Rebuilt from the files themselves after the Chapter 2 and Chapter 3 revisions mo
 | sec:appC-code | section | Code architecture | Appendix C (app:data) |
 | sec:appC-protocol | section | Reproducibility protocol | Appendix C (app:data) |
 | subsec:appC-checklist | section | Terminal session checklist | Appendix C (app:data) |
-| def:ident-identified | definition | Identified functional and identified set | Chapter 5 (ch:identifiability) |
-| def:ident-observable | definition | Observable set and target smile | Chapter 5 (ch:identifiability) |
-| lem:ident-psd | lemma | Admissible correlation triples; the ellipse $E_\eta$ | Chapter 5 (ch:identifiability) |
-| lem:ident-cumulants | lemma | Cumulants of the JIBAR forward at expiry | Chapter 5 (ch:identifiability) |
-| prop:ident-map | proposition | Contamination map $(\alpha_0,\rho,\nu)\mapsto(a,r,n)$ | Chapter 5 (ch:identifiability) |
-| rem:ident-checks | remark | Two exact checks of the contamination map | Chapter 5 (ch:identifiability) |
-| rem:ident-reading | remark | Level shift, skew tilt, curvature move | Chapter 5 (ch:identifiability) |
-| thm:ident | theorem | Identified and unidentified components of the smile map (GT Thm 3) | Chapter 5 (ch:identifiability) |
-| prop:ident-termstructure | proposition | Basis with a deterministic volatility profile: level shift, $h(\kappa T)$ | Chapter 5 (ch:identifiability) |
-| prop:ident-inverse | proposition | Inverse of the contamination map | Chapter 5 (ch:identifiability) |
-| thm:ident-two | theorem | Two models (GT Thm 4); exact at-the-money interval | Chapter 5 (ch:identifiability) |
-| rem:ident-reading-two | remark | Reading the two extreme models | Chapter 5 (ch:identifiability) |
-| rem:ident-extreme | remark | Why $\rho_{BF}=\pm1$ is not a pathology | Chapter 5 (ch:identifiability) |
-| prop:ident-consistent | proposition | Dimension and shape of the consistent set | Chapter 5 (ch:identifiability) |
-| rem:ident-epsilon | remark | The expansion parameter is not small in this market | Chapter 5 (ch:identifiability) |
-| tab:ident-count | table | Parameter count for $m$ expiries | Chapter 5 (ch:identifiability) |
-| tab:ident-example | table | Worked example summary | Chapter 5 (ch:identifiability) |
-| fig:ident-region | figure | Identified region in (at-the-money, skew) space | Chapter 5 (ch:identifiability) |
-| sec:ident-question | section | The question, and why it is identifiability and not calibration | Chapter 5 (ch:identifiability) |
-| sec:ident-model | section | Model, observables and admissible parameters | Chapter 5 (ch:identifiability) |
-| sec:ident-expansion | section | The expansion in the basis scale | Chapter 5 (ch:identifiability) |
-| sec:ident-thm3 | section | The decomposition theorem | Chapter 5 (ch:identifiability) |
-| sec:ident-thm4 | section | Two observationally equivalent models | Chapter 5 (ch:identifiability) |
-| sec:ident-count | section | Parameter count and the dimension of the consistent set | Chapter 5 (ch:identifiability) |
-| sec:ident-example | section | Worked example | Chapter 5 (ch:identifiability) |
-| sec:ident-validation | section | What the validation will test | Chapter 5 (ch:identifiability) |
-| sec:ident-discussion | section | Discussion | Chapter 5 (ch:identifiability) |
+| tab:appC-seeds | float |  | Appendix C (app:data) |
 
 ## Reserved homes
 | Object | Home |
