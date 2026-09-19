@@ -59,3 +59,11 @@ Caveat: ch3 was edited at 16:13:08, after the compile; the typeset span below is
 | 2026-09-09 | ch3-certification | drafted, under statistics review | 40 | 159 | under budget by 4; compiled copy older than working copy |
 | 2026-09-09 | appC-data-code | data and code sections drafted | 21 | 159 | typeset under App B header (R4); protocol missing |
 | 2026-09-09 | all others | stub | 2 each | 159 | 9 stubs = 17 pages of the 159 |
+| 2026-09-19 | ch1-introduction | drafted | 24 | 372 | on budget (24); both feasibility findings carried as contributions C12, C13 |
+| 2026-09-19 | ch6-usd-validation | round 1 closed, 27/27 applied | 42 | 372 | +2 over budget; review item 6 algebra corrected in the chapter (0.056 bp, not 1.2 bp) |
+| 2026-09-19 | ch7-zar-coda | round 1 closed, 19 done / 3 deferred | 26 | 372 | +6 over budget, item 7 OPEN; headline restated to blocked route only; record convention N = M - b |
+| 2026-09-19 | appC-data-code | full wrapper now reaches the repository | — | 372 | sync script was re-assembling App C and discarding the protocol section; fixed, 16 dangling refs cleared |
+
+Measured on the repository build (`report` class, 40 mm inner margin), which runs longer than the working `book`-class build: the same sources give 347 pages there. Spans: ch1 1-24, ch2 25-78, ch3 79-114, ch4 115-156, ch5 157-202, ch6 203-244, ch7 245-270, ch8 271-272 (stub), App A 273-292, App B 293-302, App C 303-.
+
+Budget position after this round: ch2 +6, ch4 +2, ch5 +2, ch6 +2, ch7 +6, App A +6 over; ch3 -8, App B -20 under. App B's 20-page slack still covers the overruns, so the 352-page total is not yet breached, but App B is 20 pages of unwritten standard proofs, not spare capacity. Note (ch6 reviser): `tectonic` does not write `main.toc` to disk without `--keep-intermediates`, so any page count taken without it silently reports the previous build.

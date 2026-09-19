@@ -15,12 +15,15 @@ cpif "$W/chapters/ch7-zar-coda.tex" "$R/Thesis/Chapter 7/src/chapter7_zar_coda.t
 cpif "$W/chapters/ch8-conclusions.tex" "$R/Thesis/Chapter 8/src/chapter8_conclusions.tex" "Conclusions"
 cpif "$W/appendices/appA-tenor.tex" "$R/Thesis/Annexures/annexureA_tenor_consistency.tex" "Tenor Consistency of Compounded-Rate Smiles"
 cpif "$W/appendices/appB-proofs-standard.tex" "$R/Thesis/Annexures/annexureB_standard_proofs.tex" "Proofs of Standard Results"
-# Appendix C is assembled from its parts
-{ printf '%s\n' '\chapter{Data, Code and Reproducibility}\label{appC-data-code}\label{app:data}';
-  printf '%s\n' '\section{USD data}'; cat "$W/appendices/appC-usd-data.tex" 2>/dev/null || true;
-  printf '%s\n' '\section{ZAR data}'; cat "$W/appendices/appC-zar-data.tex" 2>/dev/null || true;
-  printf '%s\n' '\section{Code architecture}'; cat "$W/appendices/appC-code.tex" 2>/dev/null || true;
-  printf '%s\n' '\section{Reproducibility protocol}'; printf '%s\n' '\gap{Written by thesis-writer-appC-data once code and data sections exist.}'; } > "$R/Thesis/Annexures/annexureC_data_code.tex"
+# Appendix C: the working wrapper already carries the chapter line, the section
+# headings and their labels, and \input's its three parts. Copy it rather than
+# re-assembling it, so the labels its own cross-references use survive; only the
+# \input paths need repointing at the annexure directory.
+for p in appC-usd-data appC-zar-data appC-code; do
+  [ -f "$W/appendices/$p.tex" ] && cp "$W/appendices/$p.tex" "$R/Thesis/Annexures/$p.tex"
+done
+sed 's#{appendices/appC-#{Thesis/Annexures/appC-#g' \
+  "$W/appendices/appC-data-code.tex" > "$R/Thesis/Annexures/annexureC_data_code.tex"
 [ -d "$W/code" ] && rsync -a --delete "$W/code/" "$R/Code/"
 echo synced
 [ -d "$W/reviews" ] && rsync -a "$W/reviews/" "$R/Reviews/" && echo "reviews synced"

@@ -1,2 +1,322 @@
 \chapter{The South African Converted Book}\label{ch7-zar-coda}\label{ch:zar}
-\gap{Chapter not yet drafted; scheduled in the loop order of LOOP.md.}
+
+\begin{quote}\itshape
+This chapter applies the two results of the thesis to the book the South African transition creates: \gls{jibar} options that become options on compounded \gls{zaronia} plus a fixed spread. On a monthly score record the blocked certificate has no admissible block length at a ten per cent level, and at the one length that yields a finite threshold the coupling term is twelve times a one-month mixing coefficient that no polynomial class bounds below one. The unblocked marginal bound survives on the same scores at a level of about $0.62$; what it costs is the calibration-conditional statement. The verdict is a finding about monthly scoring, and a daily record is feasible within thirteen months. The identified valuation and the width of the consistent set survive and are reported per unit of vega and in rand. No number in this chapter is reported as computed from data; every figure that carries a currency unit follows from assumptions declared beside it.
+\end{quote}
+
+\section{The question the record settles first}\label{sec:zar-question}
+
+A certificate that no record can support is not a conservative certificate; it is an empty one. Two of the three subtracted terms in the coverage guarantee of Chapter~\ref{ch:certification} are fixed by counting alone -- the number of calibration blocks a record of $N$ periods yields at block length $b$, and the multiplier $(n+1)$ in front of the mixing coefficient -- so both can be evaluated before any data exist, and their verdict decides whether the rest of the exercise is worth specifying.
+
+Chapter~\ref{ch:usd} finds that a calendar year of daily observations already cannot carry the block length the bound prefers, and that the coupling term at the shortest block length is about $126$. The record of the South African converted book is shorter by an order of magnitude and is monthly rather than daily. Section~\ref{sec:zar-feasibility} therefore repeats the arithmetic at the lengths this market affords, and the answer is worse than a displaced optimum: at most one block length yields a finite threshold, and at that block length no polynomial mixing class leaves the blocked certificate non-vacuous.
+
+The finding is about the blocked route and not about certification as such, and the chapter states both halves of it. The unblocked marginal bound of \citet[Cor.~1, eq.~(6)]{barber2026} applies to the same scores without blocking and without a gap, and on twenty-four monthly scores under the class this chapter uses as its base case it leaves a marginal level of about $0.62$. What the blocked route buys, and what that level does not, is the calibration-conditional statement of Theorem~\ref{thm:cov}(ii) and the drift accounting of Theorem~\ref{thm:cov}(iii). The consequence for the chapter is structural. The reserve that Chapter~\ref{ch:identifiability} and Chapter~\ref{ch:certification} together define has three terms -- the identified valuation, the width of the consistent set, and a certified quantile of the hedging error -- and the third term in its calibration-conditional form is available only if the feasibility test admits a block length. It does not. The chapter therefore delivers the first two terms, reports the marginal alternative for the third with its exact level, and names the calibration-conditional residual as uncertified.
+
+The chapter is arranged so that the surviving content is separable from the missing content: the converted book and its record (Section~\ref{sec:zar-book}), the feasibility computation and the route that survives it (Section~\ref{sec:zar-feasibility}), the identified valuation and the width of the consistent set for a representative book (Sections~\ref{sec:zar-value} and~\ref{sec:zar-width}), the residual (Section~\ref{sec:zar-residual}), the comparison with re-pricing on a handful of models (Section~\ref{sec:zar-models}), what a sponsor's data would change (Section~\ref{sec:zar-sponsor}), and the discussion (Section~\ref{sec:zar-discussion}).
+
+\section{The converted book and its record}\label{sec:zar-book}
+
+\subsection{What converts, and into what}
+
+\gls{jibar} ceases permanently immediately after its final publication on 31~December 2026 \citep[p.~1 and Sect.~1]{isda2025}, and an Index Cessation Event occurred on 3~December 2025 by virtue of the administrator's announcement \citep[Sect.~1.1]{isda2025}. From the first business day after cessation, contracts on the 2021 Definitions fall back to compounded \gls{zaronia} plus a fixed spread \citep[Sect.~3]{isda2025}, the three-month spread being $0.1619\%$ \citep[p.~1]{bisl2025}. The linear book converts mechanically.
+
+Not every \gls{jibar} trade converts. Trades on the 2006 Definitions that have not taken the April 2025 Benchmark Module fall instead to Reference Rate quotations and then to Calculation Agent determination \citep[Sect.~5]{isda2025}, and neither the 2020 IBOR Fallbacks Protocol nor Supplement number 70 to the 2006 Definitions supplies a permanent cessation fallback for \gls{jibar} \citep[Sect.~8]{isda2025}. What such a trade becomes is a dealer poll, not an option on a successor rate, and nothing in this chapter applies to it. Everything below is therefore a statement about the \emph{converted sub-book}, and an institution must be able to separate that sub-book from the polled residue before it can produce either the score record or the vega schedule that Section~\ref{sec:zar-sponsor} requests.
+
+The non-linear converted book -- caps, floors and swaptions written on three-month \gls{jibar} -- becomes options whose underlying is the compounded rate of Definition~\ref{def:prelim-R} plus that constant, which is exactly the object Chapter~\ref{ch:identifiability} analyses.
+
+Three features of it decide what this chapter can do. Its underlying changes on one date, so the valuation problem is a contractual fact and not a modelling choice. Its predecessor smile is observable only until cessation, so the fitting sample ends on 31~December 2026. And its successor smile is not observable at all: the \gls{mpg} conventions paper states that \gls{zaronia} caps, floors and swaptions ``will in future be quoted on screens and/or via interbank broking agents'' \citep[\S3, p.~5]{sarb2024conv}, and no evidence of such quotation has been found. The identification deficit of Chapter~\ref{ch:identifiability} is therefore not hypothetical here, and that is the difference from Chapter~\ref{ch:usd}.
+
+\gap{Citation needed: the clearing house's conversion of outstanding cleared ZAR JIBAR contracts in November 2026 and its switch of ZAR discounting and price alignment to ZARONIA in April 2026. Both are stated in member notices that have not been obtained; they fix the date from which a converted book exists in cleared form and the date from which the discounting input of the policy is ZARONIA-based, and they are used in this chapter only to bound the start of the score record from below. Chapter~\ref{ch:intro} is the home of the transition record.}
+
+\subsection{The record, and the two regimes it may be written in}
+
+The chapter needs three things from the record: a fitting sample on which the policy is fixed; a valuation input per expiry, which is the observed \gls{jibar} triple $(a_i,r_i,n_i)$; and a score record of the converted book's hedging error. The first two end at cessation and the third begins after it, which is what the calendar allows rather than a design choice. Everything the score record needs is free except one input: the realised compounded rate, the \gls{jibar} fixings while they existed, the fixed spread, the discount factors and the forwards are all public or recoverable from public sources, and the volatility level at each expiry is not. This chapter is therefore written under one of two regimes, and says which. Under the \emph{sponsor regime} a dealer supplies the \gls{jibar} and \gls{zaronia} option surfaces under a data agreement, the policy is the market convention marked at the desk's own volatilities, and every quantity below is available in rand. Under the \emph{public regime} no surface exists, the policy degrades to a historical-volatility policy, and the reserve decomposition is labelled accordingly: the identified valuation is reported per unit of vega rather than in rand, and the width of the consistent set is reported as a coefficient multiplying a book aggregate that the institution itself holds.
+
+The two regimes are not on the same collateral basis, and the chapter says which basis its figures assume. Inter-dealer implied volatilities for \gls{zaronia} non-linear products are quoted under an assumed USD-denominated zero-threshold credit support annex with \gls{sofr} collateral: the conventions paper records that ``the various implied volatilities indicated on the inter-dealer broker screens make the underlying assumption of an underlying USD-denominated CSA'' \citep[\S8.2, p.~27]{sarb2024conv}. A sponsor surface is therefore marked on that basis, while a cleared book's discounting and price alignment move to a \gls{zaronia} basis on the date recorded in the gap box above. Every rand figure below is on the sponsor basis, because it is the basis on which the volatility input is quoted; the difference from a \gls{zaronia}-discounted reserve is not quantified here.
+
+\datanote{Appendix~\ref{app:data} describes every dataset this chapter would consume and is its only home: the public fixings, spread and curves, the sponsor's \gls{jibar} and \gls{zaronia} surfaces, and the book's own vega schedule by expiry, which is the one sponsor input Section~\ref{sec:zar-width} cannot replace by a declared representative book. Nothing in this chapter has been computed from any of it.}
+
+\section{Feasibility: is there an admissible block length?}\label{sec:zar-feasibility}
+
+\subsection{The counting}
+
+The layout is that of Chapter~\ref{ch:certification}, with $n=\lfloor N/(2b)\rfloor$ calibration blocks of length $b$ alternating with gaps of $b$, a trailing gap, then the deployment block; the threshold is the $k$-th smallest calibration score with $k=\lceil(1-\alpha)(n+1)\rceil$, and $\hat q=+\infty$ when $k>n$. Two constraints follow, and neither involves data.
+
+\begin{proposition}[Feasibility of the blocked certificate on a short record]\label{prop:zar-feasible}
+Fix $\alpha\in(0,1)$ and write $m:=\lceil(1-\alpha)/\alpha\rceil$. Let the record have $N$ periods and let $b\ge1$, $n=\lfloor N/(2b)\rfloor$, $k=\lceil(1-\alpha)(n+1)\rceil$.
+\begin{enumerate}[nosep,label=(\roman*)]
+\item \textup{(Finite threshold.)} $\hat q<\infty$ if and only if $n\ge m$, which holds if and only if $b\le N/(2m)$. In particular, at $\alpha=0.1$ the ceiling is $b\le N/18$.
+\item \textup{(Non-vacuity at budget $\gamma$.)} Suppose $\beta(\cdot)\in\Bclass{r}(C)$, that is $\beta(j)\le Cj^{-r}$ for all $j\ge1$. The marginal coupling deficit of Theorem~\ref{thm:cov}\textup{(i)} satisfies $(n+1)\beta(b)\le\gamma$ as soon as $(n+1)Cb^{-r}\le\gamma$, and at $b=1$ this requires $(n+1)C\le\gamma$ whatever $r$ may be.
+\item \textup{(The record length that admits a block length.)} Write $b_\gamma:=\lceil((m+1)C/\gamma)^{1/r}\rceil$. If some $b$ satisfies both \textup{(i)} and the sufficient condition in \textup{(ii)}, then $b\ge b_\gamma$ and
+\[
+N\;\ge\;N_{\min}(\alpha,C,r,\gamma):=2m\,b_\gamma .
+\]
+The bound is attained: at $N=N_{\min}$ the choice $b=b_\gamma$ satisfies both. The converse implication fails, because $n=\lfloor N/(2b)\rfloor$ may exceed $m$ at every $b$ meeting \textup{(i)}.
+\item \textup{(A sufficient record length.)} If $N\ge2(m+1)\max\{m,b_\gamma\}$ then some $b$ satisfies both \textup{(i)} and the sufficient condition in \textup{(ii)}, and any integer $b\in\big(N/(2m+2),\,N/(2m)\big]$ does so.
+\end{enumerate}
+\end{proposition}
+
+\begin{proof}
+(i) $k\le n$ reads $\lceil(1-\alpha)(n+1)\rceil\le n$, which holds if and only if $(1-\alpha)(n+1)\le n$, that is $n\ge(1-\alpha)/\alpha$, and $n$ is an integer, so $n\ge m$. Since $n=\lfloor N/(2b)\rfloor$, $n\ge m$ if and only if $N/(2b)\ge m$.
+
+(ii) is the definition of $\Bclass{r}(C)$ evaluated at $j=b$, together with the monotonicity of $x\mapsto(n+1)x$; at $b=1$ the class gives $\beta(1)\le C$ and nothing sharper, since $1^{-r}=1$ for every $r$.
+
+(iii) Let $b$ satisfy both constraints. By (i), $n\ge m$, so $(m+1)Cb^{-r}\le(n+1)Cb^{-r}\le\gamma$, that is $b\ge((m+1)C/\gamma)^{1/r}$, and since $b$ is an integer, $b\ge b_\gamma$. The first constraint reads $N\ge2mb$, so $N\ge2mb_\gamma=N_{\min}$. At $N=N_{\min}$ the choice $b=b_\gamma$ gives $n=\lfloor 2mb_\gamma/(2b_\gamma)\rfloor=m$ exactly, and then $(n+1)Cb_\gamma^{-r}=(m+1)Cb_\gamma^{-r}\le\gamma$ by the definition of $b_\gamma$, so both constraints hold and the bound is attained.
+
+(iv) The interval $I:=\big(N/(2m+2),\,N/(2m)\big]$ has length $N\big(\tfrac1{2m}-\tfrac1{2m+2}\big)=N/\big(2m(m+1)\big)$, which is at least $1$ when $N\ge2m(m+1)$, so $I$ contains an integer $b$. Any such $b$ satisfies $b\le N/(2m)$, which is constraint (i), and $b>N/(2m+2)$, which gives $N/(2b)<m+1$ and hence $n\le m$; with (i) this forces $n=m$ exactly. Finally $b>N/(2m+2)\ge b_\gamma$ whenever $N\ge2(m+1)b_\gamma$, so $(n+1)Cb^{-r}=(m+1)Cb^{-r}\le(m+1)Cb_\gamma^{-r}\le\gamma$. Both hypotheses are implied by $N\ge2(m+1)\max\{m,b_\gamma\}$.
+\end{proof}
+
+\gap{Parts (iii) and (iv) bracket the record length at which the blocked route becomes available but do not determine it. Feasibility is not monotone in $N$, because $n=\lfloor N/(2b)\rfloor$ is determined by $N$ and $b$ rather than chosen: at $\alpha=0.1$, $C=1$, $r=2$ and $\gamma=0.4$ one has $b_\gamma=5$, $N_{\min}=90$ and the sufficient length $2(m+1)\max\{m,b_\gamma\}=180$; the record $N=90$ admits $b=5$ with $n=9$ and deficit $10/25=0.4$, while $N=100$ admits no block length at all, since the ceiling gives $b\le5$ and $b=5$ then yields $n=10$ and deficit $11/25=0.44>\gamma$. What remains to be established is the smallest $N^*$ such that every $N\ge N^*$ admits a block length; it lies in $[N_{\min},2(m+1)\max\{m,b_\gamma\}]$ and is not identified here. The necessity direction, which is what Section~\ref{sec:zar-residual} and Section~\ref{sec:zar-sponsor} use, is unaffected.}
+
+Part (ii) is the sentence the chapter turns on. A polynomial mixing class says nothing at lag one, because $C\cdot1^{-r}=C$ for every $r$: the class is an assumption about how fast dependence decays, and at a lag of one period there has been no decay to assume. A record whose only feasible block length is one period therefore gets no help at all from the mixing hypothesis, and the coupling deficit is $(n+1)C$, a number larger than one for every $C\ge1/12$.
+
+\subsection{The arithmetic at the lengths this market affords}
+
+The converted book exists from the first business day after 31~December 2026, so its hedging-error record begins in January 2027.
+
+\paragraph{Scoring frequency.} The scores below are monthly, and that is a design choice of this chapter rather than a property of the market. Nothing forces it: in the public regime the historical-volatility policy can be refreshed from the daily public \gls{zaronia} fixings every business day, in the sponsor regime the desk marks and rebalances daily, and Chapter~\ref{ch:usd} scores an equivalent book daily. Monthly scoring is what an institution produces when no decision is taken in advance, being the frequency of a reserve cycle rather than of a hedge, and this section computes the consequence of that default. Every feasibility statement below is therefore conditional on monthly scoring; Section~\ref{sec:zar-frequency-need} shows the same book scored daily to be feasible within about thirteen months of cessation, so the verdict is an argument for taking the recording decision at cessation and not a verdict about the South African market.
+
+\paragraph{What $N$ counts.} Chapter~\ref{ch:certification} fixes the accounting: $N$ is the calibration record that follows the fitting sample, the interior and trailing gaps lie inside it, and the deployment block of $b$ periods begins immediately after it. A calendar count of post-cessation months is therefore not $N$: one deployment block must be taken out of it, so a record of $M$ monthly observations gives $N=M-b$, and $N=M-1$ at the only block length that will turn out to be admissible. This is stated once here and used everywhere below.
+
+Two counts bound $M$. On the strict reading -- scores of the converted book only -- the record runs from January 2027 to the last date before submission, which is about eighteen monthly observations, so $N=17$. On the pooled reading, which starts the fixed policy at the first monthly date after the discounting switch and treats the pre-cessation months as scores of the same policy applied to the same positions, $M$ is about twenty-four and $N=23$. The strict reading is this chapter's primary case: the pooled reading requires the pre-cessation and post-cessation blocks to have a common law, which Remark~\ref{rem:zar-notrepair} argues they do not, since conversion changes the underlying of every caplet on one date. The pooled count is carried below only as a sensitivity, and it is the more favourable of the two. Both are arithmetic about a calendar, not measurements; Appendix~\ref{app:data} records the same counts with the assumptions behind them.
+
+Table~\ref{tab:zar-feasible} evaluates Proposition~\ref{prop:zar-feasible} at both counts and at $\alpha=0.1$.
+
+\begin{table}[htbp]\centering\small
+\caption{Feasibility of the blocked certificate on the converted book at $\alpha=0.1$, so that $m=9$ and the ceiling is $b\le N/18$. $M$ is the calendar count of monthly observations and $N=M-b$ is the calibration record, the deployment block being taken from the end of the calendar. All entries are arithmetic from $N$ and $b$; none uses data. The last column is the marginal coupling deficit $(n+1)\beta(b)$ under $\Bclass{r}(1)$, which at $b=1$ equals $n+1$ for every $r$.}\label{tab:zar-feasible}
+\begin{tabular}{@{}rrrrrrl@{}}
+\toprule
+Reading & $M$ & $b$ & $n$ & $k$ & $k/(n+1)$ & Status \\
+\midrule
+strict & $18$ & $1$ & $8$ & $9$ & --- & $k>n$: $\hat q=+\infty$ \\
+strict & $18$ & $2$ & $4$ & $5$ & --- & $k>n$: $\hat q=+\infty$ \\
+strict & $18$ & $3$ & $2$ & $3$ & --- & $k>n$: $\hat q=+\infty$ \\
+first feasible & $19$ & $1$ & $9$ & $9$ & $0.900$ & finite threshold; $(n+1)\beta(1)\le10$ \\
+pooled & $24$ & $1$ & $11$ & $11$ & $0.917$ & finite threshold; $(n+1)\beta(1)\le12$ \\
+pooled & $24$ & $2$ & $5$ & $6$ & --- & $k>n$: $\hat q=+\infty$ \\
+pooled & $24$ & $3$ & $3$ & $4$ & --- & $k>n$: $\hat q=+\infty$ \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+On the strict reading the verdict is not that the coupling term is too large but that there is no threshold at all: $N=17$ gives $n=8<m=9$ at $b=1$ and fewer blocks at every longer block length, so $k>n$ and $\hat q=+\infty$ at every $b$. The first calendar length at which any finite threshold exists is nineteen monthly observations, at $b=1$, and there $k/(n+1)=0.900$ exactly and the coupling deficit is $10\beta(1)$. On the pooled reading the ceiling is $b\le23/18=1.28$, so $b=1$ is again the only admissible block length; the threshold is then $S_{(11)}$, the largest of eleven monthly scores, and the realised nominal level is $k/(n+1)=0.917$.
+
+Now charge the coupling. At $b=1$ and $N=23$ the deficit is $12\beta(1)$, where $\beta(1)$ is the one-month $\beta$-mixing coefficient of the state process that generates the hedging errors. Under $\Bclass{r}(C)$ this is bounded only by $12C$, which is $12$ at $C=1$ and $6$ even at $C=1/2$: the certified level $1-\alpha-\dK(P,Q)-(n+1)\beta(b)$ is negative by an order of magnitude before any drift is charged, and it fails for the same reason as in Chapter~\ref{ch:usd}, in a shorter record.
+
+A geometric class is the only assumption under which $b=1$ survives, and it survives only at a mixing rate that the market makes implausible. Taking $\beta(j)\le C\varphi^{j}$, the deficit at $b=1$ is $12C\varphi$. Table~\ref{tab:zar-geom} evaluates it. A certified level of one half, criterion~C2 of Chapter~\ref{ch:usd}, requires $\beta(1)\le0.0333$ at $C=1$; to spend no more than half the level $\alpha$ itself requires $\beta(1)\le0.00417$. For the Gaussian first-order autoregression of Chapter~\ref{ch:certification}, whose coefficient obeys $\beta(j)\le\varphi^{j}/(2\sqrt{1-\varphi^2})$, these correspond to monthly autocorrelations of about $0.067$ and $0.008$ respectively. A monthly hedging-error record whose state has essentially no memory from one month to the next is not a description of a rates book: the book's own positions persist, the curve persists, and the volatility mark is refreshed monthly by construction.
+
+\begin{table}[htbp]\centering\small
+\caption{The coupling deficit $(n+1)\beta(b)$ at the only admissible block length, $b=1$, on the pooled reading ($M=24$, $N=23$, $n+1=12$), which is the more favourable of the two counts; the strict reading admits no block length at all. The mixing coefficient is not estimable distribution-free (Proposition~\ref{prop:noest} of Chapter~\ref{ch:certification}), so every row is an assumption and none is a measurement. A deficit of $0.05$ spends half of $\alpha$; a deficit of $0.40$ exhausts criterion~C2 of Chapter~\ref{ch:usd}.}\label{tab:zar-geom}
+\begin{tabular}{@{}llr@{}}
+\toprule
+Class & Assumed $\beta(1)$ & $12\beta(1)$ \\
+\midrule
+$\Bclass{r}(1)$, any $r$ & $1$ & $12$ \\
+$\Bclass{r}(1/2)$, any $r$ & $1/2$ & $6$ \\
+Geometric, $\varphi=0.5$ & $0.5$ & $6$ \\
+Geometric, $\varphi=0.3$ & $0.3$ & $3.6$ \\
+Geometric, $\varphi=0.1$ & $0.1$ & $1.2$ \\
+Geometric, $\varphi=0.0333$ & $0.0333$ & $0.40$ \\
+Geometric, $\varphi=0.00417$ & $0.00417$ & $0.05$ \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{The verdict}
+
+At $\alpha=0.1$ on a monthly record of the converted book the blocked certificate has no admissible block length. On the strict reading there is no finite threshold at any block length. On the pooled reading the ceiling of Proposition~\ref{prop:zar-feasible}(i) admits only $b=1$; at $b=1$ the class $\Bclass{r}$ supplies no decay at all and the deficit is at least $12C$; and the geometric classes that would rescue it require a one-month mixing coefficient below about three per cent for a certificate that is merely non-vacuous, and below half a per cent for one that keeps nine-tenths of its nominal level. Since the coefficient is not estimable distribution-free, that assumption could never be discharged from the record even if it were true.
+
+Weakening the level is not a repair. At $\alpha=0.2$, $m=4$ and the ceiling rises to $b\le N/8$, so $b=2$ becomes admissible on both readings: the strict count gives $n=4$, $k=4$ and a deficit of $5\beta(2)$, the pooled count $n=5$, $k=5$ and $6\beta(2)$. Those deficits are $1.25$ and $1.50$ under $\Bclass{2}(1)$ and $0.45$ and $0.54$ under a geometric class at $\varphi=0.3$, so every one of them exceeds the budget $\gamma=0.4$ and the best stated level available at $\alpha=0.2$ is below $0.35$. The exercise has purchased a finite threshold by discarding the level that made the certificate worth stating, and it has not bought a non-vacuous one.
+
+\subsection{The route that survives without blocking}\label{sec:zar-marginal}
+
+A reader holding the same monthly scores is not left with nothing, and the chapter says exactly what is left. The marginal bound of \citet[Cor.~1, eq.~(6)]{barber2026} for a pretrained score requires no blocking and no gap: for a stationary $\beta$-mixing sequence of $n$ calibration scores and a score function fixed in advance,
+\begin{equation}\label{eq:zar-marginal}
+\Prob\{\text{cover}\}\;\ge\;1-\alpha-\min_{\tau\ge0}\Big\{\frac{\tau}{n+1}+2\beta(\tau)\Big\},
+\end{equation}
+the lag $L$ of that corollary being zero here because the policy is fixed on $\Dfit$ before cessation and the score at each date depends on that date's block alone. Its hypotheses are the ones this chapter already assumes, so it can be evaluated on the same record; Table~\ref{tab:zar-marginal} does so.
+
+\begin{table}[htbp]\centering\small
+\caption{The marginal coverage deficit $\min_\tau\{\tau/(n+1)+2\beta(\tau)\}$ of \eqref{eq:zar-marginal} and the level it leaves at $\alpha=0.1$, on the monthly record of the converted book; the minimising lag $\tau$ is in months. Columns $n=17$ and $n=23$ hold the last observation back as the deployment period, as Table~\ref{tab:zar-feasible} does; columns $n=18$ and $n=24$ calibrate on every observation and cover the month after the record, which is the operative use of a marginal bound. No entry uses data.}\label{tab:zar-marginal}
+\begin{tabular}{@{}lrrrr@{}}
+\toprule
+Class & $n=17$ & $n=18$ & $n=23$ & $n=24$ \\
+\midrule
+$\Bclass{2}(1)$ & $0.347$ ($\tau=4$) & $0.336$ ($\tau=4$) & $0.288$ ($\tau=5$) & $0.280$ ($\tau=5$) \\
+level & $0.553$ & $0.564$ & $0.612$ & $0.620$ \\
+$\Bclass{1.5}(1)$ & $0.457$ ($\tau=5$) & $0.442$ ($\tau=5$) & $0.386$ ($\tau=6$) & $0.376$ ($\tau=6$) \\
+level & $0.443$ & $0.458$ & $0.514$ & $0.524$ \\
+Geometric, $\varphi=0.3$ & $0.221$ ($\tau=3$) & $0.212$ ($\tau=3$) & $0.179$ ($\tau=3$) & $0.174$ ($\tau=3$) \\
+level & $0.679$ & $0.688$ & $0.721$ & $0.726$ \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Under $\Bclass{2}(1)$ -- the class this chapter uses as its base case, and the class under which the blocked deficit is at least $12$ -- twenty-four monthly scores leave a marginal level of $0.620$, which clears criterion~C2 of Chapter~\ref{ch:usd}, and seventeen leave $0.553$, which also clears it. The polynomial class supplies no decay at lag one and a great deal at lag four or five, and \eqref{eq:zar-marginal} is free to use a long lag because it pays for it linearly in $\tau/n$ rather than by dividing the record into blocks. That is the whole of the difference, and it is a difference in design and not in evidence.
+
+What the blocked route buys, and this does not, is three things: the exact $\Beta(k,n+1-k)$ law and hence the calibration-conditional statement of Theorem~\ref{thm:cov}(ii), which is what a reserve needs, since a bank holds one realised threshold and not an average over calibration samples; the drift term of Theorem~\ref{thm:cov}(iii), evaluated on half-lines, whereas \eqref{eq:zar-marginal} assumes stationarity across the whole sequence and prices no drift; and the gap-separated deployment block. That paper contains no calibration-conditional result. The verdict is therefore a pair of statements: on this record no admissible block length exists for the calibration-conditional certificate, and the marginal guarantee that survives without blocking costs exactly the calibration-conditional payoff that motivated blocking.
+
+\begin{remark}[What exactly fails]\label{rem:zar-whatfails}
+It is worth being exact about which hypothesis is binding, because the three candidates are not equally guilty. The theorem is not at fault: Theorem~\ref{thm:cov} is a finite-sample statement and holds at $n=11$ as it holds at $n=1100$. The mixing assumption is not falsified: nothing here shows that the monthly scores fail to mix, only that at a lag of one period no class in $\Bclass{r}$ asserts anything, which is why the unblocked route of Section~\ref{sec:zar-marginal}, free to charge a lag of four or five months, survives on the same scores. What fails is the interaction of the blocking design with the record length. Blocking buys the exact $\Beta(k,n+1-k)$ law and a single mixing term, at a price of a factor $\sqrt b$ in effective sample size (Chapter~\ref{ch:sharpness}); on a record of two dozen periods the design has nothing to spend. The honest conclusion is about records and designs, not about theorems.
+\end{remark}
+
+\subsection{What record would be needed, and when it will exist}\label{sec:zar-frequency-need}
+
+Proposition~\ref{prop:zar-feasible}(iii) bounds the first half from below and part~(iv) from above; the figures quoted here are the necessary length $N_{\min}$, and a record is guaranteed to admit a block length only at the longer length of part~(iv). At $\alpha=0.1$, so $m=9$ and $m+1=10$, with a coupling budget $\gamma$ and class $\Bclass{r}(C)$, the smallest admissible block length is $b_\gamma=\lceil(10C/\gamma)^{1/r}\rceil$ and the record must hold $N_{\min}=18\,b_\gamma$ periods. At $C=1$ and $\gamma=0.05$ this gives $b_\gamma=35$ and $N_{\min}=630$ at $r=1.5$; $b_\gamma=15$ and $N_{\min}=270$ at $r=2$; and $b_\gamma=6$ and $N_{\min}=108$ at $r=3$. Under the weaker non-vacuity budget $\gamma=0.4$ the same formula gives $N_{\min}=162$, $90$ and $54$ respectively. Under a geometric class at $C=1$ the requirement $10\varphi^{b}\le0.05$ gives $b_\gamma=8$ and $N_{\min}=144$ at $\varphi=0.5$, $b_\gamma=5$ and $N_{\min}=90$ at $\varphi=0.3$, and $b_\gamma=3$ and $N_{\min}=54$ at $\varphi=0.1$.
+
+These are counts of periods and not of years. Two hundred and seventy monthly periods is twenty-two and a half years, which the converted book will not survive in a form worth certifying; two hundred and seventy \emph{daily} periods is about thirteen months. The same inequality that makes the monthly record hopeless makes a daily record feasible within about a year of cessation, and that is the whole of the recommendation this chapter can make. Suppose the converted book is marked and its hedging error recorded daily from the first business day after cessation, at $250$ business days to the year. After thirteen months $N\approx270$ and $b=15$ is admissible with $n=9$, $k=9$ and a coupling deficit of $10\cdot15^{-2}=0.044$ under $\Bclass{2}(1)$. After eighteen months $N\approx375$ and $b=20$ gives $n=9$, $k=9$ and a deficit of $10\cdot20^{-2}=0.025$. At these frequencies the deployment block costs $b$ further business days beyond the calibration record and the calendar absorbs it; at the monthly frequency it is the whole of the difference between a finite threshold and none. A weekly record is intermediate: two years after cessation gives $N\approx104$, a ceiling of $b\le5$, and at $b=5$ a layout with $n=10$, $k=10$ and a deficit of $11\beta(5)$, which is $0.44$ under $\Bclass{2}(1)$ -- vacuous by criterion C2 -- but $0.027$ under a geometric class at $\varphi=0.3$, the largest $\varphi$ at which that budget holds being $0.34$.
+
+\begin{remark}[The gain from a finer record is arithmetic, not evidential]\label{rem:zar-frequency}
+The daily route does not buy a weaker hypothesis. A monthly record at $b=1$ needs $\beta$ small at a lag of one month; a daily record at $b=15$ needs it small at fifteen business days, which is three calendar weeks, so in calendar time the two assumptions are nearly the same. What the daily record buys is the multiplier -- $10\beta(\text{three weeks})$ against $12\beta(\text{one month})$ -- and, more importantly, a range of block lengths over which the sweep of Chapter~\ref{ch:usd} can be run at all, where the monthly record admits one point. The certificate improves because the design has room, not because the market has been shown to forget faster.
+\end{remark}
+
+\figplan{Two panels, vertical axis probability on a logarithmic scale, $\alpha=0.1$, $C=1$. Left, horizontal axis the block length $b$ from $1$ to $30$ (log): the coupling deficit $(\lfloor N/(2b)\rfloor+1)Cb^{-r}$ at $r=2$ for $N\in\{17,23,104,270,375\}$, each curve truncated at its ceiling $b\le N/18$ with a solid dot there; the $N=23$ curve is the single point $(1,12)$ and the $N=17$ curve is empty and annotated as such; horizontal rules at $\gamma=0.05$ and $0.4$. Right, horizontal axis the record length $N$ from $17$ to $1000$ (log): the minimal achievable deficit $\min_{b\le N/18}(\lfloor N/(2b)\rfloor+1)Cb^{-r}$ for $r\in\{1.5,2,3\}$, undefined below $N=18$, with vertical rules at $N=18,23,104,270,375$ and the same horizontal rules.}{Feasibility of the blocked certificate against record length and block length, at $\alpha=0.1$; every curve is the arithmetic of Proposition~\ref{prop:zar-feasible} and no curve uses data. The monthly record supplies no admissible point on the strict count and one on the pooled count, at which the deficit exceeds one; the crossings on the right panel are the $N_{\min}$ of part~(iii).\label{fig:zar-feasible}}
+
+\section{The identified valuation of the converted book}\label{sec:zar-value}
+
+\subsection{What is identified, and in what units}
+
+Chapter~\ref{ch:identifiability} settles the valuation question for a single caplet: with the observed \gls{jibar} triple $(a,r,n)$ fixed and the basis volatility $\eta$ known, the successor at-the-money volatility at the clock is identified exactly within $[a-\eta,a+\eta]$, both endpoints attained by explicit admissible models, and the skew is identified at first order within a half-width $q c^*\nu\eta/(2\alpha_0)$ per unit of strike. Nothing further is identified: the two basis correlations are free on the ellipse of Lemma~\ref{lem:ident-psd}, and the observables constrain $\eta$ itself only at second order in the basis scale.
+
+For the converted book this reads directly. The valuation is not a number the data determine and an estimate approximates; it is a set with a known width, and the distance from a desk's single figure to the boundary of that set is not an estimation error that a longer record would shrink. Two consequences run through the chapter: the reported valuation is whatever the policy of Section~\ref{sec:zar-book} produces, with no claim that it is central, and the reserve is the width of Corollary~\ref{cor:ident-book}, a deterministic function of the book's vega schedule and of $\eta$.
+
+\subsection{The basis volatility is a range, not a number}
+
+Every quantity in this section is proportional to $\eta$, and no source pins $\eta$ to better than an order of magnitude. Chapter~\ref{ch:identifiability} records the bracket $\eta\in[4,64]$ basis points, obtained by reading the one published dynamic study of the South African spread \citep[Sec.~3, p.~5 and Sec.~5.1, Table~4]{alfeus2026} as an Ornstein--Uhlenbeck process and annualising its mean-reversion estimate under each of the two time units that source leaves open. The bracket is not a confidence interval and is not narrowed by any window length; it is the range of values consistent with the one estimate that exists. This chapter therefore carries $\eta$ as a range throughout, reports every currency figure at the two ends and at a round interior value, and never reports a single number as ``the'' reserve.
+
+\begin{remark}[Why the range cannot be closed from the South African record]\label{rem:zar-eta}
+Three obstacles stand in the way, of three different kinds. The synthetic historical successor-curve dataset builds its basis as a deterministic rolling median of the predecessor curve, so any $\eta$, $\rho_{BF}$ or $\rho_{B\alpha}$ estimated from it is an artefact of that construction; Appendix~\ref{app:data} records the restriction and it is absolute. The realised basis that remains is an object under the physical measure while the $\eta$ of Theorem~\ref{thm:ident-two} lives under $\Q^{T+\Delta}$, and the gap between them is a risk premium that no quantity of historical data observes. And the instrument that would settle the question under the pricing measure, an option on the basis itself, is quoted nowhere and is not proposed in the conventions material. The range is a feature of the problem in this market.
+\end{remark}
+
+\subsection{The identified interval per caplet, in rand}
+
+Chapter~\ref{ch:identifiability}'s worked caplet -- one-year expiry, three-month accrual, $\eta=20$ basis points -- has an at-the-money identified half-width of $18.43$ basis points quoted against $T+\Delta$, which at a Bachelier at-the-money vega is R$20{,}550$ per R100 million of notional. Three features of that figure transfer to any book. It is a width and not a mark, the interval midpoint ($64.61$ basis points) differing from the mark a desk ignoring the basis reports ($61.86$). It scales with vega and nothing else, the half-width per caplet being $\eta\,\vartheta\,qc^*$ with $\vartheta$ the signed at-the-money vega, $q$ the quoting factor and $c^*$ the Hagan bracket.
+
+And it is linear in $\eta$ at the small end of the bracket, and only there. What is exactly linear is the interval for the diffusion coefficient at the clock, $[a-\eta,a+\eta]$ of Theorem~\ref{thm:ident-two}(i); the \emph{quoted} half-width is not, because the extreme models carry $\alpha_0^{\pm}=a\mp\eta$ and $\nu^{\pm}=na/(a\mp\eta)$. Extrapolating linearly gives about R$4{,}100$ at $\eta=4$ basis points and about R$65{,}800$ at $\eta=64$, a factor of sixteen across the bracket, and the upper figure is quoted as the extrapolation it is: at $\eta=64$ against the fitted $a=65.73$ basis points the extreme model has $\alpha_0=1.73$ basis points, its vol-of-vol and Hagan bracket diverge, and the basis scale is $\varepsilon\approx1.07$, where the expansion underlying the corollary has no claim to accuracy. The honest reading of that end is that the identification failure is of the same order as the volatility itself, not a rand figure to three significant digits.
+
+\datanote{Replacing the illustration by a measurement needs the observed triple $(a_i,r_i,n_i)$ per expiry from a fitted surface before cessation (a sponsor input), the book's notional and strike schedule (an institutional input), and a value for $\eta$, for which the public regime offers only the bracket of Remark~\ref{rem:zar-eta}. Until the first two exist, Section~\ref{sec:zar-width} reports the width per unit of vega.}
+
+\section{The width of the consistent set for a representative book}\label{sec:zar-width}
+
+\subsection{The additive form, and why it is the additive form}
+
+By Corollary~\ref{cor:ident-book} the identified half-width of a book is $\eta\big|\sum_i\vartheta_iq_ic^*_i\big|$ under basis parameters shared across expiries and $\eta\sum_i|\vartheta_i|q_ic^*_i$ under per-expiry ones; for a book long at every expiry the two coincide and both are the \emph{sum} of the per-caplet half-widths.
+
+The reason is the point at which a risk system will disagree with this chapter: the supremum of a linear functional over a product of intervals is the sum of the suprema, so identified widths add, while a root-sum-square presupposes a probability distribution on the identified set under which the per-expiry deviations are independent and mean zero. An identified set is not a distribution.
+
+One coordinate of the identified set is aggregated here and one is not. Chapter~\ref{ch:identifiability} identifies a two-dimensional set, an ellipse in the level--skew plane (Theorem~\ref{thm:ident-two}, Proposition~\ref{prop:ident-consistent}), of which Corollary~\ref{cor:ident-book} aggregates the at-the-money level only. A converted book carries risk reversals and collars by construction, and their skew exposure has an identified width of its own: over a skew-vega schedule $\varsigma_i$ the analogous aggregate is $\eta\,\nu/(2\alpha_0)\sum_i|\varsigma_i|q_ic^*_i$ per unit of strike, additive for the same reason. The reserve below is therefore a \emph{lower bound} for any book that is not purely at-the-money vega.
+
+\subsection{A worked illustration}
+
+The following book is declared here and is not any institution's. Every input is an assumption and is labelled as one; the arithmetic that follows from them is exact and is shown.
+
+\begin{enumerate}[nosep,label=\textbf{A\arabic*.},leftmargin=2.2\parindent]
+\item The converted book is decomposed into caplets on the three-month compounded successor rate plus the fixed spread, at $m=20$ quarterly expiries $T_i=i/4$ for $i=1,\dots,20$, so out to five years, with accrual $\Delta=0.25$.
+\item Each caplet carries a notional of R100 million and the book is long at every expiry.
+\item Each caplet is at the money at the reserve date, so its Bachelier at-the-money vega per unit notional and accrual is $0.39894\sqrt{T_i+\Delta}$ per unit of normal volatility, and $\vartheta_i=10^8\times0.25\times0.39894\sqrt{T_i+\Delta}$. This is the maximal-vega case and it is not the contractual one: a converted book keeps the strikes of the old \gls{jibar} contracts while its underlying moves by the fixed spread $s=16.19$ basis points plus the forward basis, so on the conversion date the book is off the money by a known amount. At a normal volatility of $60$ basis points a $20$ basis-point moneyness shift reduces the Bachelier vega by about ten per cent at the three-month expiry, four per cent at one year and one per cent at five years, so A3 raises the short end of the ladder most.
+\item The clock is the linear-decay clock of Chapter~\ref{ch:prelim}, $\tau^*_i=T_i+\Delta/3$, so the quoting factor is $q_i=\sqrt{\tau^*_i/(T_i+\Delta)}$.
+\item The Hagan correction bracket is set to $c^*_i=1$. It is not constant across the ladder: $c^*=1+\tfrac1{24}(2-3\rho^2)\nu^2\tau^*$ grows linearly in the clock, so at the worked parameters of Chapter~\ref{ch:identifiability} it runs from $1.004$ at the three-month expiry through $1.014$ at one year to $1.064$ at five years, and the book aggregate $\sum_i\sqrt{\tau^*_i}\,c^*_i$ is $32.693$ against the $31.452$ that this assumption uses. A5 therefore understates the bracket by $3.9$ per cent for the book, not by the one per cent the short expiries suggest. The second error runs the other way and does not cancel it uniformly: at the one-year expiry $\eta q=18.619$ basis points against the exact quoted half-width of $18.429$, so there the convention \emph{overstates} by $1.0$ per cent, while at the five-year expiry the growth of $c^*$ dominates and it understates by about five per cent.
+\item The basis parameters are shared across expiries, so Corollary~\ref{cor:ident-book} applies in its net form; assumption~A2 makes the net and absolute forms equal in any case.
+\item No discounting is applied. The Bachelier expression of A3 is a forward premium, so every rand figure below sets $P(0,T_i+\Delta)=1$. The omission is not a rounding convention at South African rate levels: at a flat eight per cent continuously compounded discount rate the weighted aggregate $\sum_i\sqrt{\tau^*_i}\,P(0,T_i+\Delta)$ is $24.268$ against $31.452$, so the book half-width reported below is about $23$ per cent higher than its present value, uniformly in $\eta$.
+\end{enumerate}
+
+Assumptions A3 and A4 combine to remove the accrual from the answer:
+\[
+\vartheta_iq_i=10^8\times0.25\times0.39894\sqrt{T_i+\Delta}\times\sqrt{\frac{T_i+\Delta/3}{T_i+\Delta}}
+=10^8\times0.0997357\times\sqrt{\tau^*_i} ,
+\qquad
+\sum_{i=1}^{20}\sqrt{i/4+1/12}=31.4522 ,
+\]
+so the aggregate $\sum_i\vartheta_iq_ic^*_i$ is $10^8\times0.0997357\times31.4522=3.13690\times10^8$ rand per unit of normal volatility. Multiplying by $\eta$ gives the identified half-width of the book:
+\begin{equation}\label{eq:zar-bookwidth}
+\eta\Big|\sum_i\vartheta_iq_ic^*_i\Big|=3.13690\times10^8\times\eta
+=\text{R}31{,}369\ \text{per basis point of }\eta ,
+\end{equation}
+undiscounted, by assumption~A7; the present-value figure at a flat eight per cent is R$24{,}204$ per basis point.
+
+\begin{table}[htbp]\centering\small
+\caption{Identified half-width of the representative book of assumptions A1--A7, at the three values of the basis volatility carried by Remark~\ref{rem:zar-eta}. Every entry is an undiscounted forward premium (A7); the present-value column applies a flat eight per cent continuously compounded discount curve. The root-sum-square column is the figure a risk system aggregating per-expiry widths as independent would report; it is shown to be refuted, not to be used. The $\eta=64$ row is a linear extrapolation outside the range in which the quoted half-width is linear in $\eta$ (Section~\ref{sec:zar-value}) and is an order-of-magnitude statement. All entries follow from \eqref{eq:zar-bookwidth} and the assumptions; none is computed from data.}\label{tab:zar-book}
+\begin{tabular}{@{}lrrrr@{}}
+\toprule
+$\eta$ (bp) & Additive half-width (R) & Present value (R) & Root-sum-square (R) & Ratio \\
+\midrule
+$4$  & $125{,}476$   & $96{,}816$  & $29{,}361$  & $4.27$ \\
+$20$ & $627{,}381$   & $484{,}080$ & $146{,}807$ & $4.27$ \\
+$64$ & $2{,}007{,}619$ & $1{,}549{,}056$ & $469{,}782$ & $4.27$ \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+The root-sum-square column is $10^8\times0.0997357\times\eta(\sum_i\tau^*_i)^{1/2}$ with $\sum_i\tau^*_i=54.1667$, whose square root is $7.3598$, so the ratio of the two aggregations is $31.4522/7.3598=4.27$, independent of $\eta$ and of the notional. Aggregating the identified widths as if they were independent understates the reserve by more than a factor of four, and that factor is not a modelling refinement: it is the difference between a supremum over a product of intervals and a standard deviation of a sum of independent random variables, and only the first object exists here.
+
+\begin{remark}[The offset a long-short book may claim]\label{rem:zar-longshort}
+The partial immunisation of a long-short book, and its disappearance under the per-expiry variant of the nuisance, are established in Chapter~\ref{ch:identifiability}. What is South African is that the offset cannot be claimed here: criterion~V6 tests it, and the test requires a quoted successor surface across expiries, which this market does not have. The public regime must therefore take the absolute form $\eta\sum_i|\vartheta_i|q_ic^*_i$, which is what \eqref{eq:zar-bookwidth} already reports under A2.
+\end{remark}
+
+\figplan{Horizontal axis the caplet expiry $T_i$ from $0.25$ to $5$ years in quarterly steps; vertical axis rand per basis point of $\eta$. Bars: the per-expiry contribution $\vartheta_iq_ic^*_i\times10^{-4}$ under A1--A5. On a secondary axis, two step curves labelled with their endpoint values: the running additive total and the running root-sum-square. A shaded band gives the additive total across $\eta\in[4,64]$ basis points.}{Where the identified reserve of the representative book comes from and how the two aggregations diverge: the contribution grows only as the square root of the expiry, so the reserve is not dominated by the long end, while the divergence reaches $4.27$ at twenty expiries. The band shows the basis-volatility bracket moving the answer by a factor of sixteen, more than the aggregation rule does.\label{fig:zar-book}}
+
+\datanote{A reserve for a real book needs one aggregate per expiry, the signed at-the-money vega $\vartheta_i$ at the reserve date, plus the expiry schedule -- no quote, no surface and no counterparty information, so it is the one input an institution can supply without a data agreement about prices. With it \eqref{eq:zar-bookwidth} is evaluated directly and only $\eta$ remains assumed.}
+
+\section{The residual, and why it is declared rather than certified}\label{sec:zar-residual}
+
+The reserve the thesis defines has three terms:
+\begin{equation}\label{eq:zar-reserve}
+\mathcal R\;=\;\underbrace{V_\pi}_{\text{identified valuation}}\;+\;\underbrace{\eta\Big|\sum_i\vartheta_iq_ic^*_i\Big|}_{\text{width of the consistent set}}\;+\;\underbrace{\hat q}_{\text{certified hedging-error quantile}} ,
+\end{equation}
+where $V_\pi$ is the value the fixed policy reports, the second term is \eqref{eq:zar-bookwidth}, and $\hat q$ is the threshold of Chapter~\ref{ch:certification} at the stated level. Two things about the display must be said before it is used.
+
+First, $\mathcal R$ is a total carrying amount and not a reserve: the reserve proper is the second and third terms, which is what an institution holds \emph{in addition} to its mark. Second, the three terms answer different questions -- a mark, the price of an identification failure that no record closes, the price of a hedging failure over one rebalancing block -- but that is not by itself an argument that they add. The scores are measured against the fixed policy $\pi$, whose own mark lies somewhere inside the identified set, so a policy mismarked by up to $\eta|\sum_i\vartheta_iq_ic^*_i|$ generates hedging errors that already contain part of that mismarking. The argument for additivity is that the two objects are of different type: the second term is a static, measure-side width fixed at the reserve date, while $\hat q$ is a quantile of a realised profit and loss over one block, so a constant mismarking enters the scores only through its change over that block and the sum is conservative rather than double counting. That argument is not a proof.
+
+\gap{The additivity of the second and third terms of \eqref{eq:zar-reserve} is argued and not proved. What remains to be established is a bound on the part of the hedging-error score attributable to a constant mismarking of the fixed policy within the identified set, over one rebalancing block; only if that part is small relative to $\hat q$ does the sum of the two terms fail to double count. Nothing else in the chapter depends on it: the two terms are also reported separately.}
+
+The third term in its calibration-conditional form is available only if Section~\ref{sec:zar-feasibility} admits a block length, and it does not. On this record $\hat q$ is therefore not reported as a certified calibration-conditional quantile. Two routes remain, and they are of different strengths. The marginal bound \eqref{eq:zar-marginal} gives $\hat q$ a genuine coverage statement at the level of Table~\ref{tab:zar-marginal} -- about $0.62$ under $\Bclass{2}(1)$ on the pooled count -- with no calibration-conditional content. A descriptive statistic of the eleven to twenty-three monthly scores, their maximum or an empirical quantile, carries no coverage statement of any kind. Two facts fix how far the descriptive statistic is from a certificate.
+
+First, the coverage statement it would inherit under the strongest hypothesis available is already weak. Suppose, counterfactually, that the monthly scores were independent, so that no coupling term were needed. With $n=k=11$ the threshold is the sample maximum and $F_P(\hat q)$ is exactly $\Beta(11,1)$ by Theorem~\ref{thm:prelim-beta} of Chapter~\ref{ch:prelim}, whose five per cent quantile is $0.05^{1/11}=0.762$; at $n=9$ it is $0.05^{1/9}=0.717$. Even under independence the largest of eleven monthly hedging errors certifies, with ninety-five per cent confidence, a level of $0.76$ and not $0.90$. Second, that hypothesis is counterfactual, and the term that would pay for its failure is the one Section~\ref{sec:zar-feasibility} shows to be at least $12C$. So the report is: the second term of \eqref{eq:zar-reserve} is a bound, the first is a convention, and the third is either a marginal statement at about $0.62$ or a number with nothing attached, depending on which route is taken. An institution that adds the empirical maximum to the first two terms has built a reserve that may well be adequate; it has not certified it.
+
+\begin{remark}[What is and is not a repair]\label{rem:zar-notrepair}
+Four routes suggest themselves and one of them works. Using the unblocked sample quantile with the calibration-conditional guarantee of Chapter~\ref{ch:sharpness} removes the blocking and with it the exact $\Beta$ law, and the bound it would carry rests on a Chebyshev inequality whose value at two dozen periods is larger than one. Bootstrapping the scores supplies a point estimate of a quantile of the score law and not a prediction bound for a future block, as Chapter~\ref{ch:usd} states at length. Pooling the converted book's scores with the pre-cessation record changes the underlying of the book in the middle of the sample, so the calibration blocks would not have a common law and Assumption~\ref{ass:mix} would fail at its first clause; this is the operation the pooled count of Section~\ref{sec:zar-feasibility} performs, which is why that count is carried only as a sensitivity. The fourth route does work, and it is the marginal bound \eqref{eq:zar-marginal} of \citet[Cor.~1]{barber2026}: it needs no blocking, no gap and no pooling, it is evaluated on the same scores in Table~\ref{tab:zar-marginal}, and it delivers a level of about $0.62$ under $\Bclass{2}(1)$. What it does not deliver is a statement conditional on the calibration sample actually held, which is the statement a reserve wants, and no result in that paper supplies one.
+\end{remark}
+
+\section{Comparison with re-pricing on a handful of models}\label{sec:zar-models}
+
+The practice this chapter's second term displaces is familiar: value the book on three or four models, read the spread, and hold it as a valuation adjustment for model uncertainty. Three things can be said about it and a fourth cannot. The spread bounds the identified width only if the model set spans the identified set, which the two models of Theorem~\ref{thm:ident-two} show a conventional set need not do; it carries no probability, and neither does the width, so a spread read as a confidence interval asserts a distribution over models that Chapter~\ref{ch:identifiability} does not supply; and no correction factor between the two can be stated, since a desk's set may contain models inconsistent with the observed smile and certainly omits admissible ones. A comparison on real book data would need the desk's own model set, which Section~\ref{sec:zar-sponsor} lists among the sponsor inputs.
+
+\datanote{The term ``additional valuation adjustment'' is a European prudent-valuation term of art and is not used here. No primary source establishing a South African prudential requirement specific to valuation uncertainty on converted benchmark books is on file as of 19~September 2026, and none is asserted; the level this chapter works to is criterion~C2 of Chapter~\ref{ch:usd} and nothing supervisory.}
+
+The one statement worth making at length is that the usual model set reports zero in the direction that matters. Any model that applies the market convention -- shift the strike by the spread plus the forward basis, apply the volatility decay, quote the result -- sets $\rho_{BF}=\rho_{B\alpha}=0$, and by Proposition~\ref{prop:ident-consistent} all such models map to a single point of the identified set. A spread taken across variants that share that convention therefore measures the disagreement of the variants about the identified coordinates and is blind, by construction, to the two coordinates that are not identified. This is the sharpest thing the chapter can say about the practice: the direction in which it is silent is exactly the direction in which the identification fails.
+
+\section{What a sponsor's data would change}\label{sec:zar-sponsor}
+
+The requests are ordered by what they buy, so that an institution able to grant only one knows which; Appendix~\ref{app:data} holds the formats, the governance terms and the permitted aggregates.
+
+\paragraph{1. A daily marked hedging-error record of the converted book from the first business day after cessation.} This is the only input that changes the chapter's principal finding, and Section~\ref{sec:zar-frequency-need} states by how much: a daily record is feasible within about thirteen months, while the monthly record admits nothing at any horizon short of two decades. The file is one row per business day -- date, mark-to-policy value of the book and of the hedges, realised profit and loss, and the policy's own volatility inputs so that the marks are reproducible. It carries no counterparty and no quote and is an internal record of the converted sub-book. The decision to keep it must be taken at cessation, because it cannot be reconstructed afterwards.
+
+\paragraph{2. The book's signed at-the-money vega by expiry at each reserve date.} One number per expiry per month. It converts \eqref{eq:zar-bookwidth} from an illustration into the institution's own reserve and settles whether the book is one-sided, which decides between the net and absolute forms of Corollary~\ref{cor:ident-book}.
+
+\paragraph{3. The \gls{jibar} cap and floor surfaces to 31~December 2026, in normal volatility, on the desk's grids.} These supply the observed triples $(a_i,r_i,n_i)$ and therefore the level and skew about which the identified interval is centred. Without them the width of Section~\ref{sec:zar-width} is still computable but the valuation of Section~\ref{sec:zar-value} is not.
+
+\paragraph{4. The desk's estimate of the basis volatility, and its model set.} The bracket $[4,64]$ basis points spans a factor of sixteen, which is larger than any other uncertainty in this chapter, and Section~\ref{sec:zar-value} shows that its upper end is not even a rand figure. A desk estimate does not close the measure gap of Remark~\ref{rem:zar-eta}, but it replaces the bracket by a number the desk is prepared to stand behind. The model set is what Section~\ref{sec:zar-models} needs to make its comparison on a real book.
+
+\paragraph{The public-data fallback.} If no agreement is signed, three things survive: the feasibility verdict, which uses no data at all; the width \eqref{eq:zar-bookwidth} per basis point of $\eta$ and per unit of vega, which an institution can evaluate against its own book without disclosing anything; and a score record computed from public fixings and curves under a historical-volatility policy, as a descriptive series, with the reserve decomposition labelled as resting on that policy. What does not survive is the valuation of Section~\ref{sec:zar-value} in rand, and with it any comparison against the practice of Section~\ref{sec:zar-models}.
+
+\section{Discussion}\label{sec:zar-discussion}
+
+\subsection{What the chapter establishes}
+
+Two things, neither of which required data. The first is the feasibility verdict for the blocked route, conditional on monthly scoring: at a ten per cent level the strict monthly record of the converted book admits no block length with a finite threshold at all, and the pooled record admits exactly one, at which the coupling term of Theorem~\ref{thm:cov} is at least twelve times a mixing coefficient that no polynomial class bounds below one. The calibration-conditional quantile is therefore unavailable on a monthly record, while the marginal bound \eqref{eq:zar-marginal} survives on the same scores at about $0.62$ under $\Bclass{2}(1)$, which is above criterion~C2; the blocked route's payoff, and what a monthly record cannot buy, is the statement conditional on the calibration sample held. The second is the shape of the reserve that survives: the identified width adds across the book, scales with a basis volatility known only to within a factor of sixteen, and on the representative book of Section~\ref{sec:zar-width} exceeds the root-sum-square aggregation by a factor of $4.27$.
+
+Read together these say something about the transition rather than about the thesis. The South African conversion produces a book whose valuation uncertainty is large, structural and additive, and simultaneously a monthly record too short to certify the hedging of that book conditionally on the calibration sample. The chapter's recommendation follows from the pair: an institution cannot shorten the identification gap, because the instrument that would close it is not quoted; it can lengthen the record or score it more finely, and the arithmetic of Proposition~\ref{prop:zar-feasible} says by how much and from when.
+
+\subsection{Limitations}
+
+The representative book is declared, not observed, so every rand figure is illustrative, undiscounted by assumption~A7 and struck at the money by assumption~A3, which is the maximal-vega case. The reserve aggregates the at-the-money coordinate of a two-dimensional identified set and is therefore a lower bound for any book carrying skew exposure. The feasibility verdict is conditional on monthly scoring, which is this chapter's design choice and not the market's. The bracket for $\eta$ rests on one published estimate read under an assumption its source does not state, and its upper end lies outside the range in which the quoted half-width is linear in $\eta$. The mixing rates in Table~\ref{tab:zar-geom} are assumptions that the record cannot discharge, by Proposition~\ref{prop:noest} of Chapter~\ref{ch:certification}, and this is a permanent feature rather than a data gap. The skew statements inherited from Chapter~\ref{ch:identifiability} are first order in a basis scale that Chapter~\ref{ch:identifiability} shows may not be small in this market. And the chapter takes no parameter estimate from Chapter~\ref{ch:usd}: the two markets differ in depth, in collateral convention and, on the one published study, in the dynamics of the basis itself.
+
+\subsection{The same chapter in 2029}
+
+Three things would differ and the arithmetic says which matter. The monthly record would hold about twenty-four observations by the end of 2028 and about forty-eight by 2031; at $N=47$ the ceiling rises to $b\le2$, where the coupling deficit is $12\beta(2)$, still $3.0$ under $\Bclass{2}(1)$ and non-vacuous only under a geometric class at $\varphi\le0.1$, where it is $0.12$ and costs twelve points of level. So the monthly route does not become usable in 2029, or in 2031. If the daily record of Section~\ref{sec:zar-sponsor} was kept from cessation, the 2029 chapter reports a certificate with a swept block length, a sweep of assumption grids, and the decomposition of Chapter~\ref{ch:usd} applied to a real converted book: the difference between the two versions of the 2029 chapter is a data-collection decision taken in 2026 and not any mathematics.
+
+The valuation side could also change, and would change more, because the conventions material anticipates that successor caps, floors and swaptions will in future be quoted \citep[\S3, p.~5]{sarb2024conv} and quotes close the identification directly, as Section~\ref{sec:zar-value} sets out. The order in which the two changes arrive determines which chapter is worth writing: quoted successor options remove the second term of \eqref{eq:zar-reserve}, a long record certifies the third, and nothing removes the need for both.
+
+\section*{Chapter notes}
+
+The feasibility arithmetic uses the blocking layout, the threshold convention, the coverage statement and the counting convention $n=\lfloor N/(2b)\rfloor$ of Chapter~\ref{ch:certification} and the mixing class of Chapter~\ref{ch:sharpness}; the same computation for a daily record of about $250$ periods is in Chapter~\ref{ch:usd}. The unblocked marginal bound of Section~\ref{sec:zar-marginal} is \citet[Cor.~1, eq.~(6)]{barber2026}, evaluated and not extended; that paper's Theorem~2 is a construction for split conformal itself and not a minimax bound, and no calibration-conditional statement appears in it. The valuation results are Theorem~\ref{thm:ident-two} and Corollary~\ref{cor:ident-book} of Chapter~\ref{ch:identifiability}, used and not restated. The cessation timetable, the contractual fallback and the trades that do not convert are from \citet[p.~1, Sects.~1.1, 3, 5, 8]{isda2025}, the fixed spread from \citet[p.~1]{bisl2025}, the collateral convention and the absence of screen quotes from \citet[\S3, p.~5 and \S8.2, p.~27]{sarb2024conv}, and the basis estimate from \citet[Sec.~5.1, Table~4]{alfeus2026}; Chapter~\ref{ch:intro} is the home of the transition record and Appendix~\ref{app:data} of every dataset named here.

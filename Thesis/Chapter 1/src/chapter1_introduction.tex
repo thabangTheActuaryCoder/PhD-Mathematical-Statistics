@@ -1,2 +1,269 @@
+% Chapter 1 — Introduction and the South African transition
 \chapter{Introduction}\label{ch1-introduction}\label{ch:intro}
-\gap{Chapter not yet drafted; scheduled in the loop order of LOOP.md.}
+
+\begin{quote}\itshape
+A benchmark that prices a national option book is withdrawn on a known date, and the market that would reveal the successor's volatility does not exist. This thesis asks what such a book is worth and how badly a chosen valuation of it can fail. It proves that the successor diffusion coefficient is identified only within an interval of half-width equal to the basis volatility, with both endpoints attained; that a fixed valuation policy admits a finite-sample coverage certificate under mixing and drift, with a sharp drift constant; that blocking buys the exact Beta law and not rate; and that on the record lengths this transition affords the certificate is infeasible. This chapter sets out the transition record, the questions and the contributions.
+\end{quote}
+
+\section{The problem}\label{sec:intro-problem}
+
+On 31 December 2026 the \gls{jibar} is published for the last time. Publication of all remaining tenors ceases immediately after that final publication \citep[p.~1]{isda2025}. Every cap, floor and swaption written on three-month \gls{jibar} that incorporates the contractual fallback provisions then references, from the first \gls{jibar} business day thereafter, compounded \gls{zaronia} plus a spread fixed once and for all \citep[Sects.~2--3]{isda2025}. The underlying of a large book of options changes on a single date, by contract and not by choice.
+
+The day before cessation a South African bank marks that book against a \gls{jibar} volatility surface that has been quoted for three decades. The day after, it must mark the same book against a compounded-\gls{zaronia} volatility surface that has never been quoted at all. The market conventions for \gls{zaronia} caps, floors and swaptions have been published and anticipate that such products ``will in future be quoted on screens and/or via interbank broking agents'' \citep[\S3, p.~5]{sarb2024conv}; a survey of the administrator's publications, the clearing house's member material and the principal vendors found no evidence that they are so quoted.
+
+\datanote{Survey of successor-market quotation. Searches of the Reserve Bank's benchmark and \gls{mpg} pages, the clearing house's member updates, two trading-venue sites and the \gls{isda} benchmark-reform pages on 9~September 2026 returned linear \gls{zaronia} products only; no screen or broker quotation of \gls{zaronia} caps, floors or swaptions was found. This is a dated absence of evidence and not a proof of absence: the survey is to be re-run and its date updated before submission, and Chapter~\ref{ch:usd} makes the first-quoted month of a successor surface a reporting rule rather than an assumption.}
+
+Two questions follow, and they are the two questions of this thesis. The first is a question of identification: how much of the successor smile does the predecessor smile determine, and what exactly is left free? The second is a question of guarantee: once the bank has chosen a valuation-and-hedging policy from whatever is left free, how large can the hedging error of that policy be over the next period, with what probability, and on what assumptions?
+
+The two questions are not variants of one another. The first is answered by an interval of prices that the observable data cannot separate, and no probability attaches to it. The second is answered by a probability statement about a scalar loss, and it is silent about which point of the interval is the truth. A bank that has only the first has a reserve but no control; a bank that has only the second certifies a policy it cannot defend. The thesis provides both, keeps them formally separate, and is explicit about where each fails.
+
+\subsection{Who needs the answers, and in what form}
+
+Both questions have institutional addressees, and the form of the answer is dictated by them. A valuation that cannot be pinned down by observable prices is, in supervisory language, a position whose fair value is uncertain, and the prudent-valuation regime requires an institution to hold an additional valuation adjustment against exactly that uncertainty, computed from the range of plausible values rather than from a single mark \citep{bcbs2019}. The interval of Chapter~\ref{ch:identifiability} is a candidate input to such a calculation, and the reason its width is worth proving sharply rather than estimating is that a width which is not attained is a reserve that cannot be defended. The certificate of Chapter~\ref{ch:certification}, in turn, is the form in which a model-risk function or a regulator can hold a desk to a fixed policy: a stated probability, on stated assumptions, that a named loss statistic is exceeded over a named period.
+
+\gap{Citation locator needed. No page, paragraph or section locator is quoted for the prudent-valuation and model-risk material cited above, because no copy of the supervisory text has been obtained and no reading note exists for it. The citation is used here only to identify the institutional setting; no threshold, zone boundary or numerical standard from that text is used anywhere in this thesis, and Chapter~\ref{ch:usd} reports its regulatory backtest statistics without relying on published zone boundaries.}
+
+\section{The South African transition: the record}\label{sec:intro-record}
+
+This section is the single home of the transition's dates, spreads and conventions. Chapters~\ref{ch:identifiability}, \ref{ch:usd} and~\ref{ch:zar} refer to it and do not restate it.
+
+\subsection{The benchmark that ceases}
+
+\gls{jibar} is the forward-looking term rate on which the South African interest-rate market has been written. It is a credit-sensitive rate: it embeds the funding spread of the contributing banks, and it is quoted for a term that begins at the fixing and ends one tenor later. The reform that removes it is the South African instance of a global programme whose stated motivation was the thinness of the transactions underlying such rates; the South African commentary records that the panel comprised five contributing banks and that the rate did not satisfy the international sufficiency standard for transaction-based benchmarks \citep[pp.~1--2]{alfeus2024}.
+
+\subsection{The benchmark that replaces it}
+
+\gls{zaronia} is an overnight rate computed from the interbank deposit market and administered by the Reserve Bank \citep[p.~2]{alfeus2024}. It is nearly risk-free and it is backward-looking: a term rate is manufactured from it by compounding the daily fixings over the accrual period, so that the rate for $[T,T+\Delta]$ is known only at $T+\Delta$. That single structural difference drives the whole finance half of this thesis, because an option on a rate that is still accruing sees a diffusion coefficient that must vanish at the end of the window (Proposition~\ref{prop:prelim-vanish} of Chapter~\ref{ch:prelim}).
+
+\datanote{\gls{zaronia} history and its three regimes. The published series is conventionally divided into a proxy or pre-publication period before 31~October 2022, an observation period from 1~November 2022 to 3~November 2023, and the official period from 4~November 2023; the administrator's compounded index is based at $100$ on 1~November 2022. These class boundaries were read from the administrator's benchmark pages on 9~September 2026 and have no bibliography entry, because the pages are dynamic and no dated document carrying them was obtained. They conflict in one respect with a primary document that is on file: \citet[\S5.3.1, p.~11]{sarb2025fallback} states that \gls{zaronia} has been published since 1~August 2022. Whenever a date range of \gls{zaronia} data is quoted in this thesis the regime is named, and the conflict is recorded in Appendix~\ref{app:data} rather than resolved here.}
+
+\subsection{The contractual fallback and the fixed spread}
+
+The fallback is contractual, not discretionary. An Index Cessation Event occurred on 3~December 2025 by virtue of the administrator's cessation announcement, and the expected Index Cessation Effective Date is the first \gls{jibar} business day after the final publication \citep[\S1.1]{isda2025}. From that date the Fallback Rate is compounded \gls{zaronia} plus a \gls{cas} fixed as of the Rate Record Day, computed as the five-year historical median of the difference between \gls{jibar} and compounded \gls{zaronia} \citep[Sects.~2--4]{isda2025}; contracts on older definitions that were never amended fall back instead to a dealer poll \citep[\S5]{isda2025}. The methodology behind the median and the lookback that defines the compounded leg are set out by the transition workstream \citep[\S1, p.~3; \S4.1, p.~7; \S6, p.~14]{sarb2025fallback}.
+
+The spreads themselves were fixed on 3~December 2025 and are constants thereafter. Table~\ref{tab:intro-spreads} records them.
+
+\begin{table}[htbp]\centering\small
+\caption{Fallback credit adjustment spreads for \gls{jibar}, fixed as of the Rate Record Day 3~December 2025 \citep[p.~1 and Table]{bisl2025}. The three-month value is the constant $s$ of the thesis. The methodology is the five-year historical median of \gls{jibar} minus compounded \gls{zaronia} \citep[Sects.~2--4]{isda2025}, \citep[\S1, p.~3]{sarb2025fallback}.}\label{tab:intro-spreads}
+\begin{tabular}{@{}lrr@{}}
+\toprule
+Tenor & Spread (per cent) & Spread (bp) \\
+\midrule
+1 month & $0.1142$ & $11.42$ \\
+3 months & $0.1619$ & $16.19$ \\
+6 months & $0.4323$ & $43.23$ \\
+9 months & $0.5830$ & $58.30$ \\
+12 months & $0.7410$ & $74.10$ \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Two features of the spread matter for the mathematics that follows. It is a single number per tenor, so it shifts the strike of a converted option and does nothing else: the payoff identity $(R+s-K)^+=(R-K')^+$ with $K'=K-s$ is exact, and Chapter~\ref{ch:identifiability} uses it as such. And it is fixed at a median of a historical sample, so it does not track the basis it replaces. The workstream's own projections illustrate the gap: a five-year median of about $19$~bp with a mean of about $27$~bp was reported on 5~August 2024 \citep[Table~1, p.~10]{sarb2025fallback}, against a realised fixing of $16.19$~bp sixteen months later. The same document records that the spread widens in rate-cutting cycles and narrows in hiking cycles, with no floor \citep[\S5.3.3, p.~12]{sarb2025fallback}. The difference between the live basis and the frozen spread is the object the thesis calls the basis $B_t$, and it is the source of everything that is not identified.
+
+\subsection{Conventions for a market that does not yet quote}
+
+The conventions for successor non-linear products are published in advance of the market they govern. Three of their provisions are used in this thesis and are recorded once here. The \gls{zaronia} caplet pays at two business days after the end of the accrual window \citep[\S7.6, p.~24; \S6.1, p.~8]{sarb2024conv}, so both the predecessor and the successor caplet pay after the accrual period ends and no in-advance versus in-arrears convexity adjustment separates them; the payment lag itself is bounded and negligible at quote precision, as Chapter~\ref{ch:prelim} records. Quotation is in premium, Black or normal volatility \citep[\S8, p.~26]{sarb2024conv}, with a recommended thirteen-point strike grid \citep[\S7.6, p.~25]{sarb2024conv}, and inter-dealer screen volatilities are understood to assume a zero-threshold collateral agreement in United States dollars with \gls{sofr} remuneration \citep[\S8.2, p.~27]{sarb2024conv}. A linear volatility decay with the corresponding effective maturity is offered as an optional convention \citep[\S8.3.1, p.~28; \S8.3.2, eqs.~(15)--(16), p.~29]{sarb2024conv}.
+
+The conventions paper nowhere names a stochastic-volatility model. The \gls{sabr} parameterisation used throughout this thesis is the thesis's own modelling choice, made because it is the industry standard for interpolating a normal-volatility smile, and saying so is not a weakness of the identification argument: the deficit proved in Chapter~\ref{ch:identifiability} is a deficit within a class that a desk actually fits.
+
+\subsection{The transition calendar}
+
+\begin{table}[htbp]\centering\small
+\caption{The transition calendar used in this thesis. Sourced entries carry a locator; unsourced entries are gap-boxed below and are used only to bound windows, never inside a computation.}\label{tab:intro-calendar}
+\begin{tabular}{@{}lll@{}}
+\toprule
+Date & Event & Source \\
+\midrule
+3 Dec 2025 & Index Cessation Event; Rate Record Day & \citep[\S1.1]{isda2025}, \citep[p.~1]{bisl2025} \\
+3 Dec 2025 & Fallback spreads fixed (Table~\ref{tab:intro-spreads}) & \citep[p.~1, Table]{bisl2025} \\
+19 Dec 2025 & Future cessation guidance published & \citep{isda2025} \\
+1 May 2026 & ``No new \gls{jibar}'' guidance takes effect & unsourced \\
+11 Apr 2026 & \gls{zaronia} discounting and price alignment at the clearing house & unsourced \\
+21 Nov 2026 & Conversion of outstanding cleared \gls{jibar} contracts & unsourced \\
+31 Dec 2026 & Final \gls{jibar} publication; permanent cessation & \citep[p.~1]{isda2025} \\
+4 Jan 2027 & Expected Index Cessation Effective Date & \citep[\S1.1]{isda2025} \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\gap{Citation needed for three calendar entries. The ``no new \gls{jibar}'' date, the clearing house's switch of \gls{zaronia} discounting and price alignment, and its conversion of outstanding cleared \gls{jibar} contracts are stated in an administrator media release and in two clearing-house member notices, none of which has been obtained and none of which has a bibliography entry. They appear in Table~\ref{tab:intro-calendar} and in Chapter~\ref{ch:zar} only to bound below the date from which a converted book exists in cleared form and from which its discounting input is \gls{zaronia}-based. No number in this thesis is computed from any of them.}
+
+\subsection{The United States precedent}
+
+The transition of the United States dollar market from \gls{libor} to \gls{sofr} has the same structure and is five years further on. Its predecessor market was one of the deepest option markets in the world, its successor market now quotes, and the quantity that is unobservable in South Africa became observable there. That is what makes it a natural experiment for this thesis rather than a second case study, and Chapter~\ref{ch:usd} is written as a test of the South African construction on a record where the answer is known.
+
+The experiment has one structural difficulty and it is worth naming here, because it shapes the design of Chapter~\ref{ch:usd} rather than being a detail of it. The vendor surfaces are circular in both directions. Before the first month in which a successor surface is marked as quoted rather than derived, that surface is the predecessor surface shifted by the fixed spread, so a test run on it would confirm the construction by construction. After the predecessor's own quoted window ends, the predecessor surface is the successor surface shifted back, and the circularity runs the other way. The window in which both are independently quoted may be short, and Chapter~\ref{ch:usd} therefore runs two arms --- a strict arm on the intersection of the two quoted windows, and an exchange arm on listed-option settlements, which are quoted by construction and begin earlier at the cost of a shorter expiry reach --- and never pools them.
+
+\gap{Citation needed for the United States calendar and spreads. The regulator's announcement of 5~March 2021 and the trade association's contemporaneous statement fixing the spread adjustments, the end of the panel on 30~June 2023, the end of synthetic settings in September 2024, and the move of non-linear trading to the successor rate on 8~November 2021 are each stated in documents that have not been obtained. The five dollar spread adjustments enacted at 12~CFR~253.4(c), of which the three-month value $0.26161$ per cent is the one this thesis would use, rest on the proposed rule of July~2022 and not on the final rule; no final-rule text has been obtained. All of these fix window boundaries in Chapter~\ref{ch:usd} and Appendix~\ref{app:data}; none enters a computation whose result is reported.}
+
+\section{The valuation problem}\label{sec:intro-valuation}
+
+\subsection{What converts, and what the conversion costs}
+
+The linear book converts mechanically: a swap on \gls{jibar} becomes a swap on compounded \gls{zaronia} plus a constant, and the constant is known. The non-linear book does not. A cap struck at $K$ on \gls{jibar} becomes a cap struck at $K-s$ on the compounded rate, and while the payoff identity is exact, the price is not determined by it, because the price depends on the volatility of the successor rate and that volatility is not the volatility of the predecessor.
+
+Write the \gls{jibar} forward as the sum of the forward compounded rate, the basis, and the fixed spread,
+\[
+L_t \;=\; F_t + B_t + s .
+\]
+All three are martingales under the $(T+\Delta)$-forward measure $\Q^{T+\Delta}$ (Propositions~\ref{prop:prelim-L-mart} and~\ref{prop:prelim-B-mart} of Chapter~\ref{ch:prelim}), because both instruments pay at the end of the accrual window. The observed \gls{jibar} smile is therefore the smile of a sum, and the successor smile is the smile of one summand. Two differences separate them and only one is benign. The time change is benign: the decay of the compounded forward's diffusion coefficient over the accrual window converts the successor caplet into a constant-parameter caplet at an earlier clock, and the clock is computable (Lemma~\ref{lem:prelim-tc} of Chapter~\ref{ch:prelim}). The basis is not benign: it carries its own volatility $\eta$ and two correlations, with the rate and with the rate's volatility, and those correlations contaminate the observed smile in a way no amount of predecessor data removes.
+
+\subsection{Why the identification question is not a calibration question}
+
+A practitioner's first response is that the problem is one of calibration: fit the three basis parameters along with the three \gls{sabr} parameters, and use the thirteen strikes the conventions recommend. Chapter~\ref{ch:identifiability} shows that this is a rank problem and not a counting problem. With $m$ expiries there are $13m$ quotes against $3m+3$ unknowns, so a count declares the system over-determined; but at the order at which the smile is read, the contamination lies inside the span of the \gls{sabr} smile's own derivatives in level, skew and curvature. Extra strikes test whether the smile is \gls{sabr} at all. They do not separate the triple from the basis.
+
+\subsection{Why the hedging question is not a backtesting question}
+
+The second response is that whatever the mark, the policy can be backtested: count breaches of a threshold over a window and apply a coverage test. That is a diagnostic, not a guarantee, and on the records this transition affords it is a diagnostic with very few observations. What a risk committee needs is a statement with the quantifier in front: on stated assumptions, the hedging error of this fixed policy over the next period exceeds this threshold with probability at most this number. Split conformal prediction delivers exactly that form under exchangeability \citep{vovk2005}, and a record of hedging errors is not exchangeable. Recovering the form under dependence, with every deficit named and none estimated from the data it is supposed to protect, is the statistical problem of this thesis.
+
+\section{What is known}\label{sec:intro-literature}
+
+\subsection{Options on backward-looking compounded rates}
+
+The pricing of options on compounded overnight rates is settled at the level this thesis needs. \citet{lyashenko2019,lyashenko2020} construct the forward market model for backward-looking rates and identify the decay of the forward rate's volatility over the accrual window; \citet{willems2020} prices the caplet in a model whose rate diffusion decays while its vol-of-vol does not, and gives closed-form effective parameters; \citet{piterbarg2020} treats the same object from the term-rate side. Expansions and approximations for the resulting smile are given by \citet{turfus2023} and \citet{brace2024}. Chapter~\ref{ch:prelim} proves the two statements this thesis uses and records that the linear decay and the resulting clock $T+\Delta/3$ are assumptions inherited from a market convention \citep[\S8.3.2, eqs.~(15)--(16), p.~29]{sarb2024conv}, not theorems.
+
+What this literature does not ask is what the predecessor smile tells one about the successor smile when the successor does not quote. Its models take the successor rate's parameters as calibration targets. The transport of a smile through a benchmark fallback, and the identifiability of the target given only the predecessor and the fixed spread, is not treated in it.
+
+\subsection{Distribution-free prediction under dependence}
+
+Conformal prediction gives finite-sample, distribution-free coverage under exchangeability \citep{vovk2005}, with the calibration-conditional refinement of \citet[Prop.~2b, p.~479]{vovk2012} and its operational use as a small-sample level in \citet[eq.~(4), p.~2]{zwart2025}. Three routes extend it to dependent data. \citet{barber2023} pay a total-variation penalty through weighted exchangeability. \citet{oliveira2024} prove marginal validity for $\beta$-mixing data with blocking inside the proof and an unblocked predictor. \citet[Cor.~2]{barber2026} sharpen the marginal statement, bounding the deficit of the unblocked split-conformal threshold with a trained score by $2\beta(\tau)+2\beta(\tau^*)$ plus a term linear in $\tau/n$, minimised over free lags, and show it tight for split conformal up to a constant \citep[Thm.~2]{barber2026}. Gapped and thinned variants are given by \citet[Prop.~5.1, Thm.~5.1]{zheng2024} for Markov chains and by \citet{allohibi2026} under geometric mixing. The mechanism by which a drift enters once the test point is decoupled from the calibration block is in print as \citet[Prop.~13]{ramos2026}. \citet[Thm.~4]{halkiewicz2026} proves a minimax lower bound on the two-sided marginal coverage error over a class of drifting locally stationary processes and optimises a rolling window, with hardness produced by drift rather than by dependence.
+
+Two distinctions in that body of work are used throughout this thesis. The first is between marginal and calibration-conditional coverage: a calibration-conditional guarantee ``targets a stronger notion of coverage, ensuring concentration conditional on the calibration data'' and is attained at a slower rate than a marginal one \citep{gibbs2025}, which is why the conditional form of the certificate carries a term in the number of blocks while the marginal form does not. The second is between a fixed policy certified once and a predictor that adapts online: adaptive conformal inference guarantees a long-run error frequency, with per-time concentration available only under a further environment assumption \citep[Prop.~4.1]{gibbs2021}. A converted book is certified under a policy fixed in advance, so the online route answers a different question.
+
+Three things this literature has not done are the openings this thesis works in. It has no calibration-conditional statement under dependence: \citet{barber2026} is marginal throughout. It does not ask what blocking costs relative to not blocking. And its own discussion leaves open ``whether split conformal is optimal for this class of problems'' \citep[Sec.~4]{barber2026}.
+
+\subsection{South African benchmark reform}
+
+The published South African work on the reform is institutional and linear. \citet{alfeus2024} surveys progress and readiness and prices backward- against forward-looking caplets in a two-factor Wishart model \citep[Table~2]{alfeus2024}. \citet{alfeus2026} models the three-month \gls{jibar}--\gls{zaronia} spread as a mean-reverting diffusion with jumps at scheduled policy dates, reporting a sample mean of $44.15$~bp and a standard deviation of $17.12$~bp over 4~January 2016 to 31~August 2024 \citep[Sec.~3]{alfeus2026}. Neither contains a volatility surface, a smile or an identification statement. Searches of the preprint servers and the administrator's publications on 9~September 2026 found no paper on the identifiability of successor-rate smiles, on smile transport through a benchmark fallback, or on \gls{zaronia} caps, floors or swaptions.
+
+\subsection{Price bounds and valuation adjustments}
+
+The idea that an unobservable parameter should produce an interval of prices rather than a point is old in mathematical finance, where bounds on option prices under an imperfectly known volatility process are obtained by optimising over a class of admissible models \citep{frey1999}, and it is the idea behind the prudent-valuation reserve of supervisory practice \citep{bcbs2019}. What is new in the setting of a benchmark fallback is that the source of the ambiguity is identified exactly: it is not a vague model class but two scalar correlation products of a single unobservable process, and the interval they generate is computed in closed form and shown to be attained. That is what makes the width of Chapter~\ref{ch:identifiability} a theorem rather than a sensitivity.
+
+\subsection{What is missing}
+
+The finance literature prices the successor caplet given its parameters; the statistics literature certifies a predictor given exchangeability or, under mixing, marginally. Neither answers the question a converted book poses: what is the successor's price when the successor does not quote, and what is the guarantee on a policy chosen inside whatever ambiguity remains. The two halves of this thesis answer those two questions and are joined at one point: the identification result supplies the fixed policy that the certificate requires, and the certificate says nothing about which policy was chosen.
+
+\section{Research questions}\label{sec:intro-questions}
+
+\begin{enumerate}[label=\textbf{Q\arabic*.},leftmargin=2.4\parindent]
+\item Which functionals of the successor-rate smile are identified from the observable predecessor smile, the fixed spread and the observable forward basis, and which are not?
+\item How wide is the set of successor prices consistent with the observables, in units a desk uses, and does that width add or diversify across a book?
+\item Can the hedging error of a fixed valuation-and-hedging policy on a converted book be certified in finite samples when the record is dependent and the deployment law differs from the calibration law, and what is the exact price of each departure?
+\item Is that certificate sharp, how should its one free design parameter be chosen, and what does the blocking design cost relative to not blocking?
+\item On the record lengths that this transition actually affords, is the certificate feasible at the levels at which a reserve is written?
+\end{enumerate}
+
+Q1 and Q2 are answered in Chapter~\ref{ch:identifiability}, Q3 in Chapter~\ref{ch:certification}, Q4 in Chapter~\ref{ch:sharpness}, and Q5 in Chapters~\ref{ch:usd} and~\ref{ch:zar}. The answer to Q5 is negative on both records, and it is reported as a finding.
+
+\section{Contributions}\label{sec:intro-contributions}
+
+Each contribution is stated with the result that carries it and with its status. Nothing below is called proved unless its proof is written out in the chapter named or it is a cited standard result with a locator.
+
+\subsection{Identification of the successor smile}
+
+\paragraph{C1. The contamination is two-dimensional and its identified part is explicit.} Theorem~\ref{thm:ident} of Chapter~\ref{ch:identifiability} decomposes the successor smile as an identified map of the observables --- a strike shift by the fixed spread plus the forward basis, followed by the time change to the clock $\tau^*=T+\Delta/3$ --- minus a parallel level shift proportional to $\rho_{BF}\eta$ and a skew tilt proportional to $\rho_{B\alpha}\eta\nu$, plus a remainder of second order in the basis scale $\varepsilon=\eta/(\alpha_0F_0^\beta)$. The two correlation products are not identified.
+
+\gap{Theorem~\ref{thm:ident} is a target and its route is written out in Chapter~\ref{ch:identifiability}. What is not established there: a uniform remainder bound $|\cdot|\le C(\nu,T,|u|)\varepsilon^2$ with an explicit constant over the strike grid and the admissible correlation set, jointly with the error already carried by the Hagan approximation, and uniform over the law of the stochastic volatility, since the instantaneous scale $\eta/\alpha_t$ is random; the first-order skew and curvature coefficients for a basis with a term structure of volatility, and the change of measure that would produce one; whether departures of the law of the \gls{jibar} forward from the \gls{sabr} family carry information about the correlations at the far strikes; the case of a basis with jumps, which is the only open item that could change the dimension of the deficit rather than its size; and the case $\beta\neq0$.}
+
+\paragraph{C2. The at-the-money interval is exact and both endpoints are attained.} Theorem~\ref{thm:ident-two} of Chapter~\ref{ch:identifiability} proves that the diffusion coefficient of the successor rate at the clock is identified within an interval of half-width exactly $\eta$, as an identity in $\varepsilon$ at the leading order in the vol-of-vol at which the fitted triple is defined, with the endpoints attained by the writable models $dL_t=(\alpha_t\pm\eta)\,dW_t$. The admissible correlations lie on a Schur-complement ellipse, so the identified region in the level--skew plane is an ellipse and not a rectangle: fixing the at-the-money mark does not fix the skew. The half-width of the \emph{quoted} volatility is not $\eta qc^*$ but carries a computed relative correction of order $\nu^2\tau^*$ that does not vanish as $\eta\to0$.
+
+\paragraph{C3. At South African parameters the sign of the successor skew is not identified.} In the worked example of Chapter~\ref{ch:identifiability} the identified successor at-the-money interval is $[46.18,83.04]$ basis points, a quoted half-width of $18.43$ basis points against an at-the-money level of about $65$; the identified skew interval is $[-9.45,+1.05]$ basis points per hundred basis points of strike and contains zero. This is the sharpest statement the identification result makes, and it is the one a practitioner should carry away.
+
+\datanote{The basis volatility is a bracket, not a number. Every figure quoted in C3 is proportional to $\eta$, and $\eta$ is not pinned by any source obtained for this thesis. The only published dynamic study of the South African spread reports a mean-reversion estimate $\hat\kappa=0.028$ whose time unit the paper itself leaves ambiguous, giving a half-life of about twenty-five years if the step is a year and about twenty-five days if it is a day \citep[Sec.~5.1, Table~4]{alfeus2026}, and a sample standard deviation of $17.12$~bp \citep[Sec.~3]{alfeus2026}. Read as an Ornstein--Uhlenbeck process, those two readings give $\eta$ of about $4$~bp and about $64$~bp respectively, so the dimensionless basis scale $\varepsilon=\eta/\alpha_0$ lies anywhere between about $0.07$ and about $1.07$ at an at-the-money level of $60$~bp. The value $\eta=20$~bp used in the worked example, and the resulting $\varepsilon=1/3$, are an illustrative round choice inside that bracket and are declared as such wherever they appear. The ambiguity is itself an identifiability point: the quantity that sets the width of the reserve is the one the published record does not determine to within an order of magnitude.}
+
+\paragraph{C4. The identified intervals add across a book.} Corollary~\ref{cor:ident-book} of Chapter~\ref{ch:identifiability} shows that if the basis parameters are shared across expiries, one unidentified coordinate moves every mark in the same direction, so a long-only book of $m$ expiries carries $m$ times the single-caplet reserve and not $\sqrt m$ times. The reserve is the modulus of the net vega-weighted sum, so a book vega-neutral in the relevant weights is immunised and a long-only book is not. A root-sum-square would presuppose a probability distribution on the identified set, and an identified set is not a distribution.
+
+\subsection{Certification of the hedging error}
+
+\paragraph{C5. A finite-sample certificate under mixing and drift.} Theorem~\ref{thm:cov} of Chapter~\ref{ch:certification} proves that the split-conformal threshold computed on gap-separated block scores of a fixed policy covers the next gap-separated block with probability at least $1-\alpha-\dK(P,Q)-(n+1)\beta(b)$ marginally, and, on an event of stated probability, at least $b_{n,k}(\delta)-\dK(P,Q)-\beta(b)/\delta'$ conditionally on the data used to compute the threshold. The proof is written out in full from three tools proved in Chapter~\ref{ch:prelim}. Proposition~\ref{prop:twosided} brackets the same coverage from above and so defines the two-sided calibration-conditional coverage error that Chapter~\ref{ch:sharpness} optimises.
+
+The marginal part is a blocked variant of \citet{oliveira2024} and, for marginal coverage alone, is dominated by \citet[Cor.~2]{barber2026}, who need no blocking and no gaps; it is stated because its proof is the first half of the proof of the conditional part, and because \citet{barber2026} give no calibration-conditional statement. The drift mechanism is credited to \citet[Prop.~13]{ramos2026} and the Beta-quantile practice to \citet[Prop.~2b, p.~479]{vovk2012} and \citet[eq.~(4), p.~2]{zwart2025}. What Chapter~\ref{ch:certification} adds is confined to the conditional statement with its Markov term, the fixed-policy accounting, the strengthened coupling, and the two items below.
+
+\gap{Theorem~\ref{thm:cov} is proved as stated, but three of its inputs are assumptions and not conclusions, and none is discharged anywhere in this thesis. The mixing class $\Bclass{r}(C)$ that bounds $\beta(b)$ is assumed, and Proposition~\ref{prop:noest} shows it cannot be estimated distribution-free. The density bound $L$ used by the drift plug-in is an assumption about the unobserved deployment law. The deployment side of the plug-in drift estimate is not controlled under dependence: Corollary~\ref{cor:plugin} certifies the calibration side only.}
+
+\paragraph{C6. The drift is paid in Kolmogorov distance, at a square root of the Wasserstein distance.} Proposition~\ref{prop:w1} of Chapter~\ref{ch:certification} gives $\dK\le\sqrt{2L\Wone}$; the one-sided inequality is in print \citep[Prop.~1, p.~4]{xu2025}, attributed there to \citet{ross2011}, and the chapter adds the two-sided refinement, the $\Winf$ form, and a counterexample showing the square root intrinsic and its constant sharp. The consequence is that a plug-in drift penalty converges at $n^{-1/4}$, and that rate is a property of the problem.
+
+\paragraph{C7. The mixing coefficient is not estimable distribution-free.} Proposition~\ref{prop:noest} of Chapter~\ref{ch:certification} exhibits a stationary process whose windows of any fixed length are exactly independent while its $\beta$-coefficient at that lag is bounded below, so no estimator of $\beta(b)$ is consistent over all stationary processes with a given marginal. The certificate is therefore conditional on an assumed class, and the class is an input that a reader can dispute in one multiplication.
+
+\subsection{Sharpness and the design of the blocking}
+
+\paragraph{C8. The drift constant is sharp.} Theorem~\ref{thm:sharp} of Chapter~\ref{ch:sharpness} proves that the coefficient $1$ on $\dK(P,Q)$ cannot be reduced, by moving the bottom-$\varepsilon$ mass of the calibration law to a far point. The nearest published bound in a value-at-risk setting carries a coefficient $2$ on a total-variation drift term, with the factor shown not removable for that argument \citep[p.~3]{schmitt2026}; the coupling route here charges Kolmogorov distance with coefficient $1$ and that constant is attained.
+
+\paragraph{C9. The block length that minimises the certified shortfall, with its constant.} Theorem~\ref{thm:block-b} of Chapter~\ref{ch:sharpness} proves that the expected calibration-conditional shortfall is bounded by $1/(2\sqrt{n+2})+(n+1)\beta(b)$ and, over $\Bclass{r}(C)$, by $\sqrt{b/N}+CNb^{-(r+1)}$, whose normalised form is minimised at $b^*=(2(r+1))^{2/(2r+3)}N^{3/(2r+3)}$ and not at the balance point of its two terms. This is a minimiser of an upper bound. No lower bound on the blocked route's shortfall is proved anywhere in the thesis, so $b^*$ is optimal for the certificate and not for the problem, and the word is qualified wherever it appears.
+
+\paragraph{C10. Blocking buys the exact Beta law, not rate.} Theorem~\ref{thm:block-rate} of Chapter~\ref{ch:sharpness} proves that the ordinary sample quantile of the unblocked record has two-sided calibration-conditional coverage error of order $(N\delta)^{-1/2}$ for every $r>1$, and that no procedure beats $N^{-1/2}$ at fixed confidence; the blocked rate $N^{-r/(2r+3)}$ is slower by the factor $\sqrt{b^*}$. It is never called minimax. What blocking buys is the exact $\Beta(k,n+1-k)$ law of the calibration-conditional coverage, a drift term charged on a frozen half-line with the sharp constant of C8, and a certificate whose only dependence on the assumed class is one term. Compared calibration-side to calibration-side, the blocked bound is the smaller only below about $2.2\times10^3$ periods at $r=2$ on the printed accounting, and below about $6.9\times10^2$ under a refined variance proxy; the ordering at a bank's record length is therefore decided by which inequality is used on the unblocked side and not by the theory.
+
+\paragraph{C11. A mixing-driven lower bound at high confidence.} Theorem~\ref{thm:block-lower} of Chapter~\ref{ch:sharpness} states that over $\Bclass{r}(C)$ and for confidence $\delta$ in the range $[N^{-r},\kappa_rN^{-(r-1)/2}]$ no threshold procedure can achieve two-sided calibration-conditional coverage error smaller than $c_r(N^r\delta)^{-1/(r+1)}$, with a regime-renewal construction whose long runs are rare and damaging. This answers, in its calibration-conditional form, the question \citet[Sec.~4]{barber2026} leave open. It is positioned against \citet[Thm.~4]{halkiewicz2026}, whose lower bound over a class of drifting processes is produced by drift and not by dependence: neither result implies the other, and no claim is made anywhere in this thesis to the first optimal-design result for conformal prediction under dependence.
+
+\gap{Theorem~\ref{thm:block-lower} is a target. Part (a), the statement for the unblocked sample quantile alone, has a route. Part (b), the extension to every threshold procedure, is the doctoral claim and is not proved: the reduction from the displacement construction to a minimax statement over all procedures is not carried out. The matching upper bound is asserted only through the shape of a Fuk--Nagaev inequality for bounded strongly mixing sequences \citep[Ch.~6]{rio2017}, applied with no verified constant, and the $\delta$-dependence of its Gaussian-type term is trapped between $\sqrt{\log(1/\delta)}$ and $\delta^{-1/r}$ and not determined. Theorem~\ref{thm:block-drift}, on the certifiable deficit when the drift is partially observed, is a target whose five missing items are listed in Chapter~\ref{ch:sharpness}. Proposition~\ref{prop:block-w1}, the dependent empirical Wasserstein rate, is a specialisation of \citet{dedecker2017} and is not claimed as new.}
+
+\subsection{Two negative feasibility findings}
+
+The last two contributions are negative, they are established by arithmetic alone, and they are the honest limits of the method on real transition data.
+
+\paragraph{C12. On a calendar year of daily scores the record cannot carry the block length the bound prefers, and the shortest block length is vacuous.} With $N\approx250$ and $\alpha=0.1$ the feasibility ceiling is $b\le13$, at which $n=9$, $k=9$ and $k/(n+1)=0.900$ exactly; at $b=14$ the threshold is infinite. Against that, $b^*$ of Theorem~\ref{thm:block-b} is about $17.8$ at $r=2$, and keeping the discarded constants moves it further up. At the other end of the admissible range, $b=1$ gives $n=125$ and a coupling term $(n+1)Cb^{-r}=126$ at $C=1$, so the certificate is vacuous at the shortest block length before any drift is charged. The computation is Chapter~\ref{ch:usd}'s and is not repeated here.
+
+\paragraph{C13. The converted South African book admits no feasible block length at all.} Proposition~\ref{prop:zar-feasible} of Chapter~\ref{ch:zar} shows that a finite threshold at level $\alpha$ requires $n\ge\lceil(1-\alpha)/\alpha\rceil$ blocks, hence $b\le N/18$ at $\alpha=0.1$. On a monthly record of about twenty-four scores only $b=1$ survives that ceiling, and at $b=1$ the class $\Bclass{r}$ supplies no decay whatever $r$ may be, so the coupling term is at least $13C$: the certified level is negative by an order of magnitude. Weakening the level to $\alpha=0.2$ purchases a non-vacuous certificate whose stated level is about $0.67$, which is not a level at which a reserve is written. The chapter reports this as its principal finding, identifies the binding hypothesis as the interaction of the blocking design with the record length rather than the theorem or the market, and computes exactly the record that would reverse it: about $270$ \emph{daily} periods, which is thirteen months after cessation.
+
+\datanote{Both findings are arithmetic from $N$, $b$, $\alpha$ and an assumed mixing class, and use no market data. They are computed once, in Chapter~\ref{ch:usd} and Chapter~\ref{ch:zar} respectively, under the block layout $n=\lfloor N/(2b)\rfloor$ and $k=\lceil(1-\alpha)(n+1)\rceil$ fixed in Chapter~\ref{ch:prelim}, and are reproduced nowhere else in the thesis.}
+
+\subsection{Status of the principal results}
+
+\begin{table}[htbp]\centering\small
+\caption{Status of the principal results. ``Proved'' means the proof is written out in the chapter named or in Appendix~\ref{app:proofs}. ``Target'' means a statement with a written route and a box listing exactly what is not established.}\label{tab:intro-status}
+\begin{tabular}{@{}llll@{}}
+\toprule
+Result & Object & Chapter & Status \\
+\midrule
+Thm.~\ref{thm:ident} & Identified and unidentified components & \ref{ch:identifiability} & target, route written \\
+Thm.~\ref{thm:ident-two} & Exact interval, endpoints attained & \ref{ch:identifiability} & proved given the map \\
+Cor.~\ref{cor:ident-book} & Intervals add across a book & \ref{ch:identifiability} & proved \\
+Thm.~\ref{thm:cov} & Coverage under mixing and drift & \ref{ch:certification} & proved \\
+Prop.~\ref{prop:twosided} & Two-sided companion & \ref{ch:certification} & proved \\
+Prop.~\ref{prop:w1} & Drift bound $\sqrt{2L\Wone}$ & \ref{ch:certification} & one-sided in print; refinement proved \\
+Prop.~\ref{prop:noest} & Non-estimability of $\beta(b)$ & \ref{ch:certification} & proved \\
+Thm.~\ref{thm:sharp} & Sharpness of the drift constant & \ref{ch:sharpness} & proved \\
+Thm.~\ref{thm:block-b} & Minimiser of the certified shortfall & \ref{ch:sharpness} & proved \\
+Thm.~\ref{thm:block-rate} & The blocked rate is not minimax & \ref{ch:sharpness} & proved \\
+Thm.~\ref{thm:block-lower} & Mixing-driven lower bound & \ref{ch:sharpness} & target, part (b) route only \\
+Thm.~\ref{thm:block-drift} & Partially observed drift & \ref{ch:sharpness} & target, route only \\
+Prop.~\ref{prop:block-w1} & Dependent empirical $\Wone$ rate & \ref{ch:sharpness} & specialised, not new \\
+Prop.~\ref{prop:zar-feasible} & Feasibility on a short record & \ref{ch:zar} & proved \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\figplan{A single panel. Horizontal axis calendar time from January 2016 to December 2027. Left vertical axis in basis points. Series: the three-month \gls{jibar} minus compounded \gls{zaronia} spread, daily, with the pre-publication proxy period, the observation period and the official period shaded distinctly per the regimes named in this chapter; a horizontal rule at the fixed fallback spread $s=16.19$~bp, drawn solid from 3~December 2025 onward and dashed before it; vertical rules at 3~December 2025, 31~December 2026 and the first business day of 2027. Annotations: the five-year median window that produced $s$, and the two workstream projections of $19$~bp and $18$~bp.}{The live basis and the frozen spread. The figure makes the object of Chapter~\ref{ch:identifiability} visible: after cessation the contractual spread is a constant while the economic basis continues to move, and the difference between them is the quantity $B_t$ whose volatility and correlations are not identified from option prices. It also displays the distance between the median that fixed $s$ and the level realised at fixing. The data are the \gls{zaronia} and \gls{jibar} fixings registered in Appendix~\ref{app:data}; no part of the figure is model output.\label{fig:intro-basis}}
+
+\section{What the thesis does not claim}\label{sec:intro-notclaimed}
+
+Five disclaimers are stated here once and are repeated at the point of use.
+
+The identified interval is not a confidence interval. It has no coverage probability and no distribution on it; it is the set of successor prices that the observables cannot separate. A bank that wants a probability must supply a prior, and this thesis supplies none.
+
+The certificate says nothing about whether the policy is right. It requires only that the policy be fixed before the calibration record is scored. Certifying a policy that the thesis also designed would establish much less, which is why the empirical chapters certify the market convention.
+
+No comparison theorem against block bootstraps or breach-count tests is claimed. Bootstrap quantile coverage under mixing requires Edgeworth expansions with constants that are not available here, so Chapter~\ref{ch:usd}'s comparison with the moving-block and stationary bootstraps \citep[Sect.~2.3, eq.~(2.7)]{kunsch1989}, \citep{politis1994} and with regulatory backtests is empirical and is labelled as such.
+
+The blocked construction is not block-permutation conformal prediction. That method redefines the unit of exchangeability rather than the score and has been reported to undercover even in stationary simulations \citep[p.~15]{stocker2025}; the negative finding does not transfer.
+
+No claim of priority is made for the optimal-design template under dependence. \citet{halkiewicz2026} optimises a calibration window and proves a minimax lower bound for conformal prediction over a class of drifting processes; the contribution here is a different source of hardness, a $\beta$-mixing class, a calibration-conditional object, and a blocking design.
+
+\section{Data, methods and reproducibility}\label{sec:intro-data}
+
+The mathematics is developed first and the empirical work is designed against it. The statistical chapters are self-contained and their worked example is a simulated Gaussian first-order autoregression, so the central results of Chapters~\ref{ch:certification} and~\ref{ch:sharpness} can be reproduced with no market data at all.
+
+The empirical spine is the dollar transition, because it is the only one on which the identification result can be tested against an observed successor surface. The South African chapter is a coda, because the converted book will not exist until 2027 and the record it generates is short by construction. Neither chapter can be written on public data alone: there is no public dollar predecessor option surface and no public fixing history, and successor volatilities in the rand market are dealer-held. Appendix~\ref{app:data} is the single home of every dataset, its coverage, quality and licence, and of the code and the protocol that regenerates every printed number; Chapters~\ref{ch:usd} and~\ref{ch:zar} fix their own windows and acceptance criteria in advance of the data and state a public-data fallback.
+
+\section{Map of the thesis}\label{sec:intro-map}
+
+Chapter~\ref{ch:prelim} assembles, with complete proofs, the standard results the rest of the thesis uses: forward measures and the change of num\'eraire, the compounded rate and its forward, the basis, the volatility decay and the clock, \gls{sabr} with Hagan's formulas and the time-changed caplet, split conformal prediction with its exact and Beta-law coverage, $\alpha$- and $\beta$-mixing with Berbee's coupling and the blocking construction, and the distances between one-dimensional laws. Nothing in it is new. Appendix~\ref{app:proofs} carries nine of its longer standard proofs.
+
+Chapter~\ref{ch:certification} defines the block hedging-error score and proves the certificate, its two-sided companion, the drift bound and the non-estimability result, and gives the algorithm and a worked example. Chapter~\ref{ch:sharpness} proves the sharpness of the drift constant, defines the calibration-conditional coverage error, computes the block length that minimises the certified shortfall, proves that the blocked rate is not minimax, and states the mixing-driven lower bound with its construction and its gap.
+
+Chapter~\ref{ch:identifiability} answers Q1 and Q2: the contamination map, the decomposition theorem, the two observationally equivalent models, the parameter count, the book-level corollary and a worked example at illustrative South African parameters. Appendix~\ref{app:tenor} treats the consistency of the construction across nested tenors and shows that a violation is model inconsistency and not static arbitrage.
+
+Chapter~\ref{ch:usd} designs and pre-registers the test of both results on the dollar transition, with every acceptance criterion and every falsifying outcome fixed before the data are pulled. Chapter~\ref{ch:zar} applies the results to the converted South African book: it computes the feasibility verdict first, reports the identified valuation and the width of the consistent set in the additive form, and declares the uncertified residual. Chapter~\ref{ch:conclusions} states the limitations before the contributions and lists what remains open.
+
+The order of reading is the order of writing. The statistical chapters do not depend on the finance chapters; the finance chapters supply the fixed policy that the certificate requires; and the two empirical chapters are where the thesis says, in arithmetic that uses no data, what its own method cannot yet deliver.
