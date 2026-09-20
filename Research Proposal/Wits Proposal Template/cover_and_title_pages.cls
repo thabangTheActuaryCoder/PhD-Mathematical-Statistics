@@ -53,6 +53,8 @@
 
 % --- title page fields ---
 \newcommand{\fullnames}{Full names and surname of student}
+% Overridable: a concept note is not submitted in fulfilment of a degree.
+\newcommand{\proposalstatement}{Proposal submitted in fulfilment of the requirements in respect of the degree}
 \newcommand{\degree}{PHILOSOPHIAE DOCTOR}
 \newcommand{\proposaltype}{(Mathematical Statistics)}
 \newcommand{\facultyname}{Faculty of Science}
@@ -143,7 +145,7 @@
 			\fullnames \\
 			{\fontsize{12.5pt}{18.75pt}\selectfont\null}
 
-			Proposal submitted in fulfilment of the requirements in respect of the degree \\
+			\proposalstatement \\
 			{\fontsize{12.5pt}{19.5pt}\selectfont\null}
 
 			\textbf{\degree} \\

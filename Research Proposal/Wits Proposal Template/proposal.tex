@@ -279,8 +279,11 @@
 
 	% ============================================================
 	\newpage
+	% Single source of truth: the repository bibliography at the project root,
+	% not a copy inside this folder. \nocite{*} lists every entry, cited or not.
+	\nocite{*}
 	\bibliographystyle{apacite}
-	\bibliography{library}
+	\bibliography{../../References}
 	\addcontentsline{toc}{section}{References}
 
 \end{document}

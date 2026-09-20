@@ -20,11 +20,12 @@ tectonic -X compile proposal.tex     # or: xelatex proposal.tex
 
 | File | Purpose |
 |---|---|
-| `proposal.tex` | The proposal itself: section skeleton with page budgets, pre-filled candidate details |
+| `proposal.tex` | The full proposal: eighteen-section skeleton with page budgets, pre-filled candidate details |
+| `concept_note.tex` | The concept note / mini proposal, same cover pages and typography |
 | `cover_and_title_pages.cls` | Cover page and formal title page |
 | `proposal_template_style.sty` | Fonts, spacing, caption and list formatting |
 | `template_images/` | Wits logo assets |
-| `library.bib` | Bibliography (currently the template's sample; swap for `../../References.bib`) |
+| — | No local bibliography: both documents cite `../../References.bib` at the project root |
 
 ## What was kept from the source template
 
