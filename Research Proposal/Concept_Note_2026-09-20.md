@@ -1,0 +1,103 @@
+---
+title: "Pricing and Hedging through Benchmark Transitions in the Absence of Liquid Option Markets"
+subtitle: "Concept note for a proposed PhD in Mathematical Statistics"
+author: "Thabang Bongani Junior Baloyi"
+date: "University of the Witwatersrand, Johannesburg · 20 September 2026"
+geometry: a4paper, margin=2.2cm
+fontsize: 11pt
+header-includes: |
+  \usepackage{enumitem}
+  \setlist{nosep, topsep=2pt, itemsep=1pt, parsep=0pt}
+  \setlength{\parskip}{3pt}
+  \usepackage{titlesec}
+  \titlespacing*{\section}{0pt}{7pt}{3pt}
+---
+
+**Status.** Concept note for supervisor discussion; academic home and supervision to be confirmed. The results, novelty claims and feasibility described here are proposed, not established. A supplied AI-assisted draft manuscript informed the research questions; it is not evidence that its results have been proved.
+
+# The research problem
+
+When an interest-rate benchmark is replaced, the contractual cashflows of existing derivatives change: a forward-looking term rate fixed at the start of an accrual period gives way to a rate compounded over that period from overnight fixings. This alters when the underlying is observed and how uncertainty accumulates, for contracts written before the replacement was contemplated.
+
+The difficulty this project addresses is informational. A dealer may observe a reliable market in instruments referencing the legacy benchmark — curves, swaps, basis instruments and legacy options — while having little or no direct evidence about options referencing the successor rate. Those observations constrain some features of the transition; they need not determine the full distribution an option payoff depends on.
+
+This matters because an option is sensitive to outcomes beyond an average rate. Two models can agree on forward values while assigning different probabilities to large rate moves, and a caplet distinguishes them. Importing a volatility parameter from the legacy market therefore produces a number without demonstrating that it follows uniquely from what was observed: a fitted model can return a single successor price even when the observations are compatible with several.
+
+A second, separate question concerns trading. Valuation uncertainty is the range of model prices compatible with the observations; trading risk is the realised profit or loss from holding and hedging the liability. A closely calibrated model can still produce large losses when trading constraints or changing dynamics matter, and small average hedging error does not imply a valid statement about the upper tail.
+
+The South African JIBAR–ZARONIA transition supplies the application, with South African Reserve Bank conventions determining the contractual implementation. The application will be dated precisely: any statement about illiquidity will refer to a particular instrument, tenor and observation period, supported by a data audit rather than assumed for the market as a whole.
+
+# Central question and research questions
+
+> Under what assumptions can legacy market information determine successor-rate option values, and what statistically defensible bounds can be placed on the losses from hedging those options during a benchmark transition?
+
+- **RQ1.** Which successor valuation functionals are constant across the models compatible with legacy option quotes and curve or basis observations?
+- **RQ2.** Which additional observations or restrictions restore identification, and how stable is that conclusion to quote noise?
+- **RQ3.** Under what dependence and distribution-shift assumptions can a calibrated loss threshold retain a finite-sample guarantee?
+- **RQ4.** Are the resulting price ranges and risk bounds informative for a realistic hedge, once costs and data limitations are included?
+
+# Aim and objectives
+
+**Aim.** To develop and evaluate a framework for identifying successor-rate option valuations and quantifying residual hedging risk under limited option-market information.
+
+1. Specify a coherent transition model, contractual conventions and observable market information, keeping risk-neutral pricing assumptions separate from historical estimation.
+2. Prove identification or non-identification results for a restricted model class, and determine the resulting valuation ranges or approximation errors.
+3. Construct implementable hedges from available instruments and investigate finite-sample loss guarantees under explicit assumptions.
+4. Evaluate pricing uncertainty, hedge performance and certificate informativeness in simulation and in an appropriately limited empirical application.
+
+# Positioning and the provisional gap
+
+Brigo and Mercurio (2006) supply the pricing architecture; Lyashenko and Mercurio (2019) develop a forward-market treatment of backward-looking rates; Willems (2020) studies SABR smiles for risk-free-rate caplets. These inform the modelling framework. They do not by themselves establish that successor smiles are identified from a chosen set of legacy observations.
+
+Local work provides method and context: Konaite (2024) on the forward market model, Menziwa (2023) on pricing, calibration and hedging under the LIBOR model, Robbertze (2021) on neural-network volatility modelling and Stangroom (2023) on deep hedging. Mavuso (2014) studies mean–variance hedging where a liquid asset is traded dynamically and an illiquid asset is held statically, which is a natural way to make trading permissions part of the mathematics. Feng et al. (2018) separate calibration from recalibration model risk. Alfeus (2026) models JIBAR–ZARONIA spread dynamics around scheduled events; that is historical spread modelling, and is distinct from identifying a risk-neutral option valuation.
+
+The statistical component builds on conformal prediction rather than proposing a new general coverage principle. Vovk (2012) addresses conditional validity, Barber et al. (2023) treat departures from exchangeability, Oliveira et al. (2024) analyse split conformal prediction for non-exchangeable data, and Barber and Pananjady (2026) and Ramos et al. (2026) are closest to the dependence and calibration-conditional questions at issue.
+
+The provisional gap is the connection between a rigorously characterised set of transition models and a finite-sample analysis of the hedging losses those models imply, under stated dependence and distributional change. It is provisional by design: the first phase of the work is a structured comparison — observation sets, model classes, trading constraints, guarantee types, proof assumptions — written in common notation. If the candidate results reduce to existing theorems, the contribution will be narrowed or reformulated rather than restated in weaker language until it becomes unfalsifiable.
+
+# Proposed approach
+
+**Model and observations.** The work begins with a low-dimensional Markov model containing an overnight-rate factor and a spread factor, with a stated correlation, under an explicit pricing measure. A two-factor Gaussian diffusion is the initial analytical laboratory: it admits explicit covariance calculations and tractable simulation, and its limitations, including the possibility of negative rates, will be recorded rather than concealed. The observation map from model to traded instrument prices will be specified so that it prices actual cashflows before any identification claim is made.
+
+**Identification.** Let $O$ denote the observations available at a valuation date and $\Lambda(\theta)$ the model-implied observation vector. The compatible set is $\Theta(O) = \{\theta \in \Theta : \Lambda(\theta) \text{ is compatible with } O\}$, with compatibility defined by quote tolerances, preferably observed bid–ask ranges. A target valuation is identified if it is constant on $\Theta(O)$; otherwise the attainable range runs between $V_{-} = \inf_{\theta \in \Theta(O)} V_{\theta}$ and $V_{+} = \sup_{\theta \in \Theta(O)} V_{\theta}$. These are identification ranges, not confidence intervals. The first attempts will be constructive non-identification examples: two admissible models sharing the full observation map but disagreeing on the target. An identification proof, conversely, must establish constancy across the entire compatible set. Parameter counting and a good numerical fit are not sufficient.
+
+A one-period calculation shows the mechanism. Let a successor shock $X = \sigma Z_1$ and a basis shock $B = \eta(\rho Z_1 + \sqrt{1-\rho^2} Z_2)$ combine into a legacy shock $Y = X + B$. If an idealised legacy surface identifies $Y$ as standard normal, that is one equation in three covariance parameters. With $\rho = 0$, both $\sigma = \eta = 1/\sqrt{2}$ and $\sigma = 1/2,\ \eta = \sqrt{3}/2$ reproduce it exactly, so every payoff depending only on $Y$ is priced identically. A zero-strike call on $X$ is worth $\sigma/\sqrt{2\pi}$, approximately $0.2821$ in the first case and $0.1995$ in the second. Agreement on the entire legacy distribution has not determined the successor payoff. This is an illustration of the mechanism, not a claimed result; the thesis must establish whether the required variation survives once curves, basis instruments, multiple maturities and any available options enter the observation map.
+
+**Hedging.** Discounted terminal wealth comprises initial capital, cumulative trading gains and transaction costs; signed hedging loss is the discounted liability less that wealth. A sensitivity hedge and a mean–variance hedge provide the initial comparisons, with admissibility, financing, rebalancing and costs fixed before evaluation. Hedges will be compared across compatible pricing models on common evaluation scenarios. A learned policy is an optional later comparison, included only if it answers a question a simpler strategy cannot.
+
+**Statistical guarantees.** The statistical object is an upper threshold for a future hedging loss, not a claim that the price is correct. The baseline is split conformal calibration for a hedge frozen before calibration, whose order-statistic threshold has an exact finite-sample marginal guarantee under exchangeability, with a Beta law describing realised calibration-conditional coverage in the continuous independent case. The research task is the extension: separating scores by a declared gap and using coupling under a stated mixing condition to control dependence, and a distance between calibration and test loss distributions to control shift, giving a target of the schematic form
+
+$$\Pr\{L_{\mathrm{new}} \leq q\} \geq 1 - \alpha - \varepsilon_{\mathrm{dep}} - \varepsilon_{\mathrm{shift}} - \varepsilon_{\mathrm{est}}.$$
+
+This display is a research target, not a proved theorem. Neither unrestricted shift nor unrestricted dependence can be bounded from a short historical sample without assumptions, so oracle simulation, assumption-based sensitivity analysis and estimated bounds will be reported separately. A bound that is vacuous will be reported as an inability to certify under those assumptions.
+
+# Validation, data and feasibility
+
+Three settings will be used. **Controlled simulation** generates data from specified transition models with known targets, varying basis volatility, dependence, maturity, strike, observation noise, costs and regime changes, and including deliberately misspecified models. **Retrospective validation**, if licensed data can be obtained, withholds successor option quotes while fitting to permitted legacy and curve information and reveals them only for evaluation; a historical LIBOR–SOFR dataset is a candidate, subject to availability and comparability. **The South African application** proceeds on the instruments and dates the data audit supports; where successor quotes are absent, the study reports compatible valuation ranges, scenario sensitivity and observable hedge outcomes, because unobserved prices cannot serve as ground truth. Training, method selection, calibration and final evaluation will be separated chronologically, with gaps where the dependence argument requires them, so that withheld data cannot enter calibration indirectly through model selection.
+
+Data access is the central feasibility risk; if licensed data cannot be obtained, the empirical design reduces to what the available observations support, with simulation carrying the controlled validation. Novelty is a separate risk: if the statistical result follows directly from existing conformal theory it will be presented as an application, and the original contribution must then lie elsewhere. An indicative full-time schedule allocates months 1–6 to foundations, the novelty review and the data audit; 7–14 to the transition model and identification; 15–22 to hedging and the statistical analysis; 23–29 to simulation and empirical evaluation; and 30–36 to synthesis and examination preparation. Month 6 is the first decision point: confirm data access, the restricted model, and at least one candidate original result before expanding implementation.
+
+# Anticipated contribution
+
+The proposed contribution has two linked parts: a rigorous identification analysis for a restricted benchmark-transition model and observation set, and a justified analysis of loss thresholds for implementable hedges under specified dependence and shift. Both remain conditional on the literature audit and on successful proofs. A South African implementation is an application contribution; geographic novelty alone will not establish the mathematical or statistical originality the degree requires. A precise negative result — a non-identification theorem, or a demonstration that no informative certificate survives realistic sample sizes — would be a legitimate outcome, provided its assumptions and implications are exact.
+
+# Key references
+
+A full bibliography accompanies the extended proposal. The sources below are those the concept note relies on directly.
+
+- Alfeus, M. (2026). Event-aware jump-diffusion for the JIBAR–ZARONIA spread. SARB Working Paper 26/06.
+- Barber, R. F., Candès, E. J., Ramdas, A., and Tibshirani, R. J. (2023). Conformal prediction beyond exchangeability. *Annals of Statistics*, 51(2), 816–845.
+- Barber, R. F., and Pananjady, A. (2026). Predictive inference for time series: why is split conformal effective despite temporal dependence? *Proceedings of ALT*, 313.
+- Brigo, D., and Mercurio, F. (2006). *Interest Rate Models — Theory and Practice*, 2nd ed. Springer.
+- Feng, Y., Rudd, R., Baker, C., Mashalaba, Q., Mavuso, M., and Schlögl, E. (2018). Quantifying the model risk inherent in calibration and recalibration of option pricing models. arXiv:1810.09112.
+- Konaite, T. T. (2024). *Pricing Interest Rate Derivatives Using the Forward Market Model*. MSc dissertation, Wits.
+- Lyashenko, A., and Mercurio, F. (2019). Looking forward to backward-looking rates: a modeling framework for term rates replacing LIBOR.
+- Mavuso, M. M. (2014). *Mean–Variance Hedging in an Illiquid Market*. MPhil dissertation, UCT.
+- Menziwa, S. (2023). *Pricing, Calibration and Hedging under the LIBOR Model*. MPhil dissertation, UCT.
+- Oliveira, R. I., Orenstein, P., Ramos, T., and Romano, J. V. (2024). Split conformal prediction and non-exchangeable data. *JMLR*, 25(225).
+- Ramos, T. R., Graziadei, H., and Cabezas, L. M. C. (2026). Conformal prediction via transported Beta laws. arXiv:2605.19024.
+- Robbertze, Y. (2021). *Neural Network LIBOR Market Model for Pricing and Hedging Interest Rate Derivatives*. Master's thesis, UCT.
+- South African Reserve Bank (2025). *Market conventions for ZARONIA-based non-linear derivatives*. MPG.
+- Stangroom, J. (2023). *Deep Hedging in Incomplete Markets*. MSc dissertation, UCT.
+- Vovk, V. (2012). Conditional validity of inductive conformal predictors. *PMLR*, 25, 475–490.
+- Willems, S. (2020). SABR smiles for RFR caplets. arXiv:2004.04501.
