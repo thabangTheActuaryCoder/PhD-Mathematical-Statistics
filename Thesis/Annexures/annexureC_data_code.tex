@@ -1,3 +1,9 @@
+%
+% subfiles wrapper: lets this file compile alone (fast preview, no other
+% chapters) while main.tex still \subfile{}s it unchanged for the full build.
+\documentclass[../../main.tex]{subfiles}
+\begin{document}
+
 \chapter{Data, Code and Reproducibility}\label{appC-data-code}\label{app:data}
 
 \section{Introduction}\label{sec:appC-intro}
@@ -66,3 +72,4 @@ the block-length sweep figure of Chapter~\ref{ch:sharpness} series & \texttt{cer
 \subsection{Terminal session checklist}\label{subsec:appC-checklist}
 
 The identifiers and quantities marked to be confirmed in Sections~\ref{sec:appC-usd} and~\ref{sec:appC-zar} are closed in one terminal session. Its required returns are listed here so that the count can be driven to zero and the registers then cited as verified: the first calendar month in which the volatility cube marks the SOFR cap surface as quoted rather than derived; the cap and swaption volatility ticker roots for 3M~LIBOR and for compounded SOFR, with their strike and expiry encoding; the SOFR OIS strip identifiers and the curve number carrying them; the history depth and tenor points of the LIBOR--SOFR basis-swap curve; the 1W and 2M USD fallback spread values; the front SOFR futures identifier; the LIBOR fixing identifier and its history depth; and, for South Africa, the curve identifiers for the live ZARONIA OIS and JIBAR swap curves, the tenor columns of the exchange's daily files, and the earliest date the Reserve Bank selector returns for ZARONIA and for JIBAR. Each return enters the manifest with the session date and replaces one to-be-confirmed entry in the register.
+\end{document}

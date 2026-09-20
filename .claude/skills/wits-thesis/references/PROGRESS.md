@@ -2,7 +2,7 @@
 
 ## Page-budget audit, 2026-09-09 (thesis-page-budget-auditor)
 
-Sources: working copies `"~/Desktop/PhD Thesis/Council" Workspace/thesis/chapters/*.tex`, `appendices/*.tex`; compiled `"~/Desktop/PhD Thesis/main.pdf`" (159 pages, built 16:10:53 from the repository copy, `report` class, 12pt, 1.5 spacing, 40/30 mm margins).
+Sources: working copies `"~/Desktop/PhD Thesis/Claude Workspace/thesis/chapters/*.tex`, `appendices/*.tex`; compiled `"~/Desktop/PhD Thesis/main.pdf`" (159 pages, built 16:10:53 from the repository copy, `report` class, 12pt, 1.5 spacing, 40/30 mm margins).
 Method: words = source words after stripping comments and control sequences (`sed`), not `pdftotext` words; estimate = words/300; typeset = page span in main.pdf. Calibration on this build: ch2 260 source words per typeset page (proof-heavy, many displays), ch3 300, App C 318. `pdftotext` word counts overshoot by about 35 % because mathematics tokenises as words; do not use them.
 Caveat: ch3 was edited at 16:13:08, after the compile; the typeset span below is from the 11,389-word repository copy, the word count from the 12,032-word working copy. Stub chapters cost 2 typeset pages each (heading page plus `openright` blank).
 

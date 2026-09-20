@@ -1,3 +1,9 @@
+%
+% subfiles wrapper: lets this file compile alone (fast preview, no other
+% chapters) while main.tex still \subfile{}s it unchanged for the full build.
+\documentclass[../../main.tex]{subfiles}
+\begin{document}
+
 \chapter{Proofs of Standard Results}\label{appB-proofs-standard}\label{app:proofs}
 
 \begin{quote}\itshape
@@ -172,3 +178,4 @@ Because the payoff is not smooth at $K$ and the diffusion is small, the problem 
 \emph{Step 4: the first correction.} Carrying the expansion to the next order in $\epsilon^2$ produces three corrections, each linear in $t$: a local-volatility curvature term proportional to $\alpha_0^2$, which is $-\beta(2-\beta)\alpha_0^2/(24(fK)^{1-\beta})$ in normal units and $(1-\beta)^2\alpha_0^2/(24(fK)^{1-\beta})$ in lognormal units; a cross term $\rho\beta\nu\alpha_0/(4(fK)^{(1-\beta)/2})$ from the covariation of rate and volatility interacting with the backbone; and the term $(2-3\rho^2)\nu^2/24$ from the second moment of the volatility process itself, which is the only correction that survives at $\beta=0$. The lognormal formula is obtained by matching the same leading-order price to a Black price instead, which introduces the $\log(f/K)$ bracket in the denominator of \eqref{eq:prelim-hagan-B}.
 
 The derivation is asymptotic, not convergent; for $\nu^2t$ of order one or for strikes several standard deviations from the forward the formulas lose accuracy, and for $\beta<1$ the lognormal form can produce negative densities in the low-strike wing. The thesis uses expiries of at most a few years, $\nu^2t$ below one, and strikes within two standard deviations, and it treats the Hagan formula as the market's pricing convention rather than as an approximation to the exact SABR density: what is calibrated and quoted in practice is \eqref{eq:prelim-hagan-N0}.
+\end{document}

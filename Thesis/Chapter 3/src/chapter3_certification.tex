@@ -1,3 +1,9 @@
+%
+% subfiles wrapper: lets this file compile alone (fast preview, no other
+% chapters) while main.tex still \subfile{}s it unchanged for the full build.
+\documentclass[../../../main.tex]{subfiles}
+\begin{document}
+
 \chapter{Finite-Sample Certification of Hedging Error}\label{ch:cert}\label{ch:certification}
 
 \begin{quote}\itshape
@@ -580,3 +586,4 @@ Two further gapped or thinned constructions exist: \citep[Prop.~5.1]{zheng2024} 
 The Beta law of calibration-conditional coverage is \cite{vovk2012}, and its use as an operational small-sample level under exchangeability is in \cite{zwart2025}. The mechanism behind the drift term, a realised coverage $F_Q\circ F_P^{-1}(U_{(k)})$ once the test score is decoupled from the calibration block, so that $\dK(P,Q)$ is the exact penalty on a fixed half-line, appears as Proposition~13 of \cite{ramos2026}, who name blocking after \cite{yu1994} as one way to decouple and who reach the Beta law under $\alpha$-mixing asymptotically through a Berry--Esseen bound (their Proposition~15); Theorem~\ref{thm:cov}(ii) reaches it non-asymptotically under $\beta$-mixing through the coupling, which is the difference between the two routes. In a value-at-risk setting \citet[Thm.~1, p.~3]{schmitt2026} obtain a coverage bound with a coefficient $2$ on a total-variation drift term under a weighted-calibration argument, and show the factor $2$ is not removable for that argument \citep[p.~3]{schmitt2026}; the coupling route here charges $\dK$ with coefficient $1$, which Chapter~\ref{ch:sharpness} shows to be sharp.
 
 What this chapter adds to that literature is confined to the following: the conditional statement (ii) with the disintegrated coefficient and the Markov term $\beta(b)/\delta'$, Remark~\ref{rem:jointtv} on why a joint total-variation bound cannot give it, the two-sided companion of Proposition~\ref{prop:twosided} and hence the coverage-error object that Chapter~\ref{ch:sharpness} minimises, the fixed-policy laws and the accounting of policy dependence as one $\beta(b)$, the strengthened coupling of Lemma~\ref{lem:firstblock}, the two-sided refinement and the sharpness of the constant in Proposition~\ref{prop:w1}, and the non-estimability construction of Proposition~\ref{prop:noest}. None of these is deep; together they make the certificate usable on a hedging record. The sharpness of the drift constant, the design of the block length and the lower bound over $\Bclass{r}$ are the contributions of Chapter~\ref{ch:sharpness}.
+\end{document}

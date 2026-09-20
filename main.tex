@@ -132,6 +132,11 @@
 \input{Thesis/macros}
 
 % =============================================================
+% Subfiles (lets a chapter .tex compile alone; load last)
+% =============================================================
+\usepackage{subfiles}
+
+% =============================================================
 % Paragraph and Equation Formatting
 % =============================================================
 \setlength{\parindent}{0pt}
@@ -170,19 +175,21 @@
 \cleardoublepage
 \pagenumbering{arabic}
 
-\input{Thesis/Chapter 1/src/chapter1_introduction}
-\input{Thesis/Chapter 2/src/chapter2_preliminaries}
-\input{Thesis/Chapter 3/src/chapter3_certification}
-\input{Thesis/Chapter 4/src/chapter4_sharpness_blocking}
-\input{Thesis/Chapter 5/src/chapter5_identifiability}
-\input{Thesis/Chapter 6/src/chapter6_usd_validation}
-\input{Thesis/Chapter 7/src/chapter7_zar_coda}
-\input{Thesis/Chapter 8/src/chapter8_conclusions}
+\subfile{Thesis/Chapter 1/src/chapter1_introduction}
+\subfile{Thesis/Chapter 2/src/chapter2_preliminaries}
+\subfile{Thesis/Chapter 3/src/chapter3_certification}
+\subfile{Thesis/Chapter 4/src/chapter4_sharpness_blocking}
+\subfile{Thesis/Chapter 5/src/chapter5_identifiability}
+\subfile{Thesis/Chapter 6/src/chapter6_usd_validation}
+\subfile{Thesis/Chapter 7/src/chapter7_zar_coda}
+\subfile{Thesis/Chapter 8/src/chapter8_conclusions}
+\subfile{Thesis/Chapter 9/src/chapter9_placeholder}
+\subfile{Thesis/Chapter 10/src/chapter10_placeholder}
 
 \appendix
-\input{Thesis/Annexures/annexureA_tenor_consistency}
-\input{Thesis/Annexures/annexureB_standard_proofs}
-\input{Thesis/Annexures/annexureC_data_code}
+\subfile{Thesis/Annexures/annexureA_tenor_consistency}
+\subfile{Thesis/Annexures/annexureB_standard_proofs}
+\subfile{Thesis/Annexures/annexureC_data_code}
 
 \bibliographystyle{plainnat}
 \bibliography{References}

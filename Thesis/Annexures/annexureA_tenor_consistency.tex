@@ -1,3 +1,9 @@
+%
+% subfiles wrapper: lets this file compile alone (fast preview, no other
+% chapters) while main.tex still \subfile{}s it unchanged for the full build.
+\documentclass[../../main.tex]{subfiles}
+\begin{document}
+
 % Appendix A — Tenor consistency of compounded-rate smiles
 % Written against STANDARD.md, LESSONS.md and GROUND-TRUTH (13-mathematics-3yr.tex, Proposition 5).
 \chapter{Tenor Consistency of Compounded-Rate Smiles}\label{appA-tenor}\label{app:tenor}
@@ -294,3 +300,4 @@ The appendix has established three things. The compounding identity between nest
 The limitations are these. The exact statement is for the arithmetic rate; for the compounded rate the product term is a level effect of about one basis point in the example, absorbed by frozen weights at leading order, and the cleanest exact statement would be in the lognormal-on-$(1+\Delta F)$ class. The class has one volatility driver; two three-month smiles with different $\rho$ are outside it before any six-month smile is examined. The vol-of-vol profile is common to the windows, which the same-$g$ variant of Lemma~\ref{lem:prelim-tc} does not satisfy, so under that variant part~(a) is a leading-order statement. The constraints of Proposition~\ref{prop:appA-skewcurv} are first order in $\nu$, and the diagnostic's tolerances must be set with the bid--offer width of the compounded caplet market in mind, a market for which no screen quotes were found as of September 2026. And the linear profile is an assumption whose influence is larger here than in single-window pricing: the total variance of one window fixes its price whatever the pre-window shape of the coefficient, but the cross term between two windows depends on that shape, and in the example it moves the projected six-month level by $1.6$ basis points between the flat and the $\kappa=1$ profile. Step 6 of the algorithm makes this visible rather than removing it.
 
 For the converted South African book the diagnostic has one further input. The fallback strike shifts differ by tenor, $16.19$ basis points for three-month and $43.23$ basis points for six-month JIBAR \cite{bisl2025}, so the transported smiles arrive at different strike translations. Normal SABR is translation-invariant in the strike, so the shifts do not enter the consistency test of the triples, but the forwards in step 1 must be the compounded forwards, not the JIBAR forwards plus their spreads, and the two basis processes of the two tenors are not the subject of this appendix. The test is therefore a check on the output of Chapter~\ref{ch:identifiability} applied tenor by tenor, and a pair flagged by it tells the desk that the two transports cannot both be right within the model class, which is exactly the kind of statement the identifiability analysis says the JIBAR market alone cannot resolve.
+\end{document}

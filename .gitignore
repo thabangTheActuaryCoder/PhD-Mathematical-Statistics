@@ -26,8 +26,12 @@ __pycache__/
 !Research Proposal/*.pdf
 !Thesis/Cover Page/src/*.pdf
 
-# transient council working directory (drafts are synced into Thesis/ and Reviews/)
-Council Workspace/
+# transient council working directory (drafts are synced into Thesis/ and Reviews/);
+# the three files below live inside it but are real, tracked project docs
+Claude Workspace/*
+!Claude Workspace/AGENTS.md
+!Claude Workspace/CHANGES_REVIEW.md
+!Claude Workspace/sync_from_workdir.sh
 main.ist
 main.glo
 main.acn

@@ -1,3 +1,9 @@
+%
+% subfiles wrapper: lets this file compile alone (fast preview, no other
+% chapters) while main.tex still \subfile{}s it unchanged for the full build.
+\documentclass[../../../main.tex]{subfiles}
+\begin{document}
+
 \chapter{Validation on the USD LIBOR-to-SOFR Transition}\label{ch6-usd-validation}\label{ch:usd}
 
 \begin{quote}\itshape
@@ -533,3 +539,4 @@ Nothing here establishes that the certificate is better than the stationary boot
 Chapter~\ref{ch:zar} takes three things from here and nothing else: the protocol, meaning a policy fixed in advance, windows justified from a cessation calendar and criteria stated before the record is seen; the deficit decomposition, with the warning that the South African record is shorter by an order of magnitude and monthly rather than daily, so that the feasibility constraint which merely displaced the preferred block length here will bind much harder there; and the finding, whichever way it goes, on whether the physical-measure basis volatility proxies its pricing-measure counterpart, the converted book's reserve being linear in that number with no other source. It takes no parameter estimate, for the reason set out in Section~\ref{sec:usd-threats}.
 
 \datanote{No number in this chapter is computed from market data. Every table is a specification of columns and rows, every figure is a specification of axes and series, and every acceptance criterion is a threshold fixed before the corresponding data exist in the working set. The numbers that are computed here -- the feasibility ceiling $b\le13$; $b^*\approx17.8$; the sweep $n=125,62,25,12,9$ and its five values of $k/(n+1)$; $(n+1)Cb^{-r}=126$ at $b=1$; the grid counts $93/180$ and $2/180$; the Beta quantiles $0.7791$ and $0.7169$; the deficit table of Section~\ref{sec:usd-routes}; the binomial detection thresholds at $M=12$ and $M=25$; and $1/p=3$ at $n'=25$ -- use only the record length, the level $\alpha$, the assumed mixing class and the worked parameters of Chapter~\ref{ch:identifiability}, and each is stated with its inputs. The datasets named are those of Appendix~\ref{app:data}, whose unresolved identifiers are resolved in the single terminal session recorded there; no criterion, window or threshold here depends on an unresolved identifier.}
+\end{document}

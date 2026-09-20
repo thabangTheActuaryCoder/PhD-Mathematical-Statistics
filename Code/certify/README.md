@@ -1,7 +1,7 @@
 # certify — blocked conformal certificate for hedging error
 
 Reference implementation for Chapter 3 (ground-truth Theorem 6, Proposition 7,
-Theorem 9(i) of `Council Workspace/13-mathematics-3yr.tex`). Pure `numpy` + `scipy`, one module.
+Theorem 9(i) of `Claude Workspace/13-mathematics-3yr.tex`). Pure `numpy` + `scipy`, one module.
 The test file regenerates every cell of Chapter 3's Table 3.1 (`tab:example`) and the
 worked-example numbers of Section 3.7; `fig_example.py` produces the series of `fig:example`.
 

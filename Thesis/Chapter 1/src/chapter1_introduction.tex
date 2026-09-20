@@ -1,3 +1,9 @@
+%
+% subfiles wrapper: lets this file compile alone (fast preview, no other
+% chapters) while main.tex still \subfile{}s it unchanged for the full build.
+\documentclass[../../../main.tex]{subfiles}
+\begin{document}
+
 % Chapter 1 — Introduction and the South African transition
 \chapter{Introduction}\label{ch1-introduction}\label{ch:intro}
 
@@ -267,3 +273,4 @@ Chapter~\ref{ch:identifiability} answers Q1 and Q2: the contamination map, the d
 Chapter~\ref{ch:usd} designs and pre-registers the test of both results on the dollar transition, with every acceptance criterion and every falsifying outcome fixed before the data are pulled. Chapter~\ref{ch:zar} applies the results to the converted South African book: it computes the feasibility verdict first, reports the identified valuation and the width of the consistent set in the additive form, and declares the uncertified residual. Chapter~\ref{ch:conclusions} states the limitations before the contributions and lists what remains open.
 
 The order of reading is the order of writing. The statistical chapters do not depend on the finance chapters; the finance chapters supply the fixed policy that the certificate requires; and the two empirical chapters are where the thesis says, in arithmetic that uses no data, what its own method cannot yet deliver.
+\end{document}

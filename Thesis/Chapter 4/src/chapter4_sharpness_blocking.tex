@@ -1,3 +1,9 @@
+%
+% subfiles wrapper: lets this file compile alone (fast preview, no other
+% chapters) while main.tex still \subfile{}s it unchanged for the full build.
+\documentclass[../../../main.tex]{subfiles}
+\begin{document}
+
 \chapter{Sharpness and Optimal Blocking}\label{ch4-sharpness-blocking}\label{ch:sharpness}
 
 \begin{quote}\itshape
@@ -731,3 +737,4 @@ The covariance bound of Lemma~\ref{lem:sharp-cov} is the definition of the stron
 The regime-renewal construction of Definition~\ref{def:sharp-renewal} is a semi-Markov process with heavy-tailed sojourns, and the observation that such a process has polynomial rather than geometric mixing is classical. No use of it as a lower-bound construction for a conformal prediction problem appears in the literature cited here; \citet[Ex.~2, p.~12]{oliveira2024} give a $\beta$-mixing example built from a random walk on a cycle graph, whose coefficients decay geometrically and which therefore lies in every class $\Bclass{r}$, so it cannot serve. The hidden-copy process of Proposition~\ref{prop:noest} of Chapter~\ref{ch:certification} shares the mechanism of a rare event that is invisible in the record, and the coupling step of its proof is the model for the route of Lemma~\ref{lem:sharp-renewal-beta}.
 
 Two further remarks on the literature. The bracket \eqref{eq:sharp-minimax} has the same shape as the four-term decomposition of \citet[Thm.~2]{halkiewicz2026}, with his noise term $\sqrt{1/m}$ playing the role of the Gaussian term and his drift term $(m/T)^\beta$ playing the role of the mixing term; the shapes agree because both are the result of balancing a concentration term against a bias term, and the mathematics differs entirely in what produces the bias. And what is new here is the optimisation of a design parameter against the conditional object under dependence, not the object itself, whose operational use under exchangeability through the Beta quantile is recorded in the chapter notes of Chapter~\ref{ch:prelim}, citing the preprint of \citet[Sec.~2.2]{zwart2025}.
+\end{document}

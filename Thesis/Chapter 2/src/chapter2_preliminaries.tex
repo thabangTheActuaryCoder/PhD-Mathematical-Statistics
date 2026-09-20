@@ -1,5 +1,11 @@
 % Chapter 2 — Preliminaries
 % Written against STANDARD.md, LESSONS.md and GROUND-TRUTH (13-mathematics-3yr.tex).
+%
+% subfiles wrapper: lets this file compile alone (fast preview, no other
+% chapters) while main.tex still \subfile{}s it unchanged for the full build.
+\documentclass[../../../main.tex]{subfiles}
+\begin{document}
+
 \chapter{Preliminaries}\label{ch:prelim}\label{ch2-preliminaries}
 
 \begin{quote}\itshape
@@ -1158,3 +1164,5 @@ Chapter~\ref{ch:certification} takes Theorems~\ref{thm:prelim-coverage} and~\ref
 The change-of-num\'eraire theorem is \cite{geman1995}; the presentation follows \cite{brigo2006}. The extended-bond formalism for backward-looking rates is from \cite{lyashenko2019}, with the SABR specialisation, in the form that decays the rate diffusion alone, in \cite[eqs.~(3)--(4), p.~4]{willems2020}; \cite{lyashenko2020} extends the framework and \cite{brace2024} studies the dynamics of SOFR term structures with the same run-off structure. The observation that the multi-curve JIBAR forward is a $\Q^{T+\Delta}$-martingale by definition, with no replication argument, follows \cite{henrard2014}. The Hagan formulas are from \cite{hagan2002}, and the observation that the fallback is a strike shift for normal SABR is in \cite{piterbarg2020}. Split conformal prediction and its exchangeability proof are from \cite{vovk2005}; the conditional-coverage law is the Beta form of \cite[Prop.~2b, p.~479]{vovk2012}, which states it in binomial form, and it appears in the notation used here in \cite[eq.~(4)]{zwart2025}; the extension beyond exchangeability with a total-variation penalty is \cite{barber2023}, and the blocked version under mixing is \cite{oliveira2024}. Berbee's lemma is from \cite{berbee1979}; the sequential form and its $(m-1)\beta$ count are \cite[Cor.~2.7 and Lemma~4.1]{yu1994}; the general mixing reference is \cite{doukhan1994}. \cite{adams2010} prove uniform almost-sure convergence for VC classes under ergodic sampling, without rates; the non-estimability of $\beta(b)$ from one realisation is Proposition~\ref{prop:noest} of Chapter~\ref{ch:certification}. The one-dimensional Wasserstein theory is \cite{bobkov2019}, with the dependent case in \cite[Prop.~3.2]{dedecker2017}, and the $\sqrt{2L\Wone}$ inequality behind the drift penalty is \cite[Prop.~1, p.~4]{xu2025}.
 
 Three recent contributions place the blocked route of Section~\ref{sec:prelim-mixing} in context. \cite[Cor.~1--2]{barber2026} bound the marginal coverage deficit of unblocked split conformal on $\beta$-mixing data by $2\beta(\tau)+2\beta(\tau_*)$ plus a term linear in the gap length over the sample size, so blocking is not the only route to a guarantee under dependence. \cite[Prop.~13, p.~11]{ramos2026} have the Kolmogorov drift penalty $\dK(P,Q)$ in print for a test score decoupled from the calibration sample. And the Beta quantile is already in operational use as a calibration-conditional guarantee \citep[Sec.~2.2]{zwart2025}. What Chapter~\ref{ch:certification} adds to these is the coupling that produces the decoupling under mixing, and the conditional form of the certificate. DKW is \cite{dkw1956} and the empirical-process background is \cite{vdv1996}. Pinsker's inequality and the two-point method that Chapter~\ref{ch:sharpness} uses are in \cite{tsybakov2009}.
+
+\end{document}

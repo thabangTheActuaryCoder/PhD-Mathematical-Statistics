@@ -1,3 +1,9 @@
+%
+% subfiles wrapper: lets this file compile alone (fast preview, no other
+% chapters) while main.tex still \subfile{}s it unchanged for the full build.
+\documentclass[../../../main.tex]{subfiles}
+\begin{document}
+
 \chapter{Identifiability of the Successor-Rate Smile}\label{ch5-identifiability}\label{ch:identifiability}
 
 \begin{quote}\itshape
@@ -766,3 +772,4 @@ The chapter delivers two things to what follows. To Chapter~\ref{ch:certificatio
 The identification question studied here appears not to have been treated in print. Searches of the preprint servers, of SSRN and of the central bank's publication list in September 2026 returned no paper on the identifiability of successor-rate smiles, on smile transport through benchmark fallbacks, or on ZARONIA caps, floors or swaptions; the nearest works are \citet{willems2020}, \citet{piterbarg2020} and \citet{lyashenko2019,lyashenko2020}, all of which price compounded-rate options within a specified model rather than asking what the predecessor market determines, and \citet{alfeus2026}, who models the spread dynamically with no option or volatility-surface content. This is a statement about a dated search and not a proof of novelty.
 
 The device of matching a small number of cumulants and quoting the constant-parameter formula at the matched values is the effective-parameter method of \citet[App.~B]{hagan2002}, used in Chapter~\ref{ch:prelim} for time-dependent coefficients and here for an additive perturbation. The normal-volatility formula is taken from \citet[eq.~(A.67a) with $\beta=0$]{hagan2002}, also printed as \citet[eq.~(A.69a)]{hagan2002}; the specialisation printed at (A.70a) omits a factor and is not used, as recorded after Theorem~\ref{thm:prelim-hagan}.
+\end{document}
