@@ -41,20 +41,18 @@
 	constrain some features of the transition, but they need not determine the
 	full distribution on which an option payoff depends.
 
-	This distinction matters because an option is sensitive to outcomes beyond an
-	average rate. Two models can agree on every forward value while assigning
-	different probabilities to large rate moves, and a caplet separates them.
-	Importing a volatility parameter from the legacy market therefore yields a
-	number without establishing that the number follows uniquely from what was
-	observed: a fitted model returns a single successor price even when the
-	observations are compatible with many.
+	This matters because an option is sensitive to outcomes beyond an average
+	rate: two models can agree on every forward value while assigning different
+	probabilities to large moves, and a caplet separates them. Importing a
+	volatility parameter from the legacy market therefore yields a number without
+	establishing that it follows uniquely from what was observed.
 
 	A second question concerns trading rather than valuation. Valuation
 	uncertainty is the range of model prices compatible with the observations;
-	trading risk is the realised profit or loss from holding and hedging the
-	liability. A closely calibrated model can still produce large losses when
-	trading constraints or changing dynamics bind, and small average hedging
-	error says nothing about the upper tail.
+	trading risk is the realised profit or loss from hedging the liability. A
+	closely calibrated model can still produce large losses when trading
+	constraints or changing dynamics bind, and small average hedging error says
+	nothing about the upper tail.
 
 	The South African JIBAR--ZARONIA transition supplies the application, with
 	South African Reserve Bank conventions \citep{sarb2024conv} governing the
@@ -106,11 +104,10 @@
 	Swaptions, large portfolios, jump extensions, multi-tenor consistency,
 	learned hedging policies and rough-path methods are extensions, each taken up
 	only where it answers a stated research question. The collateral and funding
-	structure is simplified, and that simplification is stated.
-
-	The application is the JIBAR--ZARONIA transition. A retrospective study in a
-	currency where successor options did trade offers a further validation route,
-	subject to licensed and comparable data.
+	structure is simplified, and that simplification is stated. The application is
+	the JIBAR--ZARONIA transition; a retrospective study in a currency where
+	successor options did trade offers a further validation route, subject to
+	licensed and comparable data.
 
 	% =============================================================
 	\section{Literature and research gap}
@@ -126,11 +123,11 @@
 	the LIBOR model, \citet{robbertze2021} on neural-network volatility modelling
 	and \citet{stangroom2023} on deep hedging. \citet{mavuso2014} studies
 	mean--variance hedging with a dynamically traded liquid asset and a static
-	position in an illiquid one, which makes trading permissions part of the
-	mathematical problem. \citet{feng2018} separate calibration from
+	position in an illiquid one, making trading permissions part of the
+	mathematical problem, and \citet{feng2018} separate calibration from
 	recalibration model risk. \citet{alfeus2026} models JIBAR--ZARONIA spread
-	dynamics around scheduled events; that is historical spread modelling, and is
-	distinct from identifying a risk-neutral option valuation.
+	dynamics around scheduled events, which is historical spread modelling rather
+	than identification of a risk-neutral valuation.
 
 	The statistical component builds on conformal prediction. \citet{vovk2012}
 	treats conditional validity, \citet{barber2023} departures from
@@ -138,10 +135,9 @@
 	non-exchangeable data; \citet{barber2026} and \citet{ramos2026} are closest
 	to the dependence and calibration-conditional questions at issue.
 
-	The gap lies between these two literatures: a rigorously characterised set of
-	transition models on one side, and a finite-sample analysis of the hedging
-	losses those models imply on the other, under stated dependence and
-	distributional change. Connecting them is the object of this research.
+	The gap lies between these two literatures: a characterised set of transition
+	models on one side, and a finite-sample analysis of the hedging losses those
+	models imply on the other. Connecting them is the object of this research.
 
 	% =============================================================
 	\section{Approach}
@@ -151,11 +147,10 @@
 	The work begins with a low-dimensional Markov model in an overnight-rate
 	factor and a spread factor, with a stated correlation, under an explicit
 	pricing measure. A two-factor Gaussian diffusion serves as the analytical
-	benchmark: it admits explicit covariance calculations and tractable
-	simulation, and its restrictions, including the possibility of negative
-	rates, are recorded. The observation map from model to traded instrument
-	prices is specified so that it prices actual cashflows before any
-	identification claim is made.
+	benchmark, admitting explicit covariance calculations and tractable
+	simulation. The observation map from model to traded instrument prices is
+	specified so that it prices actual cashflows before any identification claim
+	is made.
 
 	\subsection{Identification}
 
@@ -190,12 +185,12 @@
 
 	\subsection{Hedging}
 
-	Discounted terminal wealth comprises initial capital, cumulative trading
-	gains and transaction costs; signed hedging loss is the discounted liability
-	less that wealth. A sensitivity hedge and a mean--variance hedge provide the
+	Discounted terminal wealth comprises initial capital, cumulative trading gains
+	and transaction costs; signed hedging loss is the discounted liability less
+	that wealth. A sensitivity hedge and a mean--variance hedge provide the
 	initial comparisons, with admissibility, financing, rebalancing and costs
-	fixed before evaluation. Hedges are compared across compatible pricing models
-	on common evaluation scenarios.
+	fixed beforehand, and are compared across compatible pricing models on common
+	scenarios.
 
 	\subsection{Finite-sample guarantees}
 
@@ -221,64 +216,44 @@
 
 	Three settings are used. \textbf{Controlled simulation} generates data from
 	specified transition models with known targets, varying basis volatility,
-	dependence, maturity, strike, observation noise, costs and regime changes,
-	and including deliberately misspecified models. \textbf{Retrospective
-	validation} withholds successor option quotes while fitting to permitted
-	legacy and curve information, revealing them only for evaluation; a
-	historical LIBOR--SOFR dataset is the candidate, subject to availability and
-	comparability. \textbf{The South African application} proceeds on the
-	instruments and dates the data audit supports, reporting compatible valuation
-	ranges, scenario sensitivity and observable hedge outcomes.
+	dependence, maturity, strike, observation noise, costs and regime changes, and
+	including misspecified models. \textbf{Retrospective validation} withholds
+	successor option quotes while fitting to legacy and curve information,
+	revealing them only for evaluation; a historical LIBOR--SOFR dataset is the
+	candidate. \textbf{The South African application} proceeds on the instruments
+	and dates the data audit supports, reporting compatible valuation ranges,
+	scenario sensitivity and observable hedge outcomes.
 
-	Training, method selection, calibration and final evaluation are separated
+	Training, method selection, calibration and evaluation are separated
 	chronologically, with gaps where the dependence argument requires them, so
-	that withheld data cannot enter calibration through model selection.
-
-	Data access is the principal feasibility consideration. Where licensed option
-	or hedge data cannot be obtained, the empirical design reduces to what the
-	available observations support, with simulation carrying the controlled
-	validation.
+	withheld data cannot enter calibration through model selection. Where licensed
+	data cannot be obtained, the empirical design reduces to what the available
+	observations support, with simulation carrying the controlled validation.
 
 	% =============================================================
-	\section{Contribution}
+	\section{Contribution and timeline}
 
-	The contribution has two linked parts: an identification analysis for a
-	restricted benchmark-transition model and observation set, determining which
-	successor valuations the legacy market fixes and how wide the remaining range
-	is; and a finite-sample analysis of loss thresholds for implementable hedges
-	under specified dependence and distributional change. Together these say what
-	a converted option book can be valued at on the evidence available, and what
-	can be guaranteed about the losses from hedging it.
+	The contribution has two linked parts: an identification analysis determining
+	which successor valuations the legacy market fixes and how wide the remaining
+	range is, and a finite-sample analysis of loss thresholds for implementable
+	hedges under dependence and distributional change. Together these say what a
+	converted option book can be valued at on the available evidence, and what can
+	be guaranteed about the losses from hedging it.
 
-	% =============================================================
-	\section{Indicative timeline}
-
-	\begin{table}[H]
-		\centering
-		\caption{Indicative full-time schedule.}
-		\label{tab:timeline}
-		\begin{tabular}{@{}ll@{}}
-			\toprule
-			\textbf{Months} & \textbf{Work} \\
-			\midrule
-			1--6   & Foundations, literature review and data audit \\
-			7--14  & Transition model and identification \\
-			15--22 & Hedging and statistical analysis \\
-			23--29 & Simulation and empirical evaluation \\
-			30--36 & Synthesis, revision and examination preparation \\
-			\bottomrule
-		\end{tabular}
-	\end{table}
-
-	Month 6 is the first review point, confirming data access, the model class
-	and the direction of the identification results before implementation is
-	expanded.
+	Months 1--6 cover foundations, the literature review and the data audit;
+	7--14 the transition model and identification; 15--22 hedging and the
+	statistical analysis; 23--29 simulation and empirical evaluation; and 30--36
+	synthesis, revision and examination preparation. Month 6 is the first review
+	point, confirming data access, the model class and the direction of the
+	identification results.
 
 	% =============================================================
-	\newpage
-	\nocite{sarb2024conv}
-	\bibliographystyle{plainnat}
-	\bibliography{../../References}
+	% References block exactly as in the MSc dissertation
+	\clearpage
+	\phantomsection
 	\addcontentsline{toc}{section}{References}
+	\nocite{sarb2024conv}
+	\bibliographystyle{abbrvnat}
+	\bibliography{../../References}
 
 \end{document}

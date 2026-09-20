@@ -263,12 +263,13 @@
 	\todo[inline]{The ten-chapter outline. State that the chapter count is an organisational choice and not a claim about doctoral depth.}
 
 	% ============================================================
-	\newpage
-	% Single source of truth: the repository bibliography at the project root,
-	% not a copy inside this folder. \nocite{*} lists every entry, cited or not.
-	\nocite{*}
-	\bibliographystyle{plainnat}
-	\bibliography{../../References}
+	% References block exactly as in the MSc dissertation
+	\clearpage
+	\phantomsection
 	\addcontentsline{toc}{section}{References}
+	% \nocite{*} lists every entry in References.bib, cited or not.
+	\nocite{*}
+	\bibliographystyle{abbrvnat}
+	\bibliography{../../References}
 
 \end{document}
