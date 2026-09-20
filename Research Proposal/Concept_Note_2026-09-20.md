@@ -46,7 +46,7 @@ in the Faculty of Science\\
 at the University of the Witwatersrand
 
 \vspace{1.0cm}
-\includegraphics[width=3.4cm]{../Thesis/Cover Page/src/witslogo.pdf}
+\includegraphics[width=7.2cm]{../Thesis/Cover Page/src/witslogo-colour.pdf}
 
 \vspace{0.9cm}
 Johannesburg, South Africa\\
