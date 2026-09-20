@@ -1,0 +1,40 @@
+% ------------------------------------------------------------
+% Standalone cover document for the full research proposal.
+% Builds a two-page PDF: branded cover, then formal title page.
+% The main document pulls it in with \includepdf, exactly as the MSc
+% dissertation includes its own cover PDF.
+%
+% Needs XeLaTeX, because the cover pages use system fonts (Arial):
+%   tectonic -X compile cover_proposal.tex
+% ------------------------------------------------------------
+% !TeX program = xelatex
+% !TeX root = cover_proposal.tex
+
+\LoadClass{cover_and_title_pages}
+
+\begin{document}
+
+	% === Cover page (page 1) ===
+	\renewcommand{\proposal}{PhD Proposal}
+	\renewcommand{\schoolname}{School of Statistics and Actuarial Science}
+	\renewcommand{\facultyname}{Faculty of Science}
+	\renewcommand{\thesistitle}{Pricing and Hedging through Benchmark Transitions in the Absence of Liquid Option Markets}
+	\renewcommand{\initials}{T.B.J.}
+	\renewcommand{\surname}{Baloyi}
+	\renewcommand{\studentnum}{1113941}
+	\renewcommand{\submissiondate}{September 2026}
+
+	% === Title page (page 2) ===
+	\renewcommand{\fullnames}{Baloyi Thabang Bongani Junior}
+	\renewcommand{\degree}{PHILOSOPHIAE DOCTOR}
+	\renewcommand{\proposaltype}{(Mathematical Statistics)}
+	\renewcommand{\universityname}{University of the Witwatersrand}
+	\renewcommand{\campusname}{Johannesburg, South Africa}
+	\renewcommand{\supervisor}{\hl{To be confirmed}}
+	\renewcommand{\cosupervisor}{\hl{To be confirmed}}
+	\renewcommand{\proposalmonth}{September}
+	\renewcommand{\proposalyear}{2026}
+
+	\maketitlepage
+
+\end{document}

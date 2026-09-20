@@ -32,13 +32,19 @@
 \definecolor{witsteal}{HTML}{007377}   % secondary
 \definecolor{witsgreen}{HTML}{359946}  % secondary
 
-\setmainfont{Arial}
+% Body text follows the MSc dissertation: a serif face, not the source
+% template's Arial. No \setmainfont is issued, so the body keeps XeLaTeX's
+% default Latin Modern Roman, which matches the MSc dissertation's look.
+% Arial is kept for the two cover pages only, so they still look like the
+% template they came from.
 \newfontfamily\coverfont{Arial}
 
 \usepackage{color,soul}
 \sethlcolor{yellow}
 
+% Paragraph handling as in the MSc dissertation
 \setlength{\parindent}{0pt}
+\setlength{\parskip}{6pt}
 \onehalfspacing
 
 % --- cover page fields ---
@@ -98,7 +104,7 @@
 			}%
 		}
 
-		{\color{white}
+		{\coverfont\color{white}
 			\vspace*{86pt}
 
 			{\coverfont\fontsize{17pt}{26pt}\selectfont
@@ -136,6 +142,7 @@
 	% =========================================================
 	\begin{titlepage}
 		\centering
+		\coverfont
 
 		{\fontsize{14}{21}\selectfont
 

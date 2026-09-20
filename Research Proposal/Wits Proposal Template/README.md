@@ -8,24 +8,39 @@ The source is a University of the Free State template, from the Department of
 Computer Science & Informatics. Its structure and typography are kept; the
 branding and one methodology subsection are not.
 
-## Build
-
-Requires XeLaTeX, because the template sets system fonts (Arial).
-
-```
-tectonic -X compile proposal.tex     # or: xelatex proposal.tex
-```
-
 ## Files
+
+Two-part arrangement, copied from the MSc dissertation: the cover pages are a
+separate PDF, included into a body that is formatted independently.
 
 | File | Purpose |
 |---|---|
-| `proposal.tex` | The full proposal: eighteen-section skeleton with page budgets, pre-filled candidate details |
-| `concept_note.tex` | The concept note / mini proposal, same cover pages and typography |
-| `cover_and_title_pages.cls` | Cover page and formal title page |
-| `proposal_template_style.sty` | Fonts, spacing, caption and list formatting |
-| `template_images/` | Wits logo assets |
-| — | No local bibliography: both documents cite `../../References.bib` at the project root |
+| `concept_note.tex` | Concept note / mini proposal |
+| `proposal.tex` | Full proposal: eighteen-section skeleton with page budgets |
+| `msc_body_style.sty` | Body formatting, following the MSc dissertation |
+| `Cover Page/src/cover_and_title_pages.cls` | The two cover pages (Arial, Wits palette, TikZ) |
+| `Cover Page/src/cover_concept_note.tex` | Standalone cover document for the concept note |
+| `Cover Page/src/cover_proposal.tex` | Standalone cover document for the full proposal |
+| `Cover Page/src/template_images/` | Wits logo assets |
+
+Bibliography: both documents cite `../../References.bib` at the project root.
+There is no local copy.
+
+## Build
+
+The cover pages need XeLaTeX, because they set Arial. Build them first:
+
+```
+cd "Cover Page/src" && tectonic -X compile cover_concept_note.tex
+cd "Cover Page/src" && tectonic -X compile cover_proposal.tex
+```
+
+Then the document, which pulls the cover in with `\includepdf`:
+
+```
+tectonic -X compile concept_note.tex
+tectonic -X compile proposal.tex
+```
 
 ## What was kept from the source template
 
@@ -33,9 +48,6 @@ tectonic -X compile proposal.tex     # or: xelatex proposal.tex
   budgets preserved as comments.
 - Front matter: table of contents, list of figures, list of tables, list of
   abbreviations, glossary.
-- Typography: 12pt Arial, A4, 2.5 cm margins, one-and-a-half spacing, no
-  paragraph indent, justified text, APA citations via `apacite`, italic
-  captions separated by two spaces.
 - The two-cover-page arrangement: a designed cover followed by a formal title
   page.
 - The convention of highlighting fields that still need editing.

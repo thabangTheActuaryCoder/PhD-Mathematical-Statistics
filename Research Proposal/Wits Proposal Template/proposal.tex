@@ -16,36 +16,21 @@
 % tests them, so 9.7 is restructured around the actual work phases.
 % The deviation is deliberate and is flagged in that section.
 
-\LoadClass{cover_and_title_pages}
-\usepackage{proposal_template_style}
+\PassOptionsToPackage{final}{graphicx}
+\documentclass[12pt,final]{article}
+
+\usepackage{msc_body_style}
 \usepackage{changepage}
-\usepackage[none]{hyphenat}
 
 \begin{document}
 
-	% === Cover page fields ===
-	\renewcommand{\proposal}{PhD Proposal}
-	\renewcommand{\schoolname}{School of Statistics and Actuarial Science}
-	\renewcommand{\facultyname}{Faculty of Science}
-	\renewcommand{\thesistitle}{Pricing and Hedging through Benchmark Transitions in the Absence of Liquid Option Markets}
-	\renewcommand{\initials}{T.B.J.}
-	\renewcommand{\surname}{Baloyi}
-	\renewcommand{\studentnum}{1113941}
-	\renewcommand{\submissiondate}{September 2026}
+	% =============================================================
+	% Cover and title pages (separate document)
+	% Build first:  cd "Cover Page/src" && tectonic -X compile cover_proposal.tex
+	% =============================================================
+	\includepdf[pages=1-2]{Cover Page/src/cover_proposal.pdf}
 
-	% === Title page fields ===
-	\renewcommand{\fullnames}{Baloyi Thabang Bongani Junior}
-	\renewcommand{\degree}{PHILOSOPHIAE DOCTOR}
-	\renewcommand{\proposaltype}{(Mathematical Statistics)}
-	\renewcommand{\universityname}{University of the Witwatersrand}
-	\renewcommand{\campusname}{Johannesburg, South Africa}
-	\renewcommand{\supervisor}{\hl{To be confirmed}}
-	\renewcommand{\cosupervisor}{\hl{To be confirmed}}
-	\renewcommand{\proposalmonth}{September}
-	\renewcommand{\proposalyear}{2026}
-
-	\maketitlepage
-
+	\clearpage
 	\pagenumbering{roman}
 
 	\renewcommand{\contentsname}{Table of Contents}
@@ -282,7 +267,7 @@
 	% Single source of truth: the repository bibliography at the project root,
 	% not a copy inside this folder. \nocite{*} lists every entry, cited or not.
 	\nocite{*}
-	\bibliographystyle{apacite}
+	\bibliographystyle{plainnat}
 	\bibliography{../../References}
 	\addcontentsline{toc}{section}{References}
 
