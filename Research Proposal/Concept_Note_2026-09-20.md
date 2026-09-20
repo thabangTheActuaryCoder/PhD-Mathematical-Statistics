@@ -1,8 +1,4 @@
 ---
-title: "Pricing and Hedging through Benchmark Transitions in the Absence of Liquid Option Markets"
-subtitle: "Concept note for a proposed PhD in Mathematical Statistics"
-author: "Thabang Bongani Junior Baloyi"
-date: "University of the Witwatersrand, Johannesburg · 20 September 2026"
 geometry: a4paper, margin=2.2cm
 fontsize: 11pt
 header-includes: |
@@ -12,6 +8,41 @@ header-includes: |
   \usepackage{titlesec}
   \titlespacing*{\section}{0pt}{7pt}{3pt}
 ---
+
+```{=latex}
+\thispagestyle{empty}
+\vspace*{60pt}
+```
+
+# Pricing and Hedging through Benchmark Transitions in the Absence of Liquid Option Markets {-}
+
+```{=latex}
+\vspace{36pt}
+```
+
+**Baloyi Thabang Bongani Junior**
+
+Student number 1113941
+
+```{=latex}
+\vspace{\fill}
+```
+
+A concept note submitted to the School of Statistics and Actuarial Science, Faculty of Science, University of the Witwatersrand, Johannesburg, in support of an application to register for the degree of Doctor of Philosophy in Mathematical Statistics.
+
+```{=latex}
+\vspace{24pt}
+```
+
+Johannesburg, September 2026
+
+```{=latex}
+\newpage
+```
+
+```{=openxml}
+<w:p><w:r><w:br w:type="page"/></w:r></w:p>
+```
 
 **Status.** Concept note for supervisor discussion; academic home and supervision to be confirmed. The results, novelty claims and feasibility described here are proposed, not established. A supplied AI-assisted draft manuscript informed the research questions; it is not evidence that its results have been proved.
 
@@ -44,6 +75,14 @@ The South African JIBAR–ZARONIA transition supplies the application, with Sout
 2. Prove identification or non-identification results for a restricted model class, and determine the resulting valuation ranges or approximation errors.
 3. Construct implementable hedges from available instruments and investigate finite-sample loss guarantees under explicit assumptions.
 4. Evaluate pricing uncertainty, hedge performance and certificate informativeness in simulation and in an appropriately limited empirical application.
+
+# Scope and delimitations
+
+The initial product scope is caplets, with compounding, observation shift and payment conventions stated explicitly rather than assumed from a similar-looking formula. The initial model scope is a small factor system; the initial hedge set is liquid swaps and cash instruments, restricted to instruments the data audit shows were tradeable on the relevant date. A successor option will not be used as a hedging instrument merely because it would complete the market.
+
+Swaptions, large portfolios, jump extensions, multi-tenor consistency, learned hedging policies and rough-path methods are treated as extensions, each requiring a specific reason connected to a stated research question. They are not compulsory components, and adding them all would increase the number of quantities requiring identification without sharpening the central question. The collateral and funding structure will be simplified, with that simplification stated; funding asymmetries, counterparty effects and multiple collateral currencies are excluded unless the central question demands them.
+
+The application is the South African JIBAR–ZARONIA transition. A retrospective study in a currency where successor options did trade is a candidate for validation, subject to licensed and comparable data, and its findings will not be assumed to transfer across currencies. The extent of the empirical programme depends on data access: what cannot be supported by observations actually obtained will be reported as unsupported rather than asserted.
 
 # Positioning and the provisional gap
 
@@ -80,6 +119,16 @@ Data access is the central feasibility risk; if licensed data cannot be obtained
 # Anticipated contribution
 
 The proposed contribution has two linked parts: a rigorous identification analysis for a restricted benchmark-transition model and observation set, and a justified analysis of loss thresholds for implementable hedges under specified dependence and shift. Both remain conditional on the literature audit and on successful proofs. A South African implementation is an application contribution; geographic novelty alone will not establish the mathematical or statistical originality the degree requires. A precise negative result — a non-identification theorem, or a demonstration that no informative certificate survives realistic sample sizes — would be a legitimate outcome, provided its assumptions and implications are exact.
+
+# Preparation and support required
+
+I hold an MSc in Mathematical Statistics and come to the mathematical-finance component as a learner rather than a specialist. The reading sequence is therefore explicit: Mavuso's UCT probability notes for measure-theoretic probability, conditioning, martingales and stochastic integration; Shreve (2004) to connect those tools to no-arbitrage pricing and changes of measure; and Brigo and Mercurio (2006) for interest-rate modelling. Before attempting the transition extensions I will reproduce, independently, a caplet pricing calculation, a finite-dimensional mean–variance hedge and an independent-sample conformal threshold. Possession of a draft manuscript is not evidence of understanding its contents, and the preparation plan is written on that assumption.
+
+Four working records will run across the project: a notation register, an assumption register, a reference register, and a claim-and-proof register in which every claim carries a status — established background, proved here, proposed theorem, conjecture, verified numerical evidence, or unsupported claim requiring investigation. Imported theorems will have their hypotheses rechecked in the new setting at the point of use.
+
+The supervision required spans two areas: mathematical statistics, particularly dependent-data inference and distribution-free methods, and mathematical finance, particularly interest-rate modelling and hedging in incomplete markets. Access to market data is the other substantive need, and a contact able to advise on instrument availability and quoting conventions would materially reduce the feasibility risk.
+
+Items to settle before the proposal is finalised are the precise model class, data access, the novelty statement, and the School's current proposal template and length requirements. The research uses market data and simulation rather than human participants, but the applicable ethics or exemption process will still be confirmed. This concept note and the supporting manuscript were prepared with AI assistance; that assistance will be disclosed as the institution requires, and responsibility for every retained claim rests with me.
 
 # Key references
 
