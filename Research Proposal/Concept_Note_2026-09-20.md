@@ -2,6 +2,7 @@
 geometry: a4paper, margin=2.2cm
 fontsize: 11pt
 header-includes: |
+  \usepackage{graphicx}
   \usepackage{enumitem}
   \setlist{nosep, topsep=2pt, itemsep=1pt, parsep=0pt}
   \setlength{\parskip}{3pt}
@@ -9,38 +10,68 @@ header-includes: |
   \titlespacing*{\section}{0pt}{7pt}{3pt}
 ---
 
+<!-- Cover page. Laid out after the UFS master's dissertation cover, with the
+     Wits crest. Two versions follow: raw LaTeX for the PDF, and plain
+     markdown for the .docx. Keep the wording of the two in step. -->
+
 ```{=latex}
 \thispagestyle{empty}
-\vspace*{60pt}
-```
+\begin{center}
+\vspace*{1.8cm}
 
-# Pricing and Hedging through Benchmark Transitions in the Absence of Liquid Option Markets {-}
+{\Large\bfseries Pricing and Hedging through Benchmark Transitions\\[0.35em]
+in the Absence of Liquid Option Markets\par}
 
-```{=latex}
-\vspace{36pt}
-```
+\vspace{1.3cm}
+by
+\vspace{0.45cm}
 
-**Baloyi Thabang Bongani Junior**
+Baloyi Thabang Bongani Junior
 
+\vspace{0.3cm}
 Student number 1113941
 
-```{=latex}
-\vspace{\fill}
-```
+\vspace{1.3cm}
+Concept note submitted in support of an application to register\\
+for the degree
 
-A concept note submitted to the School of Statistics and Actuarial Science, Faculty of Science, University of the Witwatersrand, Johannesburg, in support of an application to register for the degree of Doctor of Philosophy in Mathematical Statistics.
+\vspace{0.9cm}
+{\bfseries Doctor of Philosophy\par}
+\vspace{0.2cm}
+{\bfseries (Mathematical Statistics)\par}
 
-```{=latex}
-\vspace{24pt}
-```
+\vspace{1.1cm}
+in the School of Statistics and Actuarial Science\\
+in the Faculty of Science\\
+at the University of the Witwatersrand
 
-Johannesburg, September 2026
+\vspace{1.0cm}
+\includegraphics[width=3.4cm]{../Thesis/Cover Page/src/witslogo.pdf}
 
-```{=latex}
+\vspace{0.9cm}
+Johannesburg, South Africa\\
+September 2026
+
+\vspace{0.8cm}
+Supervisor: To be confirmed
+\end{center}
 \newpage
 ```
 
 ```{=openxml}
+<w:p><w:pPr><w:jc w:val="center"/></w:pPr><w:r><w:rPr><w:b/><w:sz w:val="32"/></w:rPr><w:t>Pricing and Hedging through Benchmark Transitions in the Absence of Liquid Option Markets</w:t></w:r></w:p>
+<w:p><w:pPr><w:jc w:val="center"/></w:pPr><w:r><w:t>by</w:t></w:r></w:p>
+<w:p><w:pPr><w:jc w:val="center"/></w:pPr><w:r><w:t>Baloyi Thabang Bongani Junior</w:t></w:r></w:p>
+<w:p><w:pPr><w:jc w:val="center"/></w:pPr><w:r><w:t>Student number 1113941</w:t></w:r></w:p>
+<w:p><w:pPr><w:jc w:val="center"/></w:pPr><w:r><w:t>Concept note submitted in support of an application to register for the degree</w:t></w:r></w:p>
+<w:p><w:pPr><w:jc w:val="center"/></w:pPr><w:r><w:rPr><w:b/></w:rPr><w:t>Doctor of Philosophy</w:t></w:r></w:p>
+<w:p><w:pPr><w:jc w:val="center"/></w:pPr><w:r><w:rPr><w:b/></w:rPr><w:t>(Mathematical Statistics)</w:t></w:r></w:p>
+<w:p><w:pPr><w:jc w:val="center"/></w:pPr><w:r><w:t>in the School of Statistics and Actuarial Science</w:t></w:r></w:p>
+<w:p><w:pPr><w:jc w:val="center"/></w:pPr><w:r><w:t>in the Faculty of Science</w:t></w:r></w:p>
+<w:p><w:pPr><w:jc w:val="center"/></w:pPr><w:r><w:t>at the University of the Witwatersrand</w:t></w:r></w:p>
+<w:p><w:pPr><w:jc w:val="center"/></w:pPr><w:r><w:t>Johannesburg, South Africa</w:t></w:r></w:p>
+<w:p><w:pPr><w:jc w:val="center"/></w:pPr><w:r><w:t>September 2026</w:t></w:r></w:p>
+<w:p><w:pPr><w:jc w:val="center"/></w:pPr><w:r><w:t>Supervisor: To be confirmed</w:t></w:r></w:p>
 <w:p><w:r><w:br w:type="page"/></w:r></w:p>
 ```
 
