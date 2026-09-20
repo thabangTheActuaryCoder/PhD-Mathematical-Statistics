@@ -1,0 +1,286 @@
+% ------------------------------------------------------------
+% Compile with XeLaTeX (system fonts are used).
+%   tectonic proposal.tex      or      xelatex proposal.tex
+% ------------------------------------------------------------
+% !TeX program = xelatex
+% !TeX root = proposal.tex
+%
+% Wits adaptation of the BITM LaTeX Proposal Template v4
+% (github.com/eduankotze/BITM), which is a UFS Department of Computer
+% Science & Informatics template. Section structure and page budgets are
+% kept from that template. Branding is rebuilt for Wits.
+%
+% NOTE ON SECTION 9. The source template frames methodology through
+% Saunders' research onion and CRISP-DM, which suit applied information
+% systems and data science work. This proposal proves theorems and then
+% tests them, so 9.7 is restructured around the actual work phases.
+% The deviation is deliberate and is flagged in that section.
+
+\LoadClass{cover_and_title_pages}
+\usepackage{proposal_template_style}
+\usepackage{changepage}
+\usepackage[none]{hyphenat}
+
+\begin{document}
+
+	% === Cover page fields ===
+	\renewcommand{\proposal}{PhD Proposal}
+	\renewcommand{\schoolname}{School of Statistics and Actuarial Science}
+	\renewcommand{\facultyname}{Faculty of Science}
+	\renewcommand{\thesistitle}{Pricing and Hedging through Benchmark Transitions in the Absence of Liquid Option Markets}
+	\renewcommand{\initials}{T.B.J.}
+	\renewcommand{\surname}{Baloyi}
+	\renewcommand{\studentnum}{1113941}
+	\renewcommand{\submissiondate}{September 2026}
+
+	% === Title page fields ===
+	\renewcommand{\fullnames}{Baloyi Thabang Bongani Junior}
+	\renewcommand{\degree}{PHILOSOPHIAE DOCTOR}
+	\renewcommand{\proposaltype}{(Mathematical Statistics)}
+	\renewcommand{\universityname}{University of the Witwatersrand}
+	\renewcommand{\campusname}{Johannesburg, South Africa}
+	\renewcommand{\supervisor}{\hl{To be confirmed}}
+	\renewcommand{\cosupervisor}{\hl{To be confirmed}}
+	\renewcommand{\proposalmonth}{September}
+	\renewcommand{\proposalyear}{2026}
+
+	\maketitlepage
+
+	\pagenumbering{roman}
+
+	\renewcommand{\contentsname}{Table of Contents}
+	\tableofcontents
+	\newpage
+
+	\renewcommand{\listfigurename}{List of Figures}
+	\listoffigures
+
+	\renewcommand{\listtablename}{List of Tables}
+	\listoftables
+	\newpage
+
+	\section*{List of Abbreviations}
+	\addcontentsline{toc}{section}{List of Abbreviations}
+
+	\begin{tabular}{@{}ll@{}}
+		CAS      & Credit adjustment spread \\
+		ISDA     & International Swaps and Derivatives Association \\
+		JIBAR    & Johannesburg Interbank Average Rate \\
+		LIBOR    & London Interbank Offered Rate \\
+		MPG      & Market Practitioners Group \\
+		OIS      & Overnight index swap \\
+		RFR      & Risk-free rate \\
+		SABR     & Stochastic alpha, beta, rho \\
+		SARB     & South African Reserve Bank \\
+		SOFR     & Secured Overnight Financing Rate \\
+		ZARONIA  & South African Rand Overnight Index Average \\
+	\end{tabular}
+
+	\newpage
+
+	\section*{Glossary}
+	\addcontentsline{toc}{section}{Glossary}
+
+	\begin{description}
+		\item[Backward-looking rate] A rate compounded from overnight fixings over an accrual period, known only at the end of that period.
+		\item[Compatible model set] The set of admissible models whose implied observations agree with the market observations within stated quote tolerances.
+		\item[Identified functional] A target valuation that takes the same value at every model in the compatible set.
+		\item[Identification range] The interval between the smallest and largest target values over the compatible set. Not a confidence interval.
+		\item[Hedging loss] The discounted liability less discounted terminal wealth of the hedge; positive values are shortfalls.
+		\item[Marginal coverage] A probability averaged over calibration samples, as distinct from coverage conditional on the realised calibration sample.
+	\end{description}
+
+	\newpage
+	\pagenumbering{arabic}
+
+	% ============================================================
+	\section{Introduction} % Approx. 1 page
+	\todo[inline]{Draw from the concept note: why replacing a benchmark changes contractual cashflows, and why the successor option market may be absent or thin.}
+
+	% ============================================================
+	\section{Background} % Approx. 2-3 pages
+	\todo[inline]{Benchmark reform and the JIBAR--ZARONIA transition; SARB and MPG conventions; what curves, swaps, basis instruments and legacy options reveal; interest-rate modelling approaches; conformal prediction under dependence.}
+
+	% ============================================================
+	\section{Research Gaps} % Approx. 0.5 page
+	\todo[inline]{The provisional gap: connecting a rigorously characterised compatible model set to a finite-sample analysis of the hedging losses those models imply. State that the gap is provisional pending the structured literature comparison.}
+
+	% ============================================================
+	\section{Research Problem and Statement} % Approx. 0.75 - 1 page
+	\todo[inline]{A fitted model returns one successor price although the observations are compatible with several; small average hedging error does not imply a valid upper-tail guarantee.}
+
+	% ============================================================
+	\section{Thesis Statement (PhD only)} % Approx. 1-2 sentences
+	\todo[inline]{One or two sentences. Keep it falsifiable and do not assert what is not yet proved.}
+
+	% ============================================================
+	\section{Research Aim} % Approx. 0.5 page
+
+	To develop and evaluate a framework for identifying successor-rate option
+	valuations and quantifying residual hedging risk under limited
+	option-market information.
+
+	% ============================================================
+	\section{Research Questions and Objectives} % Approx. 1-2 pages
+
+	\textbf{RQ1.} Which successor valuation functionals are constant across the
+	models compatible with legacy option quotes and curve or basis observations?
+
+	\textbf{RQ2.} Which additional observations or restrictions restore
+	identification, and how stable is that conclusion to quote noise?
+
+	\textbf{RQ3.} Under what dependence and distribution-shift assumptions can a
+	calibrated loss threshold retain a finite-sample guarantee?
+
+	\textbf{RQ4.} Are the resulting price ranges and risk bounds informative for
+	a realistic hedge, once costs and data limitations are included?
+
+	\medskip
+	\textbf{Objective 1.} Specify a coherent transition model, contractual
+	conventions and observable market information, keeping risk-neutral pricing
+	assumptions separate from historical estimation.
+
+	\textbf{Objective 2.} Prove identification or non-identification results for
+	a restricted model class, and determine the resulting valuation ranges or
+	approximation errors.
+
+	\textbf{Objective 3.} Construct implementable hedges from available
+	instruments and investigate finite-sample loss guarantees under explicit
+	assumptions.
+
+	\textbf{Objective 4.} Evaluate pricing uncertainty, hedge performance and
+	certificate informativeness in simulation and in an appropriately limited
+	empirical application.
+
+	% ============================================================
+	\section{Hypotheses (Optional)} % Approx. 0.5 page
+	\todo[inline]{Optional. If included, state them so that they can fail, and label them as conjectures rather than results.}
+
+	% ============================================================
+	\section{Research Design and Methodology} % Approx 4-5 pages
+
+	\subsection{Introduction}
+	\todo[inline]{The source template introduces Saunders' research onion here. Retain it only if the supervisor expects that framing; a mathematical-statistics proposal may instead state the design directly.}
+
+	\subsection{Research Philosophy}
+	\todo[inline]{State the position honestly rather than selecting a label for its own sake.}
+
+	\subsection{Approach to Theory Development}
+	Deductive. Results are derived from stated assumptions and then tested
+	numerically and, where data permit, empirically. Simulation supports a
+	proof; it does not replace one.
+
+	\subsection{Methodological Choice}
+	Quantitative throughout: mathematical analysis, controlled simulation and
+	an empirical case study on market data.
+
+	\subsection{Research Strategy}
+	Mathematical derivation of identification and coverage results, followed by
+	a simulation study with known data-generating laws, followed by an empirical
+	application limited to what the data audit supports.
+
+	\subsection{Time Horizon}
+	Longitudinal. The loss process is observed chronologically, and training,
+	method selection, calibration and evaluation periods are separated in time.
+
+	\subsection{Techniques and Procedures}
+
+	The source template organises this subsection around CRISP-DM, whose phases
+	suit an applied data-mining project. The work proposed here proves results
+	and then tests them, so the phases below replace that cycle. The substitution
+	is deliberate.
+
+	\subsubsection{Model and Observation Map}
+	\todo[inline]{Low-dimensional Markov model in an overnight-rate factor and a spread factor under an explicit pricing measure; the observation map must price actual cashflows before any identification claim.}
+
+	\subsubsection{Identification Analysis}
+	\todo[inline]{Compatible set, identified functionals, identification ranges; constructive non-identification examples preserving the full observation map.}
+
+	\subsubsection{Hedging and the Loss Process}
+	\todo[inline]{Admissible strategies, discounted gains, transaction costs, the signed loss definition; sensitivity and mean--variance benchmarks.}
+
+	\subsubsection{Finite-Sample Guarantees}
+	\todo[inline]{Split conformal baseline, the Beta law for calibration-conditional coverage, then the dependence and shift corrections.}
+
+	\subsubsection{Simulation Study}
+	\todo[inline]{Known data-generating laws; dependence and shift varied separately then together; ties and overlapping horizons included.}
+
+	\subsubsection{Empirical Evaluation}
+	\todo[inline]{Data audit, chronological separation, locked test period; report what was actually validated.}
+
+	% ============================================================
+	\section{Validity and Reliability} % Approx. 0.5 page
+
+	\subsection{Validity}
+	\todo[inline]{Whether the constructions answer the stated questions: full observation maps in counterexamples, correct conditioning in coverage statements.}
+
+	\subsection{Reliability}
+	\todo[inline]{Reproducibility: versioned code, configurations, seeds, Monte Carlo error estimates, documented data cleaning.}
+
+	% ============================================================
+	\section{Ethical Considerations} % Approx. 0.5 page
+
+	The research uses market data and simulation rather than human participants,
+	so no participant consent arises. The applicable institutional ethics or
+	exemption process will still be confirmed. Data licences, attribution and the
+	treatment of confidential market information will be documented. AI
+	assistance in preparing this proposal and the supporting manuscript is
+	disclosed as the University requires; responsibility for every retained claim
+	rests with the candidate.
+
+	% ============================================================
+	\section{Expected Contributions of the Research} % Approx. 0.5 page
+
+	\subsection{Theoretical Contributions}
+	\todo[inline]{Identification or non-identification for a stated model class and observation set; a justified finite-sample loss guarantee, or a credited application of existing theory. Label as proposed until proved.}
+
+	\subsection{Practical Contributions}
+	\todo[inline]{What a valuation range and a loss threshold would let a practitioner say, and what they would not.}
+
+	% ============================================================
+	\section{Limitations of the Study} % Approx. 0.5 page
+	\todo[inline]{Restricted model class, data access, dependence assumptions, unobserved successor prices, transfer across currencies.}
+
+	% ============================================================
+	\section{Timeline} % Approx. 0.5 page
+
+	\begin{table}[H]
+		\centering
+		\caption{Indicative full-time schedule.}
+		\label{tab:timeline}
+		\begin{tabular}{@{}ll@{}}
+			\hline
+			\textbf{Months} & \textbf{Work} \\
+			\hline
+			1--6   & Foundations, novelty review and data audit \\
+			7--14  & Transition model and identification \\
+			15--22 & Hedging and statistical analysis \\
+			23--29 & Simulation and empirical evaluation \\
+			30--36 & Synthesis, revision and examination preparation \\
+			\hline
+		\end{tabular}
+	\end{table}
+
+	Month 6 is the first decision point: confirm data access, the restricted
+	model, and at least one candidate original result before expanding
+	implementation.
+
+	% ============================================================
+	\section{Budget} % Approx. 0.5 page
+	\todo[inline]{Data licensing and computing costs to be priced before the final budget is submitted. No funding or vendor access is assumed.}
+
+	% ============================================================
+	\section{Computational Resources} % Approx. 0.5 page
+	\todo[inline]{Scientific computing software and a workstation; state whether cluster access is needed for the simulation study.}
+
+	% ============================================================
+	\section{Chapter Layout} % Approx. 1 page
+	\todo[inline]{The ten-chapter outline. State that the chapter count is an organisational choice and not a claim about doctoral depth.}
+
+	% ============================================================
+	\newpage
+	\bibliographystyle{apacite}
+	\bibliography{library}
+	\addcontentsline{toc}{section}{References}
+
+\end{document}

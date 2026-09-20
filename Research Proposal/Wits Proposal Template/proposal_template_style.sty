@@ -1,0 +1,195 @@
+% Adapted from the BITM proposal template style (eduankotze/BITM).
+% Only the link colours are changed, to the official Wits palette
+% defined in cover_and_title_pages.cls.
+
+% === Packages ===
+\usepackage[hidelinks]{hyperref}
+\usepackage{todonotes}
+\usepackage{apacite} % for the external bibliography
+\usepackage[autostyle]{csquotes}  % quotations 
+\usepackage{latexsym} % check marks, squares, various arrows
+\usepackage[toc,page]{appendix}
+\usepackage{tcolorbox} % this package will help with colorbox around text
+\usepackage{amsmath} % this package will help with operators, logarithms etc
+\usepackage[T1]{fontenc} % font encoding properly handle accented characters
+
+% === Commands ===
+% Wits palette for links (navy for internal, maroon for citations)
+\hypersetup{colorlinks = true, linkcolor = witsnavy, urlcolor = witsnavy, citecolor = witsmaroon}
+
+\usepackage{doi} % makes doi clickable
+\renewcommand{\doitext}{}
+
+% === Document Styling ===
+\setmainfont{Arial}
+
+% === Paragraph Formatting ===
+%\setlength{\parskip}{0pt} % No extra space between paragraphs
+
+% Leave an empty line between paragraphs
+%\setlength{\parskip}{\baselineskip}
+
+% Prevent widows and orphans
+\widowpenalty=10000
+\clubpenalty=10000
+
+% Ensure section headers don’t appear alone at the bottom of a page
+\interlinepenalty=1000
+
+\usepackage{ragged2e} % Justify paragraphs
+\justifying 
+\sloppy % makes justification more forgiving
+
+% === Figure/Table Formatting ===
+\usepackage{graphicx}		% figure placement
+\usepackage{float}          
+\usepackage{threeparttable} % table placement
+
+% === Figure/Table Caption Formatting ===
+\usepackage{caption}
+
+\DeclareCaptionLabelSeparator{twospaces}{\space\space} % defines 2 spaces 
+
+\captionsetup{
+	labelsep=twospaces,      % Two spaces between "Figure X.Y" and caption
+	labelfont={it},          % Italicize "Figure X.Y"
+	textfont={it},           % Italicize entire caption
+	format=hang
+}
+
+% === Figure Caption Formatting ===
+\DeclareCaptionListFormat{figprefix}{#1\figurename~#2}
+\captionsetup[figure]{
+	margin=1.5cm,             % Indent second and subsequent lines correctly
+	listformat=figprefix
+}
+
+% === Table Caption Formatting ===
+\DeclareCaptionListFormat{tabprefix}{#1\tablename~#2}
+\captionsetup[table]{
+	skip=0pt,
+	justification=raggedright,
+	singlelinecheck=false,
+	listformat=tabprefix
+}
+
+% === Prefix LOT with 'Table' ===
+\usepackage{tocloft}
+\renewcommand{\cfttabpresnum}{}                   
+\renewcommand{\cfttabaftersnum}{\space\space}   
+\settowidth{\cfttabnumwidth}{Table XX\space\space}
+
+% === Prefix LOF with 'Figure' ===
+\renewcommand{\cftfigpresnum}{}
+\renewcommand{\cftfigaftersnum}{\space\space}  
+\settowidth{\cftfignumwidth}{Figure XX\space\space}
+
+% === Referencing ===
+% References to sections from within the text should be with capitals
+\renewcommand{\sectionautorefname}{Section}
+\renewcommand{\subsectionautorefname}{Section}
+\renewcommand{\subsubsectionautorefname}{Section}
+
+% === Bibliography ===
+\usepackage[numbib, nottoc]{tocbibind} % style as section
+\renewcommand{\refname}{List of References} % change name
+
+% === Apply Word Styling ===
+\makeatletter
+
+\setcounter{secnumdepth}{5}%
+\setcounter{tocdepth}{5}%
+
+\renewcommand{\@dotsep}{1}
+\renewcommand\l@section{\@dottedtocline{1}{0em}{1.5em}}
+\renewcommand*\l@subsection{\@dottedtocline{2}{1.5em}{2.3em}}
+\renewcommand*\l@subsubsection{\@dottedtocline{3}{3.8em}{3.2em}}
+\renewcommand*\l@paragraph{\@dottedtocline{4}{7.0em}{4.1em}}
+\renewcommand*\l@subparagraph{\@dottedtocline{5}{10em}{5em}}
+
+\renewcommand{\section}{\@startsection%
+	{section}%
+	{0}%
+	{0em}%
+	{-\baselineskip}%
+	%{0.5\baselineskip}% 
+	{\baselineskip}% 
+	{\bfseries\large}}%
+\renewcommand{\subsection}{\@startsection%
+	{subsection}%
+	{1}%
+	{0em}%
+	{-\baselineskip}%
+	{\baselineskip}%
+	{\bfseries\normalsize}}%
+\renewcommand{\subsubsection}{\@startsection%
+	{subsubsection}%
+	{2}%
+	{0em}%
+	{-\baselineskip}%
+	{\baselineskip}%
+	{\normalfont\normalsize\itshape}}%
+\renewcommand{\paragraph}{\@startsection%
+	{paragraph}%
+	{3}%
+	{0em}%
+	{-\baselineskip}%
+	{\baselineskip}%
+	{\normalfont\small\itshape}}%
+\renewcommand{\subparagraph}{\@startsection%
+	{subparagraph}%
+	{4}%
+	{0.7cm}%
+	{-\baselineskip}%
+	{\baselineskip}%
+	{\normalfont\small\itshape}}%
+
+\makeatother
+
+% === List Formatting ===
+\usepackage{enumitem}
+
+% Top-level bullets
+\setlist[itemize,1]{
+	label=\textbullet, 				% First-level bullet (•)
+	left=0pt, 						% Align bullets with normal paragraphs
+	labelsep=0.5cm,                % Space between bullet and text
+	itemsep=0pt,					% No extra space between items
+	parsep=0pt,						% No extra space between paragraphs inside the list
+	listparindent=1.5cm  			% Indentation for wrapped lines
+}
+
+% Second-level bullets
+\setlist[itemize,2]{
+	label=--,                     % Second-level bullet (–)
+	left=0pt,                     % Align bullet with first-level text 
+	labelsep=0.5cm,           
+	itemsep=0pt,
+	parsep=0pt,
+	listparindent=1.5cm
+}
+
+% Top-level numbered lists
+\setlist[enumerate,1]{
+	label=\arabic*.,                % 1., 2., 3.
+	left=0pt,
+	labelsep=0.5cm,
+	itemsep=0pt,
+	parsep=0pt,
+	listparindent=1.5cm
+}
+
+% === Table Formatting ===
+\usepackage{siunitx} % For number alignment
+\sisetup{
+	detect-all,                     % respects surrounding font (e.g. \small)
+	table-align-text-post=false,    % avoids alignment shifting on text rows
+	table-number-alignment=center   % aligns decimals but also headers
+}
+
+\renewcommand{\arraystretch}{1.2}
+
+% === TOC, LOF, LOT Heading Formatting ===
+\renewcommand{\cfttoctitlefont}{\large\bfseries}
+\renewcommand{\cftlottitlefont}{\large\bfseries}
+\renewcommand{\cftloftitlefont}{\large\bfseries}

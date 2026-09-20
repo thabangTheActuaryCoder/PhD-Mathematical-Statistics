@@ -25,6 +25,8 @@ __pycache__/
 !Offer/*.pdf
 !Research Proposal/*.pdf
 !Thesis/Cover Page/src/*.pdf
+# logo assets the proposal template needs in order to build
+!Research Proposal/Wits Proposal Template/template_images/*.pdf
 
 # transient council working directory (drafts are synced into Thesis/ and Reviews/);
 # the three files below live inside it but are real, tracked project docs
